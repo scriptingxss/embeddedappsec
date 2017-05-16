@@ -1,4 +1,4 @@
-# Top 10 Embedded Application Security Best Practices
+# Embedded Application Security Best Practices
 
 ###### Version 1 - March 03, 2017
 
