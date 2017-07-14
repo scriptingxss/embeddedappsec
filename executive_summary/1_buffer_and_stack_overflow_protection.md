@@ -39,7 +39,6 @@ find . -type f -name '*.c' -print0|xargs -0 grep -e 'strncpy.*strlen'|wc -l
 **Below, example output of flawfinder is shown run against C source code.**
 
 ```
-
 $ flawfinder fuzzgoat.c 
 Flawfinder version 1.31, (C) 2001-2014 David A. Wheeler.
 Number of rules (primarily dangerous function names) in C/C++ ruleset: 169
@@ -150,8 +149,6 @@ strncat( buffer, SOME_DATA, strlen( SOME_DATA ));
 The screenshot below demonstrates stack protection support being enabled while building a firmware image utilizing buildroot.  
 ![](/assets/embedSec1.png)
 
-#### 
-
 **Considerations:**
 
 * What kind of buffer and where it resides: physical, logical, virtual memory?
@@ -168,6 +165,7 @@ The screenshot below demonstrates stack protection support being enabled while b
   * `strcat() -> strncat()`
   * `sprintf() -> snprintf()`
 * Those functions that do not have safe equivalents should be rewritten with safe checks implemented.
+* If FreeRTOS OS is utilized, consider setting "configCHECK\_FOR\_STACK\_OVERFLOW" to "1" with a hook function during the development and testing phases but removing for production builds. 
 
 #### Additional References {#additional-references}
 
@@ -180,6 +178,7 @@ The screenshot below demonstrates stack protection support being enabled while b
 * [https://www.owasp.org/images/2/2e/OWASP\_Code\_Review\_Guide-V1\_1.pdf](https://www.owasp.org/images/2/2e/OWASP_Code_Review_Guide-V1_1.pdf) \(Page 113-114\)
 * [University of Pittsburgh - Secure Coding C/C++: String Vulnerabilities \(PDF\)](http://www.sis.pitt.edu/jjoshi/courses/IS2620/Spring07/Lecture3.pdf)
 * [Intel Open Source Technology Center SDL Banned Functions](https://github.com/01org/safestringlib/wiki/SDL-List-of-Banned-Functions)
+* [RTOS Stack Overflow Checking](http://www.freertos.org/Stacks-and-stack-overflow-checking.html)
 
 
 
