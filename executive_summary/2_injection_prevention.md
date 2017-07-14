@@ -1,17 +1,18 @@
 ### 2. Injection Prevention {#2-injection-prevention}
 
-Ensure all untrusted data and user input is validated, sanitized, and/or outputs encoded to prevent unintended system execution. There are various injection attacks within application security such as operating system \(OS\) command injection, cross-site scripting \(E.g. JavaScript injection\), SQL injection, and others such as XPath injection. However, the most prevalent of the injection attacks within embedded software pertain to OS command injection; when an application accepts untrusted/insecure input and passes it to external applications \(either as the application name itself or arguments\) without validation or proper escaping.
+Ensure all untrusted data and user input is validated, sanitized, and/or output encoded to prevent unintended system execution. There are various injection attacks within application security such as operating system \(OS\) command injection, cross-site scripting \(E.g. JavaScript injection\), SQL injection, and others such as XPath injection. However, the most prevalent of the injection attacks within embedded software pertain to OS command injection; when an application accepts untrusted/insecure input and passes it to external applications \(either as the application name itself or arguments\) without validation or proper escaping.
 
 [**Noncompliant Code Example**](https://www.securecoding.cert.org/confluence/pages/viewpage.action?pageId=2130132) of using operating system calls:
 
 In this noncompliant code example, the system\(\) function is used to execute any\_cmd in the host environment. Invocation of a command processor is not required.
+
 ```c
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
- 
+
 enum { BUFFERSIZE = 512 };
- 
+
 void func(const char *input) {
   char cmdbuf[BUFFERSIZE];
   int len_wanted = snprintf(cmdbuf, BUFFERSIZE,
@@ -27,24 +28,27 @@ void func(const char *input) {
 ```
 
 If this code is compiled and run with elevated privileges on a Linux system, an attacker can create an account by entering the following string: `any_cmd ‘happy'; useradd 'attacker’` which would be interpreted as:
+
 ```c
 any_cmd 'happy';
 useradd 'attacker'
 ```
+
 **Compliant Example**:In this compliant solution, the call to `system()` is replaced with a call to `execve()`. The exec family of functions does not use a full shell interpreter, so it is not vulnerable to command-injection attacks, such as the one illustrated in the noncompliant code example.
 
-The `execlp()`, `execvp()`, and (nonstandard) `execvP()` functions duplicate the actions of the shell in searching for an executable file if the specified filename does not contain a forward slash character (/). As a result, they should be used without a forward slash character (/) only if the PATH environment variable is set to a safe value.
+The `execlp()`, `execvp()`, and \(nonstandard\) `execvP()` functions duplicate the actions of the shell in searching for an executable file if the specified filename does not contain a forward slash character \(/\). As a result, they should be used without a forward slash character \(/\) only if the PATH environment variable is set to a safe value.
 
 The `execl()`, `execle()`, `execv()`, and `execve()` functions do not perform path name substitution.
 
 Additionally, precautions should be taken to ensure the external executable cannot be modified by an untrusted user, for example, by ensuring the executable is not writable by the user. This compliant solution is significantly different from the preceding noncompliant code example. First, input is incorporated into the args array and passed as an argument to `execve()`, eliminating concerns about buffer overflow or string truncation while forming the command string. Second, this compliant solution forks a new process before executing `/usr/bin/any_cmd` in the child process. Although this method is more complicated than calling system\(\), the added security is worth the additional effort.
+
 ```c
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 #include <stdlib.h>
- 
+
 void func(char *input) {
   pid_t pid;
   int status;
@@ -52,9 +56,9 @@ void func(char *input) {
   char *const args[3] = {"any_exe", input, NULL};
   char **env;
   extern char **environ;
- 
+
   /* ... Sanitize arguments ... */
- 
+
   pid = fork();
   if (pid == -1) {
     /* Handle error */
@@ -78,6 +82,7 @@ void func(char *input) {
   }
 }
 ```
+
 # 
 
 **Considerations:**
