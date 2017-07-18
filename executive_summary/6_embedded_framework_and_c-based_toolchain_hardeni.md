@@ -24,7 +24,7 @@ $ Configure darwin64-x86_64-cc -no-hw -no-engine -no-comp -no-shared -no-dso -no
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for hardening auditing and suggestions.
 
   ```
-  *   wget --no-check-certificate https://github.com/CISOfy/lynis/archive/master.zip &amp;&amp; unzip master.zip &amp;&amp; cd lynis-master/ &amp;&amp; bash lynis audit system
+  *   wget --no-check-certificate https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system
   ```
 
   * Review the report in: `/var/log/lynis.log`
