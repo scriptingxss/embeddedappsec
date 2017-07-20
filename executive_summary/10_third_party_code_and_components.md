@@ -55,7 +55,7 @@ For a visual representation of the discovered CVEs paste the content of installe
 Run the scanner on your installed-packages.txt
 
 ```bash
-# ./cli.py  --format yocto "path/to/installed-packages.txt" dbs/  > cve_test.xml 
+# ./cli.py  --format yocto "path/to/installed-packages.txt" dbs/  > cve_test.xml
 ```
 
 cve\_test will now include a list of 'unit tests' in XUnit format that fail for every cve not ignored
@@ -79,6 +79,7 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
 
 * Use of [retire.js](https://github.com/RetireJS/retire.js) for JavaScript Libraries
   * Utilize [nsp](https://github.com/nodesecurity/nsp) for NodeJS packages
+* Use [MoonshineLuaSec \(MSL\)](http://firmware.re/lua/msl.tar.gz) for Lua static analysis
 * Use of [OWASP ZAP](https://github.com/zaproxy/zaproxy/wiki/Downloads) for web application testing
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for basic Kernel hardening auditing and suggestions.
   * `wget --no-check-certificate  https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system`
