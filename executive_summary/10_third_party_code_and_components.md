@@ -85,6 +85,7 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
   * `wget --no-check-certificate  https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system`
   * Review the report in: `/var/log/lynis.log`
   * **Note**: Lynis will bypass Kernel checks if a Linux kernel is not in use. The following error message will be in the logs: “Skipped test KRNL-5695 \(Determine Linux kernel version and release number\) Reason to skip: Incorrect guest OS \(Linux only\)”
+  * Lynis should be modified accordingly if storage is limited \(i.e. removing unnecessary plugins such as php etc.\)
 * Utilize free library scanners such as [LibScanner](https://github.com/scriptingxss/LibScanner) which searches through a project's dependencies and cross references them with the NVD looking for known CVEs for a yocto build environment.
   * This tool outputs XML which enables teams to utilize such features for continuous integration testing.
 * Utilize package managers \(opkg, ipkg, etc.. \) or custom update mechanisms for misc libraries within the toolchain.
