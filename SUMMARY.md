@@ -12,7 +12,7 @@
   * [7. Usage of Debugging Code and Interfaces](executive_summary/7_usage_of_debugging_code_and_interfaces.md)
   * [8. Transport Layer Security](executive_summary/8_transport_layer_security.md)
   * [9. Usage of Data Collection and Storage - Privacy](executive_summary/9_usage_of_data_collection_and_storage_-_privacy.md)
-  * [10. Third Party Code and Components](executive_summary/10_third_party_code_and_components.md)
+  * [Third Party Code and Components](executive_summary/10_third_party_code_and_components.md)
   * [Project Leaders](executive_summary/project_leaders.md)
   * [Contributors ](executive_summary/contributors.md)
 
