@@ -1,4 +1,4 @@
-### 6. Embedded Framework and C-Based Toolchain Hardening {#6-embedded-framework-and-c-based-toolchain-hardening}
+### Embedded Framework and C-Based Toolchain Hardening {#6-embedded-framework-and-c-based-toolchain-hardening}
 
 Limit BusyBox, embedded frameworks, and toolchains to only those libraries and functions being used when configuring firmware builds. Embedded Linux build systems such as Buildroot, Yocto and others typically perform this task. Removal of known insecure libraries and protocols such as Telnet not only minimize attack entry points in firmware builds, but also provide a secure-by-design approach to building software in efforts to thwart potential security threats.
 

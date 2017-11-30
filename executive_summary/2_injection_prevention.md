@@ -1,4 +1,4 @@
-### 2. Injection Prevention {#2-injection-prevention}
+### Injection Prevention {#2-injection-prevention}
 
 Ensure all untrusted data and user input is validated, sanitized, and/or output encoded to prevent unintended system execution. There are various injection attacks within application security such as operating system \(OS\) command injection, cross-site scripting \(E.g. JavaScript injection\), SQL injection, and others such as XPath injection. However, the most prevalent of the injection attacks within embedded software pertain to OS command injection; when an application accepts untrusted/insecure input and passes it to external applications \(either as the application name itself or arguments\) without validation or proper escaping.
 

@@ -1,4 +1,4 @@
-###  3. Firmware Updates and Cryptographic Signatures {#3-firmware-updates-and-cryptographic-signatures}
+### Firmware Updates and Cryptographic Signatures {#3-firmware-updates-and-cryptographic-signatures}
 
 Ensure robust update mechanisms utilize cryptographically signed firmware images upon download and when applicable, for updating functions pertaining to third party software. Cryptographic signature allows for verification that files have not been modified or otherwise tampered with since the developer created and signed them. The signing and verification process uses public-key cryptography and it is difficult to forge a digital signature \(e.g. PGP signature\) without first gaining access to the private key. In the event a private key is compromised, developers of the software must revoke the compromised key and will need to re-sign all previous firmware releases with the new key.
 
