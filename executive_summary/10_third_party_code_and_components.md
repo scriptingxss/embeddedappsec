@@ -1,4 +1,4 @@
-### 10. Third Party Code and Components {#10-third-party-code-and-components}
+### Third Party Code and Components {#10-third-party-code-and-components}
 
 Following setup of the toolchain, it is important to ensure that the kernel, software packages, and third party libraries are updated to protect against publicly known vulnerabilities. Software such as Rompager or embedded build tools such as Buildroot should be checked against vulnerability databases as well as their ChangeLogs to determine when and if an update is needed. It is important to note this process should be tested by developers and/or QA teams prior to release builds as updates to embedded systems can cause issues with the operations of those systems.
 
