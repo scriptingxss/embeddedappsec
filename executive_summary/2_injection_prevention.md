@@ -87,7 +87,13 @@ void func(char *input) {
 
 **Considerations:**
 
-* Do not invoke a command processor via `system()` `exec()` `ShellExecute()` or equivalent functions to execute a command.
+* Do not invoke shell command wrappers such as but not limited to:  
+	* PHP:`system()``exec()`
+	* C:`system()`
+	* C++:`ShellExecute()` 
+	* Lua:`os.execute()`
+	* Perl:`system()` `exec()`
+	* Python:`os.system()` `subprocess.call()`
 * If possible, avoid utilizing user data into operation system commands.
 * If needed, utilize lookup maps of numbers-to-command-strings for user driven strings that may be passed to the operating system.
 * Whitelist accepted commands via a lookup map to ensure only expected parameter values are processed.
