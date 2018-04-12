@@ -17,7 +17,7 @@ User accounts within an embedded device should not be static in nature. Features
   * Ensure active Session IDs are invalidated when passwords are changed.
   * If Session IDs are stored in a cookie, ensure that the cookie has the HttpOnly flag set.
   * Ensure Session IDs are random and change across sessions.
-* Ensure usernames and passwords are not sent over insecure protocols \(e.g. HTTP, FTP and Telnet\).
+* Ensure usernames, passwords and cookies containing Session IDs are not sent over insecure protocols \(e.g. HTTP, FTP and Telnet\).
 * Password complexity policies should be enforced to discourage easy to guess passwords such as “Password1”.
 * Ensure EEPROMs are password protected enforcing complexity requirements.
 
