@@ -88,7 +88,7 @@ void func(char *input) {
 **Considerations:**
 
 * Do not invoke shell command wrappers such as but not limited to:  
-	* PHP:`system()``exec()`
+	* PHP:`system()` `exec()`
 	* C:`system()`
 	* C++:`ShellExecute()` 
 	* Lua:`os.execute()`
