@@ -8,10 +8,16 @@ CPU Architectures
 * MIPS 
 * AVR 
 
-Programming lanugages
+Commonly used programming languages
 
 * Assembly
-* C / C++  
+* C 
+* C++  
+* Python
+* Classic ASP
+* PHP
+* Perl
+* Lua
 
 Hardware
 
