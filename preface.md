@@ -21,7 +21,7 @@ Hardware
 
 Embedded Lifespan
 
-* Sometimes immortal 
+* Sometimes immortal 😉
 * Vehicles ~11 years
 
 
