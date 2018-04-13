@@ -1,4 +1,4 @@
-Major Contributors
+Made possible by contributions from:
 
 **Jim Manico**
 
