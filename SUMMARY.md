@@ -16,5 +16,4 @@
 * [Third Party Code and Components](executive_summary/10_third_party_code_and_components.md)
 * [Threat Modeling](executive_summary/threat-model.md)
 * [Project Leaders](executive_summary/project_leaders.md)
-* [Contributors](contributors.md)
 

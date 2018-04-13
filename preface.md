@@ -1,6 +1,6 @@
 _Still in development_
 
-The term embedded can interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document, embedded can be defined as having the following traits:
+The term embedded or embedded systems can interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document, embedded can be defined as having the following traits:
 
 Hardware
 
