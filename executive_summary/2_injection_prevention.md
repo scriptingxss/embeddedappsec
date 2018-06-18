@@ -88,20 +88,27 @@ void func(char *input) {
 **Considerations:**
 
 * Do not invoke shell command wrappers such as but not limited to:  
-	* PHP:`system()` `exec()`
-	* C:`system()`
-	* C++:`ShellExecute()` 
-	* Lua:`os.execute()`
-	* Perl:`system()` `exec()`
-	* Python:`os.system()` `subprocess.call()`
+  * PHP:`system()` `exec()`
+  * C:`system()`
+  * C++:`ShellExecute()` 
+  * Lua:`os.execute()`
+  * Perl:`system()` `exec()`
+  * Python:`os.system()` `subprocess.call()`
 * If possible, avoid utilizing user data into operation system commands.
-* If needed, utilize lookup maps of numbers-to-command-strings for user driven strings that may be passed to the operating system.
+  * If needed, utilize lookup maps of numbers-to-command-strings for user driven strings that may be passed to the operating system.
 * Whitelist accepted commands via a lookup map to ensure only expected parameter values are processed.
+* Ensure to contextually output encode characters user data \(e.g. HTML, JavaScript, CSS, etc.\)
+  * HTML Entity Encoding
+    * &lt; output encoded to &lt;
+
+    * &gt; output encoded to &gt;
 
 #### Additional References: {#additional-references}
 
 * [Multiple Netgear routers are vulnerable to arbitrary command injection](https://www.kb.cert.org/vuls/id/582384)
 * [FTC Charges D-Link Put Consumers’ Privacy at Risk Due to the Inadequate Security of Its Computer Routers and Cameras](https://www.ftc.gov/news-events/press-releases/2017/01/ftc-charges-d-link-put-consumers-privacy-risk-due-inadequate)
+* [https://www.owasp.org/index.php/XSS\_\(Cross\_Site\_Scripting\)\_Prevention\_Cheat\_Sheet](https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet)
+* [https://www.owasp.org/index.php/SQL\_Injection\_Prevention\_Cheat\_Sheet](https://www.owasp.org/index.php/SQL_Injection_Prevention_Cheat_Sheet)
 * [https://www.owasp.org/images/2/2e/OWASP\_Code\_Review\_Guide-V1\_1.pdf](https://www.owasp.org/images/2/2e/OWASP_Code_Review_Guide-V1_1.pdf) \(Page 117\)
 * [https://www.owasp.org/index.php/Command\_Injection](https://www.owasp.org/index.php/Command_Injection)
 * [http://cwe.mitre.org/data/definitions/77.html](http://cwe.mitre.org/data/definitions/77.html)
