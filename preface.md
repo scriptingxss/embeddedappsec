@@ -1,20 +1,21 @@
 _Still in development_
 
-The term embedded or embedded systems can interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document, embedded can be defined as having the following traits:
+The term embedded or embedded systems can be interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document, embedded can be defined as having the following characteristics:
 
-Hardware
+Hardware:
 
 * Limited  resources 512KB - 2MB RAM 
-* System on chip \(SoC\) 
-* Microcontroller \(MCU\)  
+* System-on-chip \(SoC\) 
+* System-on-module \(SoM\)
+* Microcontroller \(MCU\)
 
-Lifespan
+Lifespan:
 
 * Sometimes immortal 😉
 * "Trustworthy" systems
-* Vehicles ~11 years
+* Vehicles ~7-15 years
 
-Common CPU Architectures
+Common CPU architectures  \(Word lengths from 8-bit, 16-bit, 32-bit, and 64-bit\)
 
 * ARM 
 * MIPS 
@@ -22,7 +23,7 @@ Common CPU Architectures
 * PowerPC
 * x86
 
-Commonly used programming languages
+Commonly used programming languages:
 
 * Assembly
 * C 
