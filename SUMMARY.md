@@ -15,5 +15,4 @@
 * [Usage of Data Collection and Storage - Privacy](executive_summary/9_usage_of_data_collection_and_storage_-_privacy.md)
 * [Third Party Code and Components](executive_summary/10_third_party_code_and_components.md)
 * [Threat Modeling](executive_summary/threat-model.md)
-* [Project Leaders](executive_summary/project_leaders.md)
 
