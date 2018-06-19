@@ -104,10 +104,10 @@ void func(char *input) {
     * &lt; output encoded to:
 
       * ```
-        &lt; 
+        &lt;
         ```
 
-    * &gt; output encoded to 
+    * &gt; output encoded to:
 
       * `&gt;`
 
