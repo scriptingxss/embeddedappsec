@@ -98,10 +98,18 @@ void func(char *input) {
   * If needed, utilize lookup maps of numbers-to-command-strings for user driven strings that may be passed to the operating system.
 * Whitelist accepted commands via a lookup map to ensure only expected parameter values are processed.
 * Ensure to contextually output encode characters user data \(e.g. HTML, JavaScript, CSS, etc.\)
-  * HTML Entity Encoding
-    * &lt; output encoded to &lt;
 
-    * &gt; output encoded to &gt;
+  * HTML Entity Encoding
+
+    * &lt; output encoded to:
+
+      * ```
+        &lt; 
+        ```
+
+    * &gt; output encoded to 
+
+      * `&gt;`
 
 #### Additional References: {#additional-references}
 
