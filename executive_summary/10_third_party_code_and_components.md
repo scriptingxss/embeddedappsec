@@ -2,14 +2,47 @@
 
 Following setup of the toolchain, it is important to ensure that the kernel, software packages, and third party libraries are updated to protect against publicly known vulnerabilities. Software such as Rompager or embedded build tools such as Buildroot should be checked against vulnerability databases as well as their ChangeLogs to determine when and if an update is needed. It is important to note this process should be tested by developers and/or QA teams prior to release builds as updates to embedded systems can cause issues with the operations of those systems.
 
-Embedded projects should maintain a “Bill of Materials” of the third party and open source software included in its firmware images. This Bill of Materials should be checked to confirm that none of the third party software included has any unpatched vulnerabilities. Up to date vulnerability information may be found through the National Vulnerability Database or Open Hub.
+Embedded projects should maintain a “Bill of Materials” of the third party and open source software included in its firmware images. This Bill of Materials should be checked to confirm that none of the third party software included has any unpatched vulnerabilities and also. Up to date vulnerability information may be found through the National Vulnerability Database or Open Hub.
 
-Several solutions exist for cataloging and auditing third party software:
+Several solutions exist for cataloging and auditing third party software. Many solutions are built into your build environment such as:
 
-* Retirejs for Javascript projects \(free\)
-* Black Duck \(paid\)
-* Package Managers \(free\)
+* C / C++
+  * `Makefile`
+* Node
+  * `npm list`
+* Python
+  * `pip freeze`
+* Ruby
+  * `gem dependency`
+* Lua
+  * See the `rockspec file`
+* Java
+  * `mvn dependency:tree`
+  * `gradle app:dependencies`
+
+* Yocto
+  * `buildhistory`
 * Buildroot \(free\)
+  * `make legal-info`
+* Package Managers \(free\)
+
+* * `dpkg --list `
+
+  * `rpm -qa`
+
+  * `yum list`
+
+  * `apt list --installed`
+* RetireJS for Javascript projects \(free\)
+
+**A sample BOM is shown below:**
+
+| **Component** | Version | Vulnerability | Notes |
+| :--- | :--- | :--- | :--- |
+| jQuery | 1.4.4 | CVE-2011-4969 |  |
+| libxml2 | 2.9.4 | CVE-2016-5131 |  |
+
+Software BOM's also include licensing and contextual information relating to the function of the component or justification for using the specific version.
 
 **Retirejs in a JavaScript project directory Example:**
 
