@@ -53,5 +53,3 @@ The term embedded or embedded systems can be interpreted in several ways dependi
 
 
 
-
-
