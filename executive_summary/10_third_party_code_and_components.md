@@ -8,6 +8,8 @@ Several solutions exist for cataloging and auditing third party software. Many s
 
 * C / C++
   * `Makefile`
+* Go
+  * Use the official `dep` [tool](https://github.com/golang/dep)
 * Node
   * `npm list`
 * Python
@@ -17,16 +19,19 @@ Several solutions exist for cataloging and auditing third party software. Many s
 * Lua
   * See the `rockspec file`
 * Java
+
   * `mvn dependency:tree`
   * `gradle app:dependencies`
 
 * Yocto
+
   * `buildhistory`
+
 * Buildroot \(free\)
   * `make legal-info`
 * Package Managers \(free\)
 
-* * `dpkg --list `
+* * `dpkg --list`
 
   * `rpm -qa`
 
@@ -37,10 +42,10 @@ Several solutions exist for cataloging and auditing third party software. Many s
 
 **A sample BOM is shown below:**
 
-| **Component** | Version | Vulnerability | Notes |
+| **Component** | Version | Vulnerabilities - CVEs | Notes |
 | :--- | :--- | :--- | :--- |
 | jQuery | 1.4.4 | CVE-2011-4969 |  |
-| libxml2 | 2.9.4 | CVE-2016-5131 |  |
+| libxml2 | 2.9.4 | CVE-2016-5131 | To be fixed |
 
 Software BOM's also include licensing and contextual information relating to the function of the component or justification for using the specific version.
 
