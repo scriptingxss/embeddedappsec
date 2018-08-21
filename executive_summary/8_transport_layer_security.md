@@ -110,6 +110,7 @@ int main() {
 **Considerations \(Disclaimer: The List below is non-exhaustive\):**
 
 * Use the latest possible version of TLS for new products \(as of writing, this is TLS 1.2\)
+* Consider implementing TLS two-way authentication for firmware that accepts TLS connections from a limited group of allowed clients.
 * If possible, consider using mutual-authentication to authenticate both end-points.
 * Validate the certificate public key, hostname, and [chain](http://fm4dd.com/openssl/certverify.htm).
 * Ensure certificate and their chains use SHA256 for signing.
