@@ -43,6 +43,7 @@ $ Configure darwin64-x86_64-cc -no-hw -no-engine -no-comp -no-shared -no-dso -no
 * [https://www.owasp.org/index.php/Application\_Threat\_Modeling](https://www.owasp.org/index.php/Application_Threat_Modeling)
 * [GNU C Library Vulnerability in Industrial Products](http://www.siemens.com/cert/pool/cert/siemens_security_advisory_ssa-301706.pdf)
 * [Linux Exploit Quick Listing](http://www.kmbl.us/les/working.php)
+* [Improving Your Embedded Linux Security Posture with Yocto](https://www.nccgroup.trust/globalassets/our-research/us/whitepapers/2018/improving-embedded-linux-security-yocto3.pdf)
 
 
 
