@@ -28,7 +28,9 @@ Several solutions exist for cataloging and auditing third party software. Many s
   * `buildhistory`
 
 * Buildroot \(free\)
+
   * `make legal-info`
+
 * Package Managers \(free\)
 
 * * `dpkg --list`
@@ -113,10 +115,15 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
 </testsuite>
 ```
 
+**As of Yocto 2.2 Morty, a built-in `cve-check` **[**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass)** was added to help automate checking of recipes against public CVEs.**
+
+TODO
+
 **Considerations \(Disclaimer: The List below is non-exhaustive\):**
 
 * Use of [retire.js](https://github.com/RetireJS/retire.js) for JavaScript Libraries
   * Utilize [nsp](https://github.com/nodesecurity/nsp) for NodeJS packages
+* Use [OWASP DependencyCheck](https://github.com/jeremylong/DependencyCheck) for detecting publicly disclosed vulnerabilities in application [dependencies and file types](https://jeremylong.github.io/DependencyCheck/analyzers/index.html).
 * Use [MoonshineLuaSec \(MSL\)](http://firmware.re/lua/msl.tar.gz) for Lua static analysis
 * Use of [OWASP ZAP](https://github.com/zaproxy/zaproxy/wiki/Downloads) for web application testing
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for basic Kernel hardening auditing and suggestions.
@@ -138,7 +145,7 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
 * [https://wiki.yoctoproject.org/wiki/Security](https://wiki.yoctoproject.org/wiki/Security)
 * [https://nvd.nist.gov/](https://nvd.nist.gov/)
 * [https://www.openhub.net/](https://www.openhub.net/)
-* [https://googleprojectzero.blogspot.com/2016/06/how-to-compromise-enterprise-endpoint.html](https://googleprojectzero.blogspot.com/2016/06/how-to-compromise-enterprise-endpoint.html)
+* [Improving Your Embedded Linux Security Posture with Yocto](https://legacy.gitbook.com/book/scriptingxss/embedded-appsec-best-practices/edit#)
 
 
 
