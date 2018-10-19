@@ -1,7 +1,6 @@
 # Summary
 
 * [Embedded Application Security Best Practices](README.md)
-* [Acknowledgments](acknowledgments.md)
 * [Preface](preface.md)
 * [Executive Summary](executive_summary/README.md)
 * [Buffer and Stack Overflow Protection  ](executive_summary/1_buffer_and_stack_overflow_protection.md)
