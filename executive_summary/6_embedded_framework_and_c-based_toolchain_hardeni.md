@@ -117,44 +117,46 @@ To enable immutable U-boot environment variables to prevent unauthorized changes
   * rquotad
   * rstatd
   * nfs
-* Remove unused/unnecessary utilities such as: 
+* Remove unused/unnecessary utilities such as:
 
   * sed, wget, curl, awk, cut, df, dmesg, echo, fdisk, grep, mkdir, mount \(vfat\), printf, tail, tee, test \(directory\), test \(file\), head, cat
 
-  [Automotive Grade Linux \(AGL\) has developed an example table](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/07-system-hardening.html#removal-or-non-inclusion-of-utilities) of common utilities and their usage for debug or production environments \(builds\). 
+  [Automotive Grade Linux \(AGL\) has developed an example table](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/07-system-hardening.html#removal-or-non-inclusion-of-utilities) of common utilities and their usage for debug or production environments \(builds\).
 
-  | Utility Name | **Location** | **Debug Environment** | **Production Environment** |
-  | :--- | :--- | :--- | :--- |
-  | Strace | /bin/trace | INCLUDE | EXCLUDE |
-  | Klogd | /sbin/klogd | INCLUDE | EXCLUDE |
-  | Syslogd\(logger\) | /bin/logger | INCLUDE | EXCLUDE |
-  | Gdbserver | /bin/gdbserver | INCLUDE | EXCLUDE |
-  | Dropbear | Remove “dropbear” from ‘/etc/init.d/rcs’ | EXCLUDE | EXCLUDE |
-  | SSH | NA | INCLUDE | EXCLUDE |
-  | Editors \(vi\) | /bin/vi | INCLUDE | EXCLUDE |
-  | Dmesg | /bin/dmesg | INCLUDE | EXCLUDE |
-  | UART | /proc/tty/driver/ | INCLUDE | EXCLUDE |
-  | Hexdump | /bin/hexdump | INCLUDE | EXCLUDE |
-  | Dnsdomainname | /bin/dnsdomainname | EXCLUDE | EXCLUDE |
-  | Hostname | /bin/hostname | INCLUDE | EXCLUDE |
-  | Pmap | /bin/pmap | INCLUDE | EXCLUDE |
-  | su | /bin/su | INCLUDE | EXCLUDE |
-  | Which | /bin/which | INCLUDE | EXCLUDE |
-  | Who and whoami | /bin/whoami | INCLUDE | EXCLUDE |
-  | ps | /bin/ps | INCLUDE | EXCLUDE |
-  | lsmod | /sbin/lsmod | INCLUDE | EXCLUDE |
-  | install | /bin/install | INCLUDE | EXCLUDE |
-  | logger | /bin/logger | INCLUDE | EXCLUDE |
-  | ps | /bin/ps | INCLUDE | EXCLUDE |
-  | rpm | /bin/rpm | INCLUDE | EXCLUDE |
-  | Iostat | /bin/iostat | INCLUDE | EXCLUDE |
-  | find | /bin/find | INCLUDE | EXCLUDE |
-  | Chgrp | /bin/chgrp | INCLUDE | EXCLUDE |
-  | Chmod | /bin/chmod | INCLUDE | EXCLUDE |
-  | Chown | /bin/chown | INCLUDE | EXCLUDE |
-  | killall | /bin/killall | INCLUDE | EXCLUDE |
-  | top | /bin/top | INCLUDE | EXCLUDE |
-  | stbhotplug | /sbin/stbhotplug | INCLUDE | EXCLUDE |
+| Utility Name | Location | Debug Environment | Production Environment |
+| :--- | :--- | :--- | :--- |
+| Strace | /bin/trace | INCLUDE | EXCLUDE |
+| Klogd | /sbin/klogd | INCLUDE | EXCLUDE |
+| Syslogd\(logger\) | /bin/logger | INCLUDE | EXCLUDE |
+| Gdbserver | /bin/gdbserver | INCLUDE | EXCLUDE |
+| Dropbear | Remove “dropbear” from ‘/etc/init.d/rcs’ | EXCLUDE | EXCLUDE |
+| SSH | NA | INCLUDE | EXCLUDE |
+| Editors \(vi\) | /bin/vi | INCLUDE | EXCLUDE |
+| Dmesg | /bin/dmesg | INCLUDE | EXCLUDE |
+| UART | /proc/tty/driver/ | INCLUDE | EXCLUDE |
+| Hexdump | /bin/hexdump | INCLUDE | EXCLUDE |
+| Dnsdomainname | /bin/dnsdomainname | EXCLUDE | EXCLUDE |
+| Hostname | /bin/hostname | INCLUDE | EXCLUDE |
+| Pmap | /bin/pmap | INCLUDE | EXCLUDE |
+| su | /bin/su | INCLUDE | EXCLUDE |
+| Which | /bin/which | INCLUDE | EXCLUDE |
+| Who and whoami | /bin/whoami | INCLUDE | EXCLUDE |
+| ps | /bin/ps | INCLUDE | EXCLUDE |
+| lsmod | /sbin/lsmod | INCLUDE | EXCLUDE |
+| install | /bin/install | INCLUDE | EXCLUDE |
+| logger | /bin/logger | INCLUDE | EXCLUDE |
+| ps | /bin/ps | INCLUDE | EXCLUDE |
+| rpm | /bin/rpm | INCLUDE | EXCLUDE |
+| Iostat | /bin/iostat | INCLUDE | EXCLUDE |
+| find | /bin/find | INCLUDE | EXCLUDE |
+| Chgrp | /bin/chgrp | INCLUDE | EXCLUDE |
+| Chmod | /bin/chmod | INCLUDE | EXCLUDE |
+| Chown | /bin/chown | INCLUDE | EXCLUDE |
+| killall | /bin/killall | INCLUDE | EXCLUDE |
+| top | /bin/top | INCLUDE | EXCLUDE |
+| stbhotplug | /sbin/stbhotplug | INCLUDE | EXCLUDE |
+
+
 
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for hardening auditing and suggestions.
 
