@@ -6,7 +6,7 @@ It is important to ensure all unnecessary pre-production build code, as well as 
 
 * Remove backdoor accounts used for debugging, deployment verification and/or customer support purposes.
 * Ensure third party libraries and binary images are reviewed for backdoors by staff before market deployment.
-  * Tools such as Binwalk, Firmadyne, IDA pro, radare2, Firmware Mod Toolkit \(FMK\), and various other tools listed in the additional references \(\#4\) should be utilized for firmware analysis.
+  * Tools such as Binwalk, Firmadyne, IDA pro, radare2, Firmware Mod Toolkit \(FMK\), Firmware Analysis Comparison Toolkit \(FACT\), and various other tools listed in the additional references \(\#4\) should be utilized for firmware analysis.
 
 #### Additional References {#additional-references}
 

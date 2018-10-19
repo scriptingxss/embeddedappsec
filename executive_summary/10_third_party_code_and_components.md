@@ -115,9 +115,9 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
 </testsuite>
 ```
 
-**As of Yocto 2.2 Morty, a built-in `cve-check` **[**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass)** was added to help automate checking of recipes against public CVEs.**
+**As of Yocto 2.2 Morty, a built-in **`cve-check`** **[**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass)** was added to help automate checking of recipes against public CVEs.**
 
-TODO
+**TODO**
 
 **Considerations \(Disclaimer: The List below is non-exhaustive\):**
 
