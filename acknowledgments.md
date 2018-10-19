@@ -29,7 +29,7 @@ Some of the ways you can help:
 * Code snippets in your favorite language
 * Translate guidance material 
 
-Feel free to contact the project leaders for ways to get involved.
+To get started, create a GitBook account or sign in with your Github credentials to add  comments and make edits. All changes are tracked and synced to [https://github.com/scriptingxss/embeddedappsec](https://github.com/scriptingxss/embeddedappsec).  Alternatively, clone the Github repo, use your favorite markdown editor, apply/make your edits, and submit a pull request. Feel free to contact the project leaders for ways to get involved.
 
 ### Project Leaders {#project-leaders}
 
