@@ -18,7 +18,18 @@ User accounts within an embedded device should not be static in nature. Features
   * If Session IDs are stored in a cookie, ensure that the cookie has the HttpOnly flag set.
   * Ensure Session IDs are random and change across sessions.
 * Ensure usernames, passwords and cookies containing Session IDs are not sent over insecure protocols \(e.g. HTTP, FTP and Telnet\).
-* Password complexity policies should be enforced to discourage easy to guess passwords such as “Password1”.
+* Password complexity policies should be enforced to discourage easy to guess passwords such as “Password1”. A complex password should have the following attributes:
+
+  * At least 10 characters or more in length
+
+  * At least one upper-case letter
+
+  * At least one numeric character
+
+  * At least one lower-case letter
+
+  * At least one special character
+
 * Ensure EEPROMs are password protected enforcing complexity requirements.
 
 #### Additional References {#additional-references}
@@ -26,6 +37,7 @@ User accounts within an embedded device should not be static in nature. Features
 * [FTC Charges D-Link Put Consumers’ Privacy at Risk Due to the Inadequate Security of Its Computer Routers and Cameras](https://www.ftc.gov/news-events/press-releases/2017/01/ftc-charges-d-link-put-consumers-privacy-risk-due-inadequate)
 * [https://www.owasp.org/index.php/Testing\_Identity\_Management](https://www.owasp.org/index.php/Testing_Identity_Management)
 * [https://www.owasp.org/images/6/67/OWASPApplicationSecurityVerificationStandard3.0.pdf](https://www.owasp.org/images/6/67/OWASPApplicationSecurityVerificationStandard3.0.pdf) \(Page 26-31\)
+* [SB-327 Information privacy: connected devices](https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201720180SB327)
 
 
 
