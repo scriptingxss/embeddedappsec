@@ -44,7 +44,7 @@ Threat models should answer the following four questions:
 * How well was our analysis?
   * Conduct a retrospective activity to check the overall quality, progress, and future planning. 
 
-Threat modeling should be done **early, and as often as possible**. They are best owned by the software teams and should considered a **living document** that is updated as new features are planned. 
+Threat modeling should be done **early, and as often as possible**. Threat model owners are best in the hands of the software teams and should considered a **living document** that is updated as new features are planned. 
 
 A great book and also an authoritative reference is "[Threat Modeling: Designing for Security](https://www.amazon.com/Threat-Modeling-Designing-Adam-Shostack/dp/1118809998)". 
 
