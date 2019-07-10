@@ -1,8 +1,8 @@
 # Embedded Application Security Best Practices
 
-![](https://lh6.googleusercontent.com/Le0Nb5GsnzwUpvT6XaSQg1FnDTSRXqBB64kgXjWkOFb7XYO3s2PmLhYRIdwcSLDTGDBonURW-ZE7Oz3pB4kauCW4ou58Dzs9eyc-UFJptghQnzpBKQWS-a2BhN_SVBEQ_Qoq8KNJ4hjNxPEBjA "ttp://www.pythonsecurity.org/static/img/owasp-logo.png")
+![](https://lh6.googleusercontent.com/Le0Nb5GsnzwUpvT6XaSQg1FnDTSRXqBB64kgXjWkOFb7XYO3s2PmLhYRIdwcSLDTGDBonURW-ZE7Oz3pB4kauCW4ou58Dzs9eyc-UFJptghQnzpBKQWS-a2BhN_SVBEQ_Qoq8KNJ4hjNxPEBjA)
 
-###### OWASP Embedded Application Security Project [Wiki Page](https://www.owasp.org/index.php/OWASP_Embedded_Application_Security)
+#### OWASP Embedded Application Security Project [Wiki Page](https://www.owasp.org/index.php/OWASP_Embedded_Application_Security)
 
 ## Welcome
 
@@ -33,41 +33,37 @@ Some of the ways you can help:
 * Code snippets in your favorite language
 * Translate guidance material 
 
-Feel free to sign up for a task out of our roadmap below or add your own idea to the roadmap. To get started, create a GitBook account or sign in with your Github credentials to add  comments and make edits. All changes are tracked and synced to [https://github.com/scriptingxss/embeddedappsec](https://github.com/scriptingxss/embeddedappsec).  Alternatively, clone the Github repo, use your favorite markdown editor, apply/make your edits, and submit a pull request. Feel free to contact the project leaders for ways to get involved.
+Feel free to sign up for a task out of our roadmap below or add your own idea to the roadmap. To get started, create a GitBook account or sign in with your Github credentials to add comments and make edits. All changes are tracked and synced to [https://github.com/scriptingxss/embeddedappsec](https://github.com/scriptingxss/embeddedappsec). Alternatively, clone the Github repo, use your favorite markdown editor, apply/make your edits, and submit a pull request. Feel free to contact the project leaders for ways to get involved.
 
-## 2018 Roadmap
+## 2019 Roadmap
 
 Introductory Embedded Section
 
-* [x] Expand on what embedded firmware is \(8,16,32 bit, minimal hardware resources, list embedded use cases and industries\)
-* [x] Describe types of architectures \(MIPS, ARM, PowerPC, x86 etc.\)
-* [x] Describe types of firmware and operating systems
-* [ ] Layout of firmware for embedded linux, RTOS, and Embedded Window
+* [ ] Layout of firmware for embedded linux, RTOS variants, and Embedded Window
 
 Expand on embedded best practices
 
 * [ ] Secure boot recommendations
   * [x] U-boot
-* [x] Create examples of software bill of materials \(BOM\)
-* [x] Additional example programming language command injection system calls or APIs
 * [ ] Break out subsections for each of the platforms with contextual guidance and configurations
 * [ ] Expand on hardening for:
   * [ ] Embedded Linux
   * [ ] RTOS \(QNX/MQX\)
 * [ ] Best practices/considerations for PKI in embedded systems
+* [ ] Provide a threat model example for embedded devices 
+* [ ] Include automated scanning examples
+* [ ] Provide detailed best practices for identity management
 
 Create example embedded application security requirements for new products
 
 * [ ] Integrate with ASVS or create an EASVS \(Embedded Application Security Verification Standard\)
-* [ ] Integrate with the IoT project
+* [x] Integrate with the IoT project
 
 Join the mailing list, slack channel and contact the Project leaders if you feel you can contribute.
 
-### Project Leaders {#project-leaders}
+### Project Leaders <a id="project-leaders"></a>
 
 [Aaron Guzman](https://www.linkedin.com/in/scriptingxss/) [@scriptingxss](https://twitter.com/scriptingxss)
 
 Alex Lafrenz [@zerofrenz](https://twitter.com/zerofrenz)
-
-
 

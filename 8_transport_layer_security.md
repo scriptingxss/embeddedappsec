@@ -1,4 +1,4 @@
-### Transport Layer Security {#8-transport-layer-security}
+# Transport Layer Security
 
 Ensure all methods of communication are utilizing industry standard encryption configurations for [TLS](https://www.securecoding.cert.org/confluence/display/c/API10-C.+APIs+should+have+security+options+enabled+by+default). The use of TLS ensures that all data remains confidential and untampered with while in transit. Utilize free certificate authority services such as [Let’s Encrypt](https://letsencrypt.org/) if the embedded device utilizes domain names.
 
@@ -143,12 +143,10 @@ Examples of implementation can be found at:
 
 * [https://github.com/wolfSSL/wolfssl-examples](https://github.com/wolfSSL/wolfssl-examples)
 
-#### Additional References {#additional-references}
+## Additional References <a id="additional-references"></a>
 
 * [https://letsencrypt.org/](https://letsencrypt.org/)
 * [https://community.letsencrypt.org/t/certificate-for-embedded-device-without-a-domain-name/2372](https://community.letsencrypt.org/t/certificate-for-embedded-device-without-a-domain-name/2372)
 * [http://fm4dd.com/openssl/](http://fm4dd.com/openssl/)
 * [https://www.engadget.com/2015/04/19/wink-home-automation-hub-bricked/](https://www.engadget.com/2015/04/19/wink-home-automation-hub-bricked/)
-
-
 

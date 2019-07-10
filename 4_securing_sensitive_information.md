@@ -1,4 +1,4 @@
-### Securing Sensitive Information {#4-securing-sensitive-information}
+# Securing Sensitive Information
 
 Do not hardcode secrets such as passwords, usernames, tokens, private keys or similar variants into firmware release images. This also includes the storage of sensitive data that is written to disk. If hardware security element \(SE\) or Trusted Execution Environment \(TEE\) is available, it is recommended to utilize such features for storing sensitive data. Otherwise, use of strong cryptography should be evaluated to protect the data.
 
@@ -167,13 +167,11 @@ new_secret = NULL;
 * Do not hardcode passwords across product lines.
 * Do not store secrets in an unprotected storage location or external storage including within an EEPROM or flash.
 
-#### Additional References {#additional-references}
+## Additional References <a id="additional-references"></a>
 
 * [https://cwe.mitre.org/data/definitions/259.html](https://cwe.mitre.org/data/definitions/259.html)
 * [https://cwe.mitre.org/data/definitions/798.html](https://cwe.mitre.org/data/definitions/798.html)
 * [https://cwe.mitre.org/data/definitions/321.html](https://cwe.mitre.org/data/definitions/321.html)
 * [CWE-321: Use of Hard-coded Cryptographic Key - CVE-2013-6952](https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2013-6952)
   * [http://www.ioactive.com/pdfs/IOActive\_Belkin-advisory-lite.pdf](http://www.ioactive.com/pdfs/IOActive_Belkin-advisory-lite.pdf)
-
-
 

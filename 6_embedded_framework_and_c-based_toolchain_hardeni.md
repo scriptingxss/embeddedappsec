@@ -1,4 +1,4 @@
-### Embedded Framework and C-Based Toolchain Hardening {#6-embedded-framework-and-c-based-toolchain-hardening}
+# Embedded Framework and C-Based Toolchain Hardening
 
 Limit BusyBox, embedded frameworks, and toolchains to only those libraries and functions being used when configuring firmware builds. Embedded Linux build systems such as Buildroot, Yocto and others typically perform this task. Removal of known insecure libraries and protocols such as Telnet not only minimize attack entry points in firmware builds, but also provide a secure-by-design approach to building software in efforts to thwart potential security threats.
 
@@ -9,11 +9,15 @@ $ Configure darwin64-x86_64-cc -no-hw -no-engine -no-comp -no-shared -no-dso -no
 ```
 
 **Selecting one shell Example**: Utilizing buildroot, the screenshot below demonstrates only one Shell being enabled, bash. \(_Note: Buildroot examples are shown below but there are other ways to accomplish the same configuration with other embedded Linux build systems._\)  
-![](/assets/embedSec3.png)
 
-**Hardening Services Example**: The screenshot below shows openssh enabled but not FTP daemons proftpd and pure-ftpd. Only enable FTP if TLS is to be utilized. For example, proftpd and pureftpd require custom compilation to use TLS with mod\_tls for proftpd and passing `./configure --with-tls` for pureftpd.![](/assets/embedSec2.png)
 
-**Hardening Das U-boot Example: **Often, physical access to an embedded device enables attack paths to modify bootloader configurations. Below, example best practice configurations for `uboot_config` are provided_. Note: The _`uboot_config`_ file is typically auto generated depending on the build environment and specific board. _
+![](.gitbook/assets/embedsec3.png)
+
+**Hardening Services Example**: The screenshot below shows openssh enabled but not FTP daemons proftpd and pure-ftpd. Only enable FTP if TLS is to be utilized. For example, proftpd and pureftpd require custom compilation to use TLS with mod\_tls for proftpd and passing `./configure --with-tls` for pureftpd.
+
+![](.gitbook/assets/embedsec2.png)
+
+**Hardening Das U-boot Example:** Often, physical access to an embedded device enables attack paths to modify bootloader configurations. Below, example best practice configurations for `uboot_config` are provided_. Note: The_ `uboot_config` _file is typically auto generated depending on the build environment and specific board._ 
 
 Configure "Verified Boot" \(secure boot\) for U-Boot 2013.07 versions and above. Verified Boot is not enabled by default and requires board support with the below configurations required at the minimum.
 
@@ -40,11 +44,11 @@ Afterwards, a series of steps are needed for configuring Verified Boot. An examp
 3. Create a Image Tree Source file \(ITS\) file describing how you want the kernel to be packaged, compressed and signed.
 4. Create an RSA key pair with RSA2048 and use SHA256 hashing algorithm for authentication \(**store your private key in a safe place and not hardcoded into firmware**\)
 5. Sign the kernel
-6. Put the** public key **into U-Boot's image
+6. Put the **public key** into U-Boot's image
 7. Put U-Boot and the kernel onto the board
 8. Test the image and boot configurations
 
-In addition to the above, make the applicable configurations valid to the context of your embedded device.  Below are notable configurations that can be made.
+In addition to the above, make the applicable configurations valid to the context of your embedded device. Below are notable configurations that can be made.
 
 `CONFIG_BOOTDELAY -2. #Prevents access to u-boot's console when auto boot is used`
 
@@ -156,11 +160,9 @@ To enable immutable U-boot environment variables to prevent unauthorized changes
 | top | /bin/top | INCLUDE | EXCLUDE |
 | stbhotplug | /sbin/stbhotplug | INCLUDE | EXCLUDE |
 
-
-
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for hardening auditing and suggestions.
 
-  ```
+  ```text
   *   wget --no-check-certificate https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system
   ```
 
@@ -168,7 +170,7 @@ To enable immutable U-boot environment variables to prevent unauthorized changes
 
 * Perform iterative threat model exercises with developers as well as relative stakeholders on software running on the embedded device.
 
-#### Additional References {#additional-references}
+## Additional References <a id="additional-references"></a>
 
 * [https://www.owasp.org/index.php/C-Based\_Toolchain\_Hardening](https://www.owasp.org/index.php/C-Based_Toolchain_Hardening)
 * [https://www.bulkorder.ftc.gov/system/files/publications/pdf0199-carefulconnections-buildingsecurityinternetofthings.pdf](https://www.bulkorder.ftc.gov/system/files/publications/pdf0199-carefulconnections-buildingsecurityinternetofthings.pdf)
@@ -183,6 +185,4 @@ To enable immutable U-boot environment variables to prevent unauthorized changes
 * [Hardened U-boot](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/07-system-hardening.html#hardened-boot)
   * [Verified boot](https://lwn.net/Articles/571031/)
 * [Improving Your Embedded Linux Security Posture with Yocto](https://www.nccgroup.trust/globalassets/our-research/us/whitepapers/2018/improving-embedded-linux-security-yocto3.pdf)
-
-
 

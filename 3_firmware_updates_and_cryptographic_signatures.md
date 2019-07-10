@@ -1,4 +1,4 @@
-### Firmware Updates and Cryptographic Signatures {#3-firmware-updates-and-cryptographic-signatures}
+# Firmware Updates and Cryptographic Signatures
 
 Ensure robust update mechanisms utilize cryptographically signed firmware images upon download and when applicable, for updating functions pertaining to third party software. Cryptographic signature allows for verification that files have not been modified or otherwise tampered with since the developer created and signed them. The signing and verification process uses public-key cryptography and it is difficult to forge a digital signature \(e.g. PGP signature\) without first gaining access to the private key. In the event a private key is compromised, developers of the software must revoke the compromised key and will need to re-sign all previous firmware releases with the new key.
 
@@ -72,7 +72,7 @@ Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 
 * Ensure robust update mechanisms utilize cryptographically signed firmware images for updating functions.
   * GPG \([https://github.com/romanz/trezor-agent/blob/master/README-GPG.md](https://github.com/romanz/trezor-agent/blob/master/README-GPG.md)\)
-* Ensure updates are downloaded over the most recent secure TLS version possible. \(As of writing, this is TLS1.2\)
+* Ensure updates are downloaded over the most recent secure TLS version possible. \(As of writing, this is TLS1.3\)
   * Ensure updates validate the public key and certificate chain of the update server.
 * Include a feature to utilize automatic firmware updates upon a predefined schedule.
   * Force updates in highly vulnerable use cases.
@@ -85,8 +85,11 @@ Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
     * immutable and signed
     * Simple
 * Consider implementing a [read only root file system](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/05-security-concepts.html#read-only-root-file-system) with an overlay that can be created for directories which require local persistence.
+* Ensure a reliable clock source is available for querying certificate revocation servers. 
 
-#### Additional References {#additional-references}
+
+
+## Additional References <a id="additional-references"></a>
 
 * [https://www.kernel.org/signature.html](https://www.kernel.org/signature.html)
 * [https://www.owasp.org/index.php/Key\_Management\_Cheat\_Sheet](https://www.owasp.org/index.php/Key_Management_Cheat_Sheet)
@@ -97,6 +100,4 @@ Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 * [Implementing secure remote firmware updates](https://www.allegrosoft.com/wp-content/uploads/Secure-Firmware-Updates-Paper.pdf)
 * [Code Integrity during execution by Automotive Grade Linux](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/05-security-concepts.html#code-integrity-during-execution)
 * [Securing Software Updates for Automobiles](https://uptane.github.io/)
-
-
 

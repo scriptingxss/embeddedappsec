@@ -1,44 +1,46 @@
-### **Buffer and Stack Overflow Protection** {#1-buffer-and-stack-overflow-protection}
+# Buffer and Stack Overflow Protection
 
-Prevent the use of known dangerous functions and APIs in effort to protect against memory-corruption vulnerabilities within firmware. \(e.g. Use of [unsafe C functions](https://www.securecoding.cert.org/confluence/display/c/VOID+MSC34-C.+Do+not+use+deprecated+and+obsolete+functions) - [strcat, strcpy, sprintf, scanf](http://cwe.mitre.org/data/definitions/676.html#Demonstrative Examples%29%29 ). Memory-corruption vulnerabilities, such as buffer overflows, can consist of overflowing the stack \([Stack overflow](https://en.wikipedia.org/wiki/Stack_buffer_overflow%29\) or overflowing the heap \([Heap overflow](https://en.wikipedia.org/wiki/Heap_overflow%29\). For simplicity purposes, this document does not distinguish between these two types of vulnerabilities. In the event a buffer overflow has been detected and exploited by an attacker, the instruction pointer register is overwritten to execute the arbitrary malicious code provided by the attacker.
+Prevent the use of known dangerous functions and APIs in effort to protect against memory-corruption vulnerabilities within firmware. \(e.g. Use of [unsafe C functions](https://www.securecoding.cert.org/confluence/display/c/VOID+MSC34-C.+Do+not+use+deprecated+and+obsolete+functions) - [strcat, strcpy, sprintf, scanf](http://cwe.mitre.org/data/definitions/676.html#Demonstrative%20Examples%29%29%20). Memory-corruption vulnerabilities, such as buffer overflows, can consist of overflowing the stack \([Stack overflow](https://en.wikipedia.org/wiki/Stack_buffer_overflow%29\) or overflowing the heap \([Heap overflow](https://en.wikipedia.org/wiki/Heap_overflow%29\). For simplicity purposes, this document does not distinguish between these two types of vulnerabilities. In the event a buffer overflow has been detected and exploited by an attacker, the instruction pointer register is overwritten to execute the arbitrary malicious code provided by the attacker.
 
 **Finding Vulnerable C functions in source code. Example: Utilize the “find” command below within a “C” repository to find vulnerable C functions such as "strncpy" and "strlen" in source code.**
 
-```
+```text
 find . -type f -name '*.c' -print0|xargs -0 grep -e 'strncpy.*strlen'|wc -l
 ```
 
 **An OR grep expression could be utilized with the following expression:**
 
-    $ grep -E '(strcpy|strcat|strncat|sprintf|strlen|memcpy|fopen|gets)' fuzzgoat.c
-       memcpy (&state.settings, settings, sizeof (json_settings));
-                {  sprintf (error, "Unexpected EOF in string (at %d:%d)", line_and_col);
+```text
+$ grep -E '(strcpy|strcat|strncat|sprintf|strlen|memcpy|fopen|gets)' fuzzgoat.c
+   memcpy (&state.settings, settings, sizeof (json_settings));
+            {  sprintf (error, "Unexpected EOF in string (at %d:%d)", line_and_col);
+                        sprintf (error, "Invalid character value `%c` (at %d:%d)", b, line_and_col);
                             sprintf (error, "Invalid character value `%c` (at %d:%d)", b, line_and_col);
-                                sprintf (error, "Invalid character value `%c` (at %d:%d)", b, line_and_col);
-                      {  sprintf (error, "%d:%d: Unexpected EOF in block comment", line_and_col);
-                   {  sprintf (error, "%d:%d: Comment not allowed here", line_and_col);
-                   {  sprintf (error, "%d:%d: EOF unexpected", line_and_col);
-                         sprintf (error, "%d:%d: Unexpected `%c` in comment opening sequence", line_and_col, b);
-                      sprintf (error, "%d:%d: Trailing garbage: `%c`",
-                      {  sprintf (error, "%d:%d: Unexpected ]", line_and_col);
-                            sprintf (error, "%d:%d: Expected , before %c",
-                            sprintf (error, "%d:%d: Expected : before %c",
-                            {  sprintf (error, "%d:%d: Unexpected %c when seeking value", line_and_col, b);
-                         {  sprintf (error, "%d:%d: Expected , before \"", line_and_col);
-                         sprintf (error, "%d:%d: Unexpected `%c` in object", line_and_col, b);
-                            {  sprintf (error, "%d:%d: Unexpected `0` before `%c`", line_and_col, b);
-                      {  sprintf (error, "%d:%d: Expected digit before `.`", line_and_col);
-                         {  sprintf (error, "%d:%d: Expected digit after `.`", line_and_col);
-                      {  sprintf (error, "%d:%d: Expected digit after `e`", line_and_col);
-       sprintf (error, "%d:%d: Unknown value", line_and_col);
-       strcpy (error, "Memory allocation failure");
-       sprintf (error, "%d:%d: Too long (caught overflow)", line_and_col);
-             strcpy (error_buf, error);
-             strcpy (error_buf, "Unknown error");
+                  {  sprintf (error, "%d:%d: Unexpected EOF in block comment", line_and_col);
+               {  sprintf (error, "%d:%d: Comment not allowed here", line_and_col);
+               {  sprintf (error, "%d:%d: EOF unexpected", line_and_col);
+                     sprintf (error, "%d:%d: Unexpected `%c` in comment opening sequence", line_and_col, b);
+                  sprintf (error, "%d:%d: Trailing garbage: `%c`",
+                  {  sprintf (error, "%d:%d: Unexpected ]", line_and_col);
+                        sprintf (error, "%d:%d: Expected , before %c",
+                        sprintf (error, "%d:%d: Expected : before %c",
+                        {  sprintf (error, "%d:%d: Unexpected %c when seeking value", line_and_col, b);
+                     {  sprintf (error, "%d:%d: Expected , before \"", line_and_col);
+                     sprintf (error, "%d:%d: Unexpected `%c` in object", line_and_col, b);
+                        {  sprintf (error, "%d:%d: Unexpected `0` before `%c`", line_and_col, b);
+                  {  sprintf (error, "%d:%d: Expected digit before `.`", line_and_col);
+                     {  sprintf (error, "%d:%d: Expected digit after `.`", line_and_col);
+                  {  sprintf (error, "%d:%d: Expected digit after `e`", line_and_col);
+   sprintf (error, "%d:%d: Unknown value", line_and_col);
+   strcpy (error, "Memory allocation failure");
+   sprintf (error, "%d:%d: Too long (caught overflow)", line_and_col);
+         strcpy (error_buf, error);
+         strcpy (error_buf, "Unknown error");
+```
 
 **Below, example output of flawfinder is shown run against C source code.**
 
-```
+```text
 $ flawfinder fuzzgoat.c 
 Flawfinder version 1.31, (C) 2001-2014 David A. Wheeler.
 Number of rules (primarily dangerous function names) in C/C++ ruleset: 169
@@ -147,7 +149,7 @@ strncat( buffer, SOME_DATA, strlen( SOME_DATA ));
 ```
 
 The screenshot below demonstrates stack protection support being enabled while building a firmware image utilizing buildroot.  
-![](/assets/embedSec1.png)
+![](.gitbook/assets/embedsec1.png)
 
 **Considerations:**
 
@@ -167,11 +169,12 @@ The screenshot below demonstrates stack protection support being enabled while b
 * Those functions that do not have safe equivalents should be rewritten with safe checks implemented.
 * If FreeRTOS OS is utilized, consider setting "configCHECK\_FOR\_STACK\_OVERFLOW" to "1" with a hook function during the development and testing phases but removing for production builds. 
 
-#### Additional References {#additional-references}
+## Additional References <a id="additional-references"></a>
 
 * OSS \(Open Source Software\) Static Analysis Tools
   * Use of [flawfinder](http://www.dwheeler.com/flawfinder/) and [PMD](https://pmd.github.io/) for C
   * Use of [cppcheck](http://cppcheck.sourceforge.net/) for [C++](https://github.com/struct/mms/blob/master/Modern_Memory_Safety_In_C_CPP.pdf)
+  * Consider [Codechecker](https://github.com/Ericsson/codechecker) and [Infer](https://fbinfer.com/) for C, C++, and iOS using Clang Static Analysis
 * [http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html](http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html)
 * [https://www.owasp.org/index.php/C-Based\_Toolchain\_Hardening\#GCC.2FBinutils](https://www.owasp.org/index.php/C-Based_Toolchain_Hardening#GCC.2FBinutils)
 * [https://www.owasp.org/index.php/Buffer\_overflow\_attack](https://www.owasp.org/index.php/Buffer_overflow_attack)
@@ -179,6 +182,4 @@ The screenshot below demonstrates stack protection support being enabled while b
 * [University of Pittsburgh - Secure Coding C/C++: String Vulnerabilities \(PDF\)](http://www.sis.pitt.edu/jjoshi/courses/IS2620/Spring07/Lecture3.pdf)
 * [Intel Open Source Technology Center SDL Banned Functions](https://github.com/01org/safestringlib/wiki/SDL-List-of-Banned-Functions)
 * [RTOS Stack Overflow Checking](http://www.freertos.org/Stacks-and-stack-overflow-checking.html)
-
-
 

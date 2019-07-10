@@ -1,10 +1,8 @@
-# Preface
+# What are Embedded Systems?
 
-_Still in development_
+The term embedded or embedded systems can be interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document,  firmware is defined as the software layer between the underlying hardware and the operating system \(OS\). The main purpose of firmware is to initialize and abstract enough hardware so operating systems drivers and components can further configure the hardware according to its functionality. In addition to firmware, embedded systems can be defined as having the characteristics described below. 
 
-The term embedded or embedded systems can be interpreted in several ways depending on your background, knowledge, and exposure to embedded technology. For the purpose of this document, embedded can be defined as having the following characteristics:
-
-#### Hardware:
+## Hardware:
 
 * Limited resources 
   * 16KB - 1GB RAM 
@@ -13,14 +11,16 @@ The term embedded or embedded systems can be interpreted in several ways dependi
 * System-on-module \(SoM\)
 * Microcontroller \(MCU\)
 
-#### Lifespan:
+## **Bootloaders:**
 
-* Sometimes immortal 😉
-  * \*Some flash chips use a disclaimer of 20 years data retention\*
-* "Trustworthy" systems
-* Vehicles ~7-15 years
+* Das U-boot
+* RedBoot
+* CoreBoot
+* Grub
+* Little Kernel
+* and more
 
-#### Common CPU architectures:
+## Common CPU architectures:
 
 * Word lengths from 8-bit, 16-bit, 32-bit, and 64-bit
 * ARM 
@@ -29,29 +29,42 @@ The term embedded or embedded systems can be interpreted in several ways dependi
 * PowerPC
 * x86
 
-#### Common operating system platforms:
+## Common operating system platforms:
 
 * Embedded Linux
-  * OpenWRT variants
+  * OpenWrt variants
 * Android
-* RTOS
+* Ubuntu Core
+* RTOS \(Microkernel\)
   * FreeRTOS
+  * Mbed OS
   * QNX
   * AUTOSAR
   * INTEGRITY
-* Bare metal
-  * Microchip PIC MCUs
+* BareMetal
+* Windows 
+  * Windows Compact 2016
+  * Windows Compact 7
+  * Windows 10 IoT
 
-#### Commonly used programming languages:
+## Commonly used programming languages:
 
 * Assembly
-* C 
-* C++  
+* C / C++  
 * Python
 * Classic ASP
 * PHP
 * Perl
 * Lua
+* Golang \(Go\)
+* Rust
 
 
+
+## Lifespan:
+
+* Sometimes immortal 😉
+  * \*Some flash chips use a disclaimer of 20 years data retention\*
+* "Trustworthy" systems
+* Vehicles ~7-15 years
 

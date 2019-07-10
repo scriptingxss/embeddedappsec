@@ -1,4 +1,4 @@
-### Injection Prevention {#2-injection-prevention}
+# Injection Prevention
 
 Ensure all untrusted data and user input is validated, sanitized, and/or output encoded to prevent unintended system execution. There are various injection attacks within application security such as operating system \(OS\) command injection, cross-site scripting \(E.g. JavaScript injection\), SQL injection, and others such as XPath injection. However, the most prevalent of the injection attacks within embedded software pertain to OS command injection; when an application accepts untrusted/insecure input and passes it to external applications \(either as the application name itself or arguments\) without validation or proper escaping.
 
@@ -83,8 +83,6 @@ void func(char *input) {
 }
 ```
 
-# 
-
 **Considerations:**
 
 * Do not invoke shell command wrappers such as but not limited to:  
@@ -98,20 +96,15 @@ void func(char *input) {
   * If needed, utilize lookup maps of numbers-to-command-strings for user driven strings that may be passed to the operating system.
 * Whitelist accepted commands via a lookup map to ensure only expected parameter values are processed.
 * Ensure to contextually output encode characters user data \(e.g. HTML, JavaScript, CSS, etc.\)
-
   * HTML Entity Encoding
-
     * &lt; output encoded to:
-
-      * ```
+      * ```text
         &lt;
         ```
-
     * &gt; output encoded to:
-
       * `&gt;`
 
-#### Additional References: {#additional-references}
+## Additional References: <a id="additional-references"></a>
 
 * [Multiple Netgear routers are vulnerable to arbitrary command injection](https://www.kb.cert.org/vuls/id/582384)
 * [FTC Charges D-Link Put Consumers’ Privacy at Risk Due to the Inadequate Security of Its Computer Routers and Cameras](https://www.ftc.gov/news-events/press-releases/2017/01/ftc-charges-d-link-put-consumers-privacy-risk-due-inadequate)
@@ -122,6 +115,4 @@ void func(char *input) {
 * [http://cwe.mitre.org/data/definitions/77.html](http://cwe.mitre.org/data/definitions/77.html)
 * [http://cwe.mitre.org/data/definitions/78.html](http://cwe.mitre.org/data/definitions/78.html)
 * [Bash Command Injection Vulnerability](https://ics-cert.us-cert.gov/advisories/ICSA-14-269-01A)
-
-
 
