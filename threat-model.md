@@ -2,7 +2,7 @@
 
 ## Threat Modeling
 
-Threat modeling is an exercise that helps with quantifying threats to understand how attackers \(threat actors\) may be able to compromise a system and then make the appropriate mitigations to thwart the potential risk posed. Typically, threat modeling is an exercise that takes place before deployment to production systems as part of the design phase but can also be used in the beginning stages of any security testing. Threat modeling will usually include the following activities:
+Threat modeling is an exercise that helps with quantifying threats to understand how attackers \(threat actors\) may be able to compromise a system and then make the appropriate mitigations to thwart the potential risks posed. Typically, threat modeling is an exercise that takes place before deployment to production systems as part of the design phase but can also be used in the beginning stages of any security testing. Threat modeling will usually include the following activities:
 
 1. Identifying all assets in a system, creating an architecture overview
 2. Decomposing the system \(or device\)
@@ -34,7 +34,9 @@ Common risk rating systems used in threat modeling are [DREAD](https://en.wikipe
 Threat models should answer the following four questions:
 
 * What are we building?
-  * Use data flow diagrams to assist with modeling components and how they interact locally as well as with external services
+  * Use data flow diagrams \(DFD\) to assist with modeling components and how they interact locally as well as with external services
+  * DFDs should show each process, user, entity, data store, and protocols that connect assets
+  * Make use of tools such as Microsoft Threat Modeling Tool 2016, OWASP Threat Dragon, or online diagram software such as [https://draw.io/](https://draw.io/) or [https://www.lucidchart.com](https://www.lucidchart.com).
 * What can go wrong?
   * Leverage STRIDE to help identify and enumerate threats
 * What are we going to do about the issues that can go wrong?
