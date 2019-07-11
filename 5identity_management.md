@@ -29,6 +29,7 @@ User accounts within an embedded device should not be static in nature. Features
 
 ## Additional References <a id="additional-references"></a>
 
+* [NIST Special Publication 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html)
 * [FTC Charges D-Link Put Consumers’ Privacy at Risk Due to the Inadequate Security of Its Computer Routers and Cameras](https://www.ftc.gov/news-events/press-releases/2017/01/ftc-charges-d-link-put-consumers-privacy-risk-due-inadequate)
 * [https://www.owasp.org/index.php/Testing\_Identity\_Management](https://www.owasp.org/index.php/Testing_Identity_Management)
 * [https://www.owasp.org/images/6/67/OWASPApplicationSecurityVerificationStandard3.0.pdf](https://www.owasp.org/images/6/67/OWASPApplicationSecurityVerificationStandard3.0.pdf) \(Page 26-31\)

@@ -85,6 +85,7 @@ Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
     * immutable and signed
     * Simple
 * Consider implementing a [read only root file system](http://docs.automotivelinux.org/docs/architecture/en/dev/reference/security/05-security-concepts.html#read-only-root-file-system) with an overlay that can be created for directories which require local persistence.
+  * Apply appropriate controls and monitoring for approved processes that can write data to persistent storage locations. 
 * Ensure a reliable clock source is available for querying certificate revocation servers. 
 
 

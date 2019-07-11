@@ -160,14 +160,8 @@ To enable immutable U-boot environment variables to prevent unauthorized changes
 | top | /bin/top | INCLUDE | EXCLUDE |
 | stbhotplug | /sbin/stbhotplug | INCLUDE | EXCLUDE |
 
-* Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for hardening auditing and suggestions.
-
-  ```text
-  *   wget --no-check-certificate https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system
-  ```
-
+* Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for hardening auditing and suggestions. `wget --no-check-certificate https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system`
   * Review the report in: `/var/log/lynis.log`
-
 * Perform iterative threat model exercises with developers as well as relative stakeholders on software running on the embedded device.
 
 ## Additional References <a id="additional-references"></a>

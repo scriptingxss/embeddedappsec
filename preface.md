@@ -59,8 +59,6 @@ The term embedded or embedded systems can be interpreted in several ways dependi
 * Golang \(Go\)
 * Rust
 
-
-
 ## Lifespan:
 
 * Sometimes immortal 😉
