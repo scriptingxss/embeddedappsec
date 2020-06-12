@@ -35,29 +35,9 @@ Some of the ways you can help:
 
 Feel free to sign up for a task out of our roadmap below or add your own idea to the roadmap. To get started, create a GitBook account or sign in with your Github credentials to add comments and make edits. All changes are tracked and synced to [https://github.com/scriptingxss/embeddedappsec](https://github.com/scriptingxss/embeddedappsec). Alternatively, clone the Github repo, use your favorite markdown editor, apply/make your edits, and submit a pull request. Feel free to contact the project leaders for ways to get involved.
 
-## 2019 Roadmap
+## Roadmap
 
-Introductory Embedded Section
-
-* [ ] Layout of firmware for embedded linux, RTOS variants, and Embedded Window
-
-Expand on embedded best practices
-
-* [ ] Secure boot recommendations
-  * [x] U-boot
-* [ ] Break out subsections for each of the platforms with contextual guidance and configurations
-* [ ] Expand on hardening for:
-  * [ ] Embedded Linux
-  * [ ] RTOS \(QNX/MQX\)
-* [ ] Best practices/considerations for PKI in embedded systems
-* [ ] Provide a threat model example for embedded devices 
-* [ ] Include automated scanning examples
-* [ ] Provide detailed best practices for identity management
-
-Create example embedded application security requirements for new products
-
-* [ ] Integrate with ASVS or create an EASVS \(Embedded Application Security Verification Standard\)
-* [x] Integrate with the IoT project
+🚨⚠️ This project is currently going through a revamp of its content and structure. 🚨⚠️ 
 
 Join the mailing list, slack channel and contact the Project leaders if you feel you can contribute.
 
