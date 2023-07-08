@@ -23,21 +23,22 @@ Several solutions exist for cataloging and auditing third party software. Many s
   * `gradle app:dependencies`
 * Yocto
   * `buildhistory`
-* Buildroot \(free\)
+* Buildroot (free)
   * `make legal-info`
-* Package Managers \(free\)
-* * `dpkg --list`
+* Package Managers (free)
+*
+  * `dpkg --list`
   * `rpm -qa`
   * `yum list`
   * `apt list --installed`
-* RetireJS for Javascript projects \(free\)
+* RetireJS for Javascript projects (free)
 
 **A sample BOM is shown below:**
 
-| **Component** | Version | Vulnerabilities - CVEs | Notes |
-| :--- | :--- | :--- | :--- |
-| jQuery | 1.4.4 | CVE-2011-4969 |  |
-| libxml2 | 2.9.4 | CVE-2016-5131 | To be fixed |
+| **Component** | Version | Vulnerabilities - CVEs | Notes       |
+| ------------- | ------- | ---------------------- | ----------- |
+| jQuery        | 1.4.4   | CVE-2011-4969          |             |
+| libxml2       | 2.9.4   | CVE-2016-5131          | To be fixed |
 
 Software BOM's also include licensing and contextual information relating to the function of the component or justification for using the specific version.
 
@@ -59,57 +60,15 @@ Loading from cache: https://raw.githubusercontent.com/RetireJS/retire.js/master/
  ↳ moment.js 2.10.6 has known vulnerabilities: severity: low; summary: reDOS - regular expression denial of service; https://github.com/moment/moment/issues/2936
 ```
 
-**Utilizing LibScanner Example:**
 
-Download the latest NVD xml DB
 
-```bash
-# ./download_xml.sh
+Find your installed-packages.txt from your yocto build. For information on that see: [http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#understanding-what-the-build-history-contains](http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#understanding-what-the-build-history-contains)
 
-...
-...
---2017-02-20 14:57:57--  https://nvd.nist.gov/download/nvdcve-2017.xml.gz
-Resolving nvd.nist.gov (nvd.nist.gov)... 129.6.13.177, 2610:20:6005:13::177
-Connecting to nvd.nist.gov (nvd.nist.gov)|129.6.13.177|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 68023 (66K) [application/x-gzip]
-Saving to: ‘nvdcve-2017.xml.gz’
+**As of Yocto 2.2 Morty, a built-in** `cve-check` [**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass) **was added to help automate checking of recipes against public CVEs at build time. See the following Yocto page for additional details:** [**https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html**](https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html)
 
-nvdcve-2017.xml.gz  100%[===================>]  66.43K   389KB/s    in 0.2s…
-```
 
-Find your installed-packages.txt from your yocto build. For information on that see: [http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html\#understanding-what-the-build-history-contains](http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#understanding-what-the-build-history-contains)
 
-For a visual representation of the discovered CVEs paste the content of installed-packages.txt to [http://devicevulnerabilitychecker.com](http://devicevulnerabilitychecker.com) to integrate it as part of your CI system, see below.
-
-Run the scanner on your installed-packages.txt
-
-```bash
-# ./cli.py  --format yocto "path/to/installed-packages.txt" dbs/  > cve_test.xml
-```
-
-cve\_test will now include a list of 'unit tests' in XUnit format that fail for every cve not ignored
-
-```bash
-# tail cve_test.xml
-
-<failure> Medium (6.8) - Use-after-free vulnerability in libxml2 through 2.9.4, as used in Google Chrome before 52.0.2743.82, allows remote attackers to cause a denial of service or possibly have unspecified other impact via vectors related to the XPointer range-to function. 
-
- CVE Published on: 2016-07-23 https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2016-5131 </failure>
-</testcase>
-<testcase id="CVE-2016-9318" name="CVE-2016-9318" classname="libxml2 - 2.9.4" time="0">
-<failure> Medium (6.8) - libxml2 2.9.4 and earlier, as used in XMLSec 1.2.23 and earlier and other products, does not offer a flag directly indicating that the current document may be read but other files may not be opened, which makes it easier for remote attackers to conduct XML External Entity (XXE) attacks via a crafted document. 
-
- CVE Published on: 2016-11-15 https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2016-9318 </failure>
-</testcase>
-</testsuite>
-```
-
-**As of Yocto 2.2 Morty, a built-in** `cve-check` ****[**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass) **was added to help automate checking of recipes against public CVEs.**
-
-**TODO**
-
-**Considerations \(Disclaimer: The List below is non-exhaustive\):**
+**Considerations (Disclaimer: The List below is non-exhaustive):**
 
 * Use of [retire.js](https://github.com/RetireJS/retire.js) for JavaScript Libraries
   * Utilize `npm audit` for NodeJS packages
@@ -119,21 +78,20 @@ cve\_test will now include a list of 'unit tests' in XUnit format that fail for 
 * Utilize tools such as [Lynis](https://raw.githubusercontent.com/CISOfy/lynis/master/lynis) for basic Kernel hardening auditing and suggestions.
   * `wget --no-check-certificate  https://github.com/CISOfy/lynis/archive/master.zip && unzip master.zip && cd lynis-master/ && bash lynis audit system`
   * Review the report in: `/var/log/lynis.log`
-  * **Note**: Lynis will bypass Kernel checks if a Linux kernel is not in use. The following error message will be in the logs: “Skipped test KRNL-5695 \(Determine Linux kernel version and release number\) Reason to skip: Incorrect guest OS \(Linux only\)”
-  * Lynis should be modified accordingly if storage is limited \(i.e. removing unnecessary plugins such as php etc.\)
+  * **Note**: Lynis will bypass Kernel checks if a Linux kernel is not in use. The following error message will be in the logs: “Skipped test KRNL-5695 (Determine Linux kernel version and release number) Reason to skip: Incorrect guest OS (Linux only)”
+  * Lynis should be modified accordingly if storage is limited (i.e. removing unnecessary plugins such as php etc.)
 * Utilize free library scanners such as [LibScanner](https://github.com/scriptingxss/LibScanner) which searches through a project's dependencies and cross references them with the NVD looking for known CVEs for a yocto build environment.
   * This tool outputs XML which enables teams to utilize such features for continuous integration testing.
-* Utilize package managers \(opkg, ipkg, etc.. \) or custom update mechanisms for misc libraries within the toolchain.
+* Utilize package managers (opkg, ipkg, etc.. ) or custom update mechanisms for misc libraries within the toolchain.
 * Review changelogs of toolchains, software packages, and libraries to better determine if an update is needed.
 * Ensure the implementation of embedded build systems such as Yocto and Buildroot are set up in a way that allows for the update of all included packages.
 
-## Additional References <a id="additional-references"></a>
+## Additional References <a href="#additional-references" id="additional-references"></a>
 
 * [https://www.kb.cert.org/vuls/id/922681](https://www.kb.cert.org/vuls/id/922681)
 * [https://www.kb.cert.org/vuls/id/561444](https://www.kb.cert.org/vuls/id/561444)
-* [https://buildroot.org/downloads/manual/manual.html\#faq-no-binary-packages](https://buildroot.org/downloads/manual/manual.html#faq-no-binary-packages)
+* [https://buildroot.org/downloads/manual/manual.html#faq-no-binary-packages](https://buildroot.org/downloads/manual/manual.html#faq-no-binary-packages)
 * [https://wiki.yoctoproject.org/wiki/Security](https://wiki.yoctoproject.org/wiki/Security)
 * [https://nvd.nist.gov/](https://nvd.nist.gov/)
 * [https://www.openhub.net/](https://www.openhub.net/)
-* [Improving Your Embedded Linux Security Posture with Yocto](https://legacy.gitbook.com/book/scriptingxss/embedded-appsec-best-practices/edit#)
-
+* [Improving Your Embedded Linux Security Posture with Yocto](https://legacy.gitbook.com/book/scriptingxss/embedded-appsec-best-practices/edit)
