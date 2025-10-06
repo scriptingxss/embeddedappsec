@@ -12,7 +12,7 @@ It is important to ensure all unnecessary pre-production build code, as well as 
 
 ## Additional References <a id="additional-references"></a>
 
-* [https://www.owasp.org/index.php/Leftover\_Debug\_Code](https://www.owasp.org/index.php/Leftover_Debug_Code)
+* [https://owasp.org/www-community/vulnerabilities/Leftover_Debug_Code](https://owasp.org/www-community/vulnerabilities/Leftover_Debug_Code)
 * [https://cwe.mitre.org/data/definitions/489.html](https://cwe.mitre.org/data/definitions/489.html)
 * [http://www.kb.cert.org/vuls/id/419568](http://www.kb.cert.org/vuls/id/419568)
 * [Firmware and binary analysis tool index](https://scriptingxss.gitbook.io/firmware-security-testing-methodology/#firmware-and-binary-analysis-tool-index)

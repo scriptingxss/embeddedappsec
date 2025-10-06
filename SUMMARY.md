@@ -2,6 +2,9 @@
 
 * [Embedded Application Security Best Practices](README.md)
 * [What are Embedded Systems?](preface.md)
+
+## Security Best Practices
+
 * [Buffer and Stack Overflow Protection](1_buffer_and_stack_overflow_protection.md)
 * [Injection Prevention](2_injection_prevention.md)
 * [Firmware Updates and Cryptographic Signatures](3_firmware_updates_and_cryptographic_signatures.md)
@@ -13,5 +16,16 @@
 * [Usage of Data Collection and Storage - Privacy](9_usage_of_data_collection_and_storage_-_privacy.md)
 * [Third Party Code and Components](10_third_party_code_and_components.md)
 * [Threat Modeling](threat-model.md)
+
+## Appendices
+
+* [Appendix A: OWASP IoT Ecosystem Alignment](owasp-iot-ecosystem-alignment.md)
+* [Appendix B: Device Compliance Frameworks](device-compliance-frameworks.md)
+
+## Project Information
+
+* [Project Roadmap](project-roadmap.md)
+* [Acknowledgments](acknowledgments.md)
 * [About OWASP](about-owasp.md)
+* [Changelog 2025](CHANGELOG-2025.md)
 
