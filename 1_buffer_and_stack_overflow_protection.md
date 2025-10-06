@@ -1,6 +1,6 @@
 # Buffer and Stack Overflow Protection
 
-Prevent the use of known dangerous functions and APIs in effort to protect against memory-corruption vulnerabilities within firmware. (e.g. Use of [unsafe C functions](https://www.securecoding.cert.org/confluence/display/c/VOID+MSC34-C.+Do+not+use+deprecated+and+obsolete+functions) - [strcat, strcpy, sprintf, scanf](http://cwe.mitre.org/data/definitions/676.html#Demonstrative%20Examples\)\)). Memory-corruption vulnerabilities, such as buffer overflows, can consist of overflowing the stack ([Stack overflow](https://en.wikipedia.org/wiki/Stack\_buffer\_overflow\)/) or overflowing the heap ([Heap overflow](https://en.wikipedia.org/wiki/Heap\_overflow\)/). For simplicity purposes, this document does not distinguish between these two types of vulnerabilities. In the event a buffer overflow has been detected and exploited by an attacker, the instruction pointer register is overwritten to execute the arbitrary malicious code provided by the attacker.
+Prevent the use of known dangerous functions and APIs in effort to protect against memory-corruption vulnerabilities within firmware. (e.g. Use of [unsafe C functions](https://wiki.sei.cmu.edu/confluence/display/c/VOID+MSC34-C.+Do+not+use+deprecated+and+obsolete+functions) - [strcat, strcpy, sprintf, scanf](http://cwe.mitre.org/data/definitions/676.html#Demonstrative%20Examples\)\)). Memory-corruption vulnerabilities, such as buffer overflows, can consist of overflowing the stack ([Stack overflow](https://en.wikipedia.org/wiki/Stack\_buffer\_overflow\)/) or overflowing the heap ([Heap overflow](https://en.wikipedia.org/wiki/Heap\_overflow\)/). For simplicity purposes, this document does not distinguish between these two types of vulnerabilities. In the event a buffer overflow has been detected and exploited by an attacker, the instruction pointer register is overwritten to execute the arbitrary malicious code provided by the attacker.
 
 **Finding Vulnerable C functions in source code. Example: Utilize the “find” command below within a “C” repository to find vulnerable C functions such as "strncpy" and "strlen" in source code.**
 
@@ -85,7 +85,7 @@ See 'Secure Programming for Linux and Unix HOWTO'
 (http://www.dwheeler.com/secure-programs) for more information.
 ```
 
-Usage of deprecated functions, [**Noncompliant Code Example**](https://www.securecoding.cert.org/confluence/display/c/VOID+STR35-C.+Do+not+copy+data+from+an+unbounded+source+to+a+fixed-length+array):This noncompliant code example assumes that gets() will not read more than BUFSIZ - 1 characters from stdin. This is an invalid assumption, and the resulting operation can cause a buffer overflow. Note further that BUFSIZ is a macro integer constant, defined in stdio.h, representing a suggested argument to setvbuf() and not the maximum size of such an input buffer.
+Usage of deprecated functions, [**Noncompliant Code Example**](https://wiki.sei.cmu.edu/confluence/display/c/VOID+STR35-C.+Do+not+copy+data+from+an+unbounded+source+to+a+fixed-length+array):This noncompliant code example assumes that gets() will not read more than BUFSIZ - 1 characters from stdin. This is an invalid assumption, and the resulting operation can cause a buffer overflow. Note further that BUFSIZ is a macro integer constant, defined in stdio.h, representing a suggested argument to setvbuf() and not the maximum size of such an input buffer.
 
 The gets() function reads characters from the stdin into a destination array until end-of-file is encountered or a newline character is read. Any newline character is discarded, and a null character is written immediately after the last character read into the array.
 
@@ -169,6 +169,198 @@ The screenshot below demonstrates stack protection support being enabled while b
 * Those functions that do not have safe equivalents should be rewritten with safe checks implemented.
 * If FreeRTOS OS is utilized, consider setting "configCHECK\_FOR\_STACK\_OVERFLOW" to "1" with a hook function during the development and testing phases but removing for production builds.&#x20;
 
+## Yocto Project Compiler Hardening for Buffer Overflow Protection
+
+If you're using the Yocto Project build system for embedded Linux development, Yocto provides comprehensive built-in compiler flags specifically designed to prevent buffer and stack overflows. These flags are centrally managed and can be enabled project-wide.
+
+###  Stack Protection in Yocto
+
+**Enable Stack Protection** (usually enabled by default):
+```bitbake
+# In local.conf or distro .conf
+INHERIT += "security-flags"
+```
+
+This automatically enables:
+```bitbake
+SECURITY_CFLAGS += "-fstack-protector-strong"
+```
+
+**What `-fstack-protector-strong` provides**:
+- Inserts stack canaries (random values) before return addresses
+- Protects functions with arrays, pointers, or structs containing arrays
+- Detects stack buffer overflows at runtime
+- ~2-5% performance overhead (acceptable for most embedded systems)
+- Catches 90%+ of stack-based buffer overflow attacks
+
+**Alternative: Maximum Stack Protection**:
+```bitbake
+# For high-security applications (medical, automotive, industrial)
+SECURITY_CFLAGS:append = " -fstack-protector-all"
+```
+
+**Note**: `-fstack-protector-all` protects ALL functions but has higher performance overhead (~5-10%).
+
+### FORTIFY_SOURCE for Buffer Overflow Detection
+
+Yocto enables `FORTIFY_SOURCE` by default, providing compile-time and runtime checks for buffer overflows:
+
+```bitbake
+# Enabled by default in security_flags.inc
+SECURITY_CFLAGS += "-D_FORTIFY_SOURCE=2"
+```
+
+**What `_FORTIFY_SOURCE=2` detects**:
+- Buffer overflows in `memcpy()`, `strcpy()`, `strncpy()`, `sprintf()`, etc.
+- Out-of-bounds writes to arrays and buffers
+- Both compile-time warnings and runtime aborts
+
+**Example Protected Code**:
+```c
+char buffer[10];
+strcpy(buffer, "This string is way too long");  // Runtime abort with FORTIFY_SOURCE
+```
+
+**Scarthgap 5.0 LTS Enhancement (GCC 13.2+)**: Use `_FORTIFY_SOURCE=3` for even stronger protection:
+```bitbake
+# In high-security recipes
+CFLAGS:append = " -D_FORTIFY_SOURCE=3"
+```
+
+### GCC -fhardened Flag (Comprehensive Protection)
+
+For maximum buffer overflow protection in Yocto Scarthgap 5.0+ (GCC 13.2):
+
+```bitbake
+# In local.conf or distro .conf for system-wide hardening
+SECURITY_CFLAGS += "-fhardened"
+```
+
+**What `-fhardened` includes**:
+- `-D_FORTIFY_SOURCE=3` (strongest buffer overflow checks)
+- `-fstack-protector-strong` (stack canary protection)
+- `-fstack-clash-protection` (stack clash attack mitigation)
+- `-ftrivial-auto-var-init=zero` (zero-initialize all automatic variables)
+- `-D_GLIBCXX_ASSERTIONS` (C++ standard library assertions)
+
+**When to use**:
+- Medical devices (FDA-regulated)
+- Automotive (ISO 26262, UNECE WP.29)
+- Industrial control systems (IEC 62443)
+- Any high-security embedded application
+
+**Trade-off**: ~5-10% performance overhead for significantly improved security
+
+### Position Independent Executable (PIE) for ASLR
+
+Yocto enables PIE by default to support Address Space Layout Randomization (ASLR):
+
+```bitbake
+# Enabled by default in security_flags.inc
+SECURITY_CFLAGS += "-fpie"
+SECURITY_LDFLAGS += "-pie"
+```
+
+**How PIE prevents buffer overflow exploits**:
+- Randomizes executable base address at runtime
+- Makes ROP (Return-Oriented Programming) attacks much harder
+- Attacker cannot predict memory layout for exploit payloads
+- Works in conjunction with kernel ASLR (`CONFIG_RANDOMIZE_BASE=y`)
+
+### Verification of Buffer Overflow Protections
+
+**Verify security flags are applied to your binaries**:
+
+```bash
+# Install checksec in your Yocto build
+bitbake checksec-native
+
+# Check security properties of a binary
+checksec --file=tmp/work/.../package/usr/bin/myapp
+
+# Expected output:
+# RELRO           STACK CANARY      NX            PIE
+# Full RELRO      Canary found      NX enabled    PIE enabled
+```
+
+**Manual verification with readelf**:
+```bash
+# Check for stack canary symbols
+readelf -s mybinary | grep stack_chk
+# Should show: __stack_chk_fail, __stack_chk_guard
+
+# Check for PIE
+readelf -h mybinary | grep Type
+# Should show: Type: DYN (Shared object file)
+```
+
+### Buildroot vs. Yocto Comparison
+
+For developers migrating from Buildroot or evaluating build systems:
+
+| Feature | Buildroot | Yocto Project |
+|---------|-----------|---------------|
+| **Stack Protection** | Manual via BR2_SSP_OPTION | Automatic via security-flags |
+| **FORTIFY_SOURCE** | Manual via BR2_FORTIFY_SOURCE | Enabled by default (level 2) |
+| **PIE/ASLR** | Manual via BR2_RELRO | Enabled by default |
+| **Centralized Management** | Per-package configuration | Project-wide security_flags.inc |
+| **Verification Tools** | Manual integration | checksec-native built-in |
+| **Complexity** | Simpler | More complex but more powerful |
+| **Best For** | Simple embedded systems | Production embedded Linux |
+
+**Recommendation**:
+- **Buildroot**: Prototyping, simple single-application systems
+- **Yocto**: Production devices, compliance requirements, complex systems
+
+### Per-Recipe Security Flag Customization
+
+**Disable flags for performance-critical code** (use with caution):
+```bitbake
+# In recipe (.bb file)
+SECURITY_CFLAGS = ""  # Remove all security flags
+```
+
+**Add extra protection to specific applications**:
+```bitbake
+# crypto-daemon_1.0.bb
+SECURITY_CFLAGS:append = " -fhardened -fanalyzer"
+```
+
+**Example: High-Security Recipe with Maximum Buffer Overflow Protection**:
+```bitbake
+# secure-app_1.0.bb
+DESCRIPTION = "Security-critical application with maximum hardening"
+LICENSE = "MIT"
+
+# Maximum buffer overflow protection
+SECURITY_CFLAGS:append = " -fhardened"
+
+# Additional protections
+CFLAGS:append = " -D_FORTIFY_SOURCE=3"
+CFLAGS:append = " -fstack-clash-protection"
+CFLAGS:append = " -fstack-protector-all"  # Protect ALL functions
+
+# No executable stack
+LDFLAGS:append = " -Wl,-z,noexecstack"
+
+# Immediate symbol binding
+LDFLAGS:append = " -Wl,-z,now"
+
+do_compile() {
+    ${CC} ${CFLAGS} ${LDFLAGS} -o secure-app main.c
+}
+```
+
+### Integration with Chapter 6
+
+For comprehensive Yocto security configuration beyond buffer overflow protection, including:
+- Kernel hardening (KASLR, KPTI, kernel stack protection)
+- Mandatory Access Control (SELinux, AppArmor, SMACK)
+- CVE checking and SBOM generation
+- Reproducible builds
+
+See: **[Chapter 6: Embedded Framework and C-Based Toolchain Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md)** - Yocto Project Build System Security section
+
 ## Additional References <a href="#additional-references" id="additional-references"></a>
 
 * OSS (Open Source Software) Static Analysis Tools
@@ -176,9 +368,9 @@ The screenshot below demonstrates stack protection support being enabled while b
   * Use of [cppcheck](http://cppcheck.sourceforge.net/) for [C++](https://github.com/struct/mms/blob/master/Modern\_Memory\_Safety\_In\_C\_CPP.pdf)
   * Consider [Codechecker](https://github.com/Ericsson/codechecker) and [Infer](https://fbinfer.com/) for C, C++, and iOS using Clang Static Analysis
 * [http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html](http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html)
-* [https://www.owasp.org/index.php/C-Based\_Toolchain\_Hardening#GCC.2FBinutils](https://www.owasp.org/index.php/C-Based\_Toolchain\_Hardening#GCC.2FBinutils)
-* [https://www.owasp.org/index.php/Buffer\_overflow\_attack](https://www.owasp.org/index.php/Buffer\_overflow\_attack)
-* [https://www.owasp.org/images/2/2e/OWASP\_Code\_Review\_Guide-V1\_1.pdf](https://www.owasp.org/images/2/2e/OWASP\_Code\_Review\_Guide-V1\_1.pdf) (Page 113-114)
+* [https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html#GCC.2FBinutils](https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html#GCC.2FBinutils)
+* [https://owasp.org/www-community/attacks/Buffer_overflow_attack](https://owasp.org/www-community/attacks/Buffer_overflow_attack)
+* [https://owasp.org/www-project-code-review-guide/](https://owasp.org/www-project-code-review-guide/) (Page 113-114)
 * [University of Pittsburgh - Secure Coding C/C++: String Vulnerabilities (PDF)](http://www.sis.pitt.edu/jjoshi/courses/IS2620/Spring07/Lecture3.pdf)
 * [Intel Open Source Technology Center SDL Banned Functions](https://github.com/01org/safestringlib/wiki/SDL-List-of-Banned-Functions)
 * [RTOS Stack Overflow Checking](http://www.freertos.org/Stacks-and-stack-overflow-checking.html)
