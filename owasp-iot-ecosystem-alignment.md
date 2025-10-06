@@ -251,7 +251,3 @@ The OWASP IoT ecosystem provides a comprehensive, integrated approach to embedde
 - **IoTGoat**: Practice environment and "where to learn"
 
 Use them together for complete security coverage from design through deployment.
-
----
-
-**Last Updated**: 2025-10-05

@@ -2371,8 +2371,6 @@ Threat models should answer the following four questions:
 
 ---
 
-**Last Updated**: 2025-01-15
-**Next Review**: 2025-07-15 (6-month cadence)
 **Document Owner**: OWASP Embedded Application Security Project
 
 ---

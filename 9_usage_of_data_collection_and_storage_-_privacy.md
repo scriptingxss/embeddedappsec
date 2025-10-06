@@ -1927,6 +1927,4 @@ For comprehensive compliance requirements, see **[Appendix B: Device Compliance 
 
 ---
 
-**Last Updated**: October 5, 2025
 **Regulatory Landscape**: GDPR (2018), CCPA (2020), CPRA (2023), EU AI Act (2024-2027)
-**Next Review**: January 2026 (Annual privacy regulation review)

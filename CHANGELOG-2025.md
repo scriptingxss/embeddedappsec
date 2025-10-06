@@ -1,6 +1,5 @@
 # OWASP Embedded Application Security - 2025 Changelog
 
-**Last Updated**: October 5, 2025
 **Version**: 2025.1
 
 ---
@@ -601,5 +600,3 @@ cat device-compliance-frameworks.md | grep -E "EU Cyber|ETSI|IEC 62443"
 ---
 
 **Changelog Version**: 2025.1
-**Last Updated**: October 5, 2025
-**Next Review**: January 5, 2026

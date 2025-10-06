@@ -503,9 +503,3 @@ The law is intentionally broad, but "reasonable security" should include:
 * [ENISA IoT Security](https://www.enisa.europa.eu/topics/iot-and-smart-infrastructures)
 * [BSI (German Federal Office)](https://www.bsi.bund.de/EN/Home/home_node.html) - IoT security guidelines
 
----
-
-**Last Updated**: 2025-10-05
-**Next Review**: 2025-01-05
-
-This guide should be reviewed quarterly as regulations and standards continue to evolve rapidly in the IoT/embedded security space.
