@@ -682,8 +682,8 @@ i2cdetect -y 1  # Should show device at 0x60
 
 For complete hardware security implementation in Yocto:
 - **Secure Boot**: See [Chapter 3: Firmware Updates and Cryptographic Signatures](3_firmware_updates_and_cryptographic_signatures.md)
-- **Kernel Hardening**: See [Chapter 6: Embedded Framework Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto kernel security section
-- **Build System Security**: See [Chapter 6](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto Project Build System Security
+- **Kernel Hardening**: See [Chapter 6: Embedded Platform Security Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto kernel security section
+- **Build System Security**: See [Chapter 6: Platform Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto Project Build System Security
 
 #### Resources
 

@@ -351,7 +351,7 @@ do_compile() {
 }
 ```
 
-### Integration with Chapter 6
+### Integration with Chapter 6: Platform Security
 
 For comprehensive Yocto security configuration beyond buffer overflow protection, including:
 - Kernel hardening (KASLR, KPTI, kernel stack protection)
@@ -359,7 +359,7 @@ For comprehensive Yocto security configuration beyond buffer overflow protection
 - CVE checking and SBOM generation
 - Reproducible builds
 
-See: **[Chapter 6: Embedded Framework and C-Based Toolchain Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md)** - Yocto Project Build System Security section
+See: **[Chapter 6: Embedded Platform Security Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md)** - Yocto Project Build System Security section
 
 ## Additional References <a href="#additional-references" id="additional-references"></a>
 

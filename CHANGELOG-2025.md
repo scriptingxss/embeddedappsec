@@ -181,7 +181,7 @@ Both examples include:
 
 Added comprehensive Yocto Project security guidance across multiple chapters, making this the definitive resource for secure embedded Linux development using Yocto.
 
-#### Chapter 6: Embedded Framework and C-Based Toolchain Hardening
+#### Chapter 6: Embedded Platform Security Hardening
 
 **Section Added**: "Yocto Project Build System Security (2024-2025)" (~780 lines)
 
@@ -297,9 +297,9 @@ Added comprehensive Yocto Project security guidance across multiple chapters, ma
 #### Cross-References
 
 All Yocto sections include cross-references to related chapters:
-- Chapter 1 → Chapter 6 (comprehensive toolchain hardening)
-- Chapter 3 → Chapter 4 (hardware root of trust) and Chapter 6 (kernel security)
-- Chapter 4 → Chapter 3 (secure boot) and Chapter 6 (build system security)
+- Chapter 1 → Chapter 6 (platform and toolchain hardening)
+- Chapter 3 → Chapter 4 (hardware root of trust) and Chapter 6 (platform security)
+- Chapter 4 → Chapter 3 (secure boot) and Chapter 6 (platform hardening)
 - Chapter 6 → Chapter 10 (CVE checking and SBOM)
 
 #### Resources Added

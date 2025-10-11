@@ -410,7 +410,7 @@ fit_check_sign -f tmp/deploy/images/myboard/fitImage \
 
 For complete Yocto secure boot implementation:
 - **Hardware Security**: See [Chapter 4: Securing Sensitive Information](4_securing_sensitive_information.md) - TEE and Hardware Security with Yocto
-- **Kernel Hardening**: See [Chapter 6: Embedded Framework Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto kernel security
+- **Kernel Hardening**: See [Chapter 6: Embedded Platform Security Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md) - Yocto kernel security
 - **CVE Management**: See [Chapter 10: Third Party Components](10_third_party_code_and_components.md) - Yocto CVE checking
 
 ### Resources

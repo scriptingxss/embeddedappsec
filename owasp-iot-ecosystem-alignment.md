@@ -40,7 +40,7 @@ This document maps the Embedded Application Security Best Practices to the broad
 | **3. Firmware Updates and Cryptographic Signatures** | V1.1 (Update Mechanisms)<br>V1.2 (Cryptographic Verification) | ISTG-FW-OTHR (Firmware Updates)<br>ISTG-DES-CRYPT (Cryptographic Implementations) | Stage 8 (Binary Exploitation)<br>Stage 3 (Firmware Analysis) | Insecure OTA update mechanism, missing signature validation | Implement ISVS V1.1 secure update requirements, validate with ISTG firmware update test cases |
 | **4. Securing Sensitive Information** | V2.6 (Sensitive Data Storage)<br>V3.3 (Secure Storage) | ISTG-FW-CRYPT (Cryptography)<br>ISTG-FW-INFO-002 (Hardcoded Secrets) | Stage 5 (Filesystem Extraction)<br>Stage 4 (Filesystem Analysis) | Hardcoded credentials in binaries, plaintext passwords in config files | Apply ISVS V2.6 secure storage requirements, use FSTM Stage 4-5 to identify secrets, test on IoTGoat hardcoded credentials |
 | **5. Identity Management** | V2.4 (Authentication)<br>V2.5 (Session Management) | ISTG-UI-AUTHZ (Authorization)<br>ISTG-UI-AUTHN (Authentication) | Stage 6 (Dynamic Analysis) | Default credentials, weak password policies | Implement ISVS V2.4-V2.5 requirements, test with ISTG authentication test cases |
-| **6. Embedded Framework Hardening** | V3.1 (Platform Configuration)<br>V3.2 (Software Hardening) | ISTG-FW-CONF (Configuration Review) | Stage 3 (Firmware Analysis)<br>Stage 4 (Filesystem Analysis) | Unnecessary services enabled (telnet, ftp), debug interfaces active | Follow ISVS V3.1-V3.2 hardening guidelines, use FSTM Stage 3-4 for configuration review |
+| **6. Embedded Platform Security Hardening** | V3.1 (Platform Configuration)<br>V3.2 (Software Hardening) | ISTG-FW-CONF (Configuration Review) | Stage 3 (Firmware Analysis)<br>Stage 4 (Filesystem Analysis) | Unnecessary services enabled (telnet, ftp), debug interfaces active | Follow ISVS V3.1-V3.2 hardening guidelines, use FSTM Stage 3-4 for configuration review |
 | **7. Debugging Code and Interfaces** | V3.4 (Debug Interfaces)<br>V5.3 (Physical Interfaces) | ISTG-WRLS-JTAG (Hardware Debug)<br>ISTG-FW-INFO-003 (Debug Code) | Stage 2 (Firmware Acquisition)<br>Stage 6 (Dynamic Analysis) | Hidden developer diagnostic page, UART shell access | Implement ISVS V3.4 requirements to disable debug interfaces, test using ISTG hardware debug test cases |
 | **8. Transport Layer Security** | V4.1 (Encryption)<br>V4.3 (Certificate Validation) | ISTG-DES-CRYPT (Cryptography)<br>ISTG-WRLS-WIFI (Wireless) | Stage 6 (Dynamic Analysis) | Weak TLS configurations, missing certificate validation | Apply ISVS V4.1-V4.3 TLS requirements, validate using ISTG cryptography test cases |
 | **9. Data Collection and Storage - Privacy** | V1.4 (Privacy)<br>V2.6 (Data Protection) | ISTG-FW-INFO (Information Gathering) | Stage 5 (Filesystem Extraction) | PII stored in plaintext logs | Implement ISVS V1.4 privacy requirements, use FSTM to identify data leakage |
@@ -221,14 +221,14 @@ This document maps the Embedded Application Security Best Practices to the broad
 This guide's best practices address all OWASP IoT Top 10 vulnerabilities:
 
 1. **Weak, Guessable, or Hardcoded Passwords** → Chapter 5 (Identity Management), Chapter 4 (Securing Sensitive Information)
-2. **Insecure Network Services** → Chapter 6 (Embedded Framework Hardening), Chapter 8 (TLS)
+2. **Insecure Network Services** → Chapter 6 (Platform Hardening), Chapter 8 (TLS)
 3. **Insecure Ecosystem Interfaces** → Chapter 2 (Injection Prevention), Chapter 5 (Identity Management)
 4. **Lack of Secure Update Mechanism** → Chapter 3 (Firmware Updates)
 5. **Use of Insecure or Outdated Components** → Chapter 10 (Third Party Code)
 6. **Insufficient Privacy Protection** → Chapter 9 (Data Collection and Storage)
 7. **Insecure Data Transfer and Storage** → Chapter 4 (Securing Sensitive Information), Chapter 8 (TLS)
-8. **Lack of Device Management** → Chapter 5 (Identity Management), Chapter 6 (Framework Hardening)
-9. **Insecure Default Settings** → Chapter 6 (Framework Hardening), Chapter 7 (Debugging Code)
+8. **Lack of Device Management** → Chapter 5 (Identity Management), Chapter 6 (Platform Hardening)
+9. **Insecure Default Settings** → Chapter 6 (Platform Hardening), Chapter 7 (Debugging Code)
 10. **Lack of Physical Hardening** → Chapter 7 (Debugging Code and Interfaces)
 
 ### Tools Integration

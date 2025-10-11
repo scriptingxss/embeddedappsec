@@ -10,7 +10,7 @@
 * [Firmware Updates and Cryptographic Signatures](3_firmware_updates_and_cryptographic_signatures.md)
 * [Securing Sensitive Information](4_securing_sensitive_information.md)
 * [Identity Management](5identity_management.md)
-* [Embedded Framework and C-Based Toolchain Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md)
+* [Embedded Platform Security Hardening](6_embedded_framework_and_c-based_toolchain_hardeni.md)
 * [Usage of Debugging Code and Interfaces](7_usage_of_debugging_code_and_interfaces.md)
 * [Transport Layer Security](8_transport_layer_security.md)
 * [Usage of Data Collection and Storage - Privacy](9_usage_of_data_collection_and_storage_-_privacy.md)

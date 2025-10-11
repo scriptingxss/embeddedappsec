@@ -105,7 +105,7 @@ This document provides guidance on aligning embedded device security with curren
 | Provision 3 | Chapter 3 (Firmware Updates) | Secure OTA updates, automatic updates |
 | Provision 4 | Chapter 4 (Securing Sensitive Info) | Hardware security (TEE/SE), encryption |
 | Provision 5 | Chapter 8 (TLS) | TLS 1.3, certificate validation |
-| Provision 6 | Chapter 6 (Framework Hardening) | Minimize services, disable debug interfaces |
+| Provision 6 | Chapter 6 (Platform Hardening) | Minimize services, disable debug interfaces |
 | Provision 7 | Chapter 3 (Firmware Updates) | Cryptographic signatures, secure boot |
 | Provision 8 | Chapter 9 (Privacy) | Data minimization, secure storage |
 | Provision 13 | Chapter 2 (Injection Prevention) | Input validation, sanitization |
@@ -157,11 +157,11 @@ This document provides guidance on aligning embedded device security with curren
 |--------------|---------------|--------------|
 | FR 1 | Chapter 5 | Multi-factor authentication, unique device identity |
 | FR 2 | Chapter 5 | Role-based access control, least privilege |
-| FR 3 | Chapter 3, 6 | Secure boot, integrity verification, input validation |
+| FR 3 | Chapter 3, 6 | Secure boot, platform integrity, input validation |
 | FR 4 | Chapter 4, 8 | Encryption at rest/transit, key management |
-| FR 5 | Chapter 6 | Network segmentation, firewall rules |
-| FR 6 | Chapter 6 | Logging, monitoring, incident response |
-| FR 7 | Chapter 6 | DoS protection, resource management |
+| FR 5 | Chapter 6 | Network segmentation, SELinux zone isolation, firewall rules |
+| FR 6 | Chapter 6 | Logging, monitoring, SELinux audit, incident response |
+| FR 7 | Chapter 6 | DoS protection, resource management, MAC enforcement |
 
 ### Resources
 
@@ -304,7 +304,7 @@ Higher tiers require more rigorous security controls and documentation.
 | Secure Boot | Chapter 3, 6 | U-Boot hardening, verified boot |
 | OTA Updates | Chapter 3 | Uptane, secure update protocols |
 | V2X Security | Chapter 8 | TLS 1.3, certificate management |
-| ECU Hardening | Chapter 6 | Toolchain hardening, service reduction |
+| ECU Hardening | Chapter 6 | Platform hardening, toolchain security, service reduction |
 | Key Management | Chapter 4 | HSM integration, TEE usage |
 
 ### Resources
