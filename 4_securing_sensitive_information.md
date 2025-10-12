@@ -168,7 +168,7 @@ new_secret = NULL;
 * Do not store secrets in an unprotected storage location or external storage including within an EEPROM or flash.
 * **Leverage hardware security when available** (see Hardware-Based Security section below)
 
-## Hardware-Based Security for Sensitive Data (2025 Best Practices)
+## Hardware-Based Security for Sensitive Data
 
 Modern embedded devices should leverage hardware security features to protect sensitive information. Hardware-based security provides protection even when software is compromised.
 
@@ -700,7 +700,7 @@ For complete hardware security implementation in Yocto:
 - [TPM 2.0 Software Stack (TSS)](https://github.com/tpm2-software)
 - [TPM 2.0 Tools Documentation](https://tpm2-tools.readthedocs.io/)
 
-## Post-Quantum Cryptography for Secure Storage (2025+)
+## Post-Quantum Cryptography for Secure Storage
 
 ### Quantum Threat to Stored Data
 
