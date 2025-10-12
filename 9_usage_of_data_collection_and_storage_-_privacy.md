@@ -165,7 +165,7 @@ int apply_user_privacy_preferences(user_id_t user, privacy_prefs_t *prefs) {
 
 ---
 
-## Modern Privacy Regulations (2025)
+## Modern Privacy Regulations
 
 ### GDPR (General Data Protection Regulation) - EU
 

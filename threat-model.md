@@ -27,7 +27,7 @@ Threat modeling should be done **early, and as often as possible**. Threat model
 
 ---
 
-## Modern Threat Modeling Frameworks (2025)
+## Modern Threat Modeling Frameworks
 
 ### 1. STRIDE (Classic - Microsoft)
 

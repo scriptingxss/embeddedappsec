@@ -4,7 +4,7 @@ The term embedded or embedded systems can be interpreted in several ways dependi
 
 In 2025, embedded systems span from 8-bit microcontrollers in IoT sensors to multi-core ARM processors running Linux in automotive systems, industrial equipment, and smart infrastructure. This guide addresses security considerations across this entire spectrum.
 
-## Authoritative Standards and Definitions (2025)
+## Authoritative Standards and Definitions
 
 This guide aligns with internationally recognized standards and frameworks:
 
@@ -41,7 +41,7 @@ This guide aligns with internationally recognized standards and frameworks:
 
 ## Hardware
 
-### Resource Spectrum (2025)
+### Resource Spectrum
 
 * **Tiny IoT** (Constrained devices - IETF RFC 7228 Class 1/2):
   * 16KB - 256KB RAM
@@ -74,7 +74,7 @@ This guide aligns with internationally recognized standards and frameworks:
 * **TF-A** - Trusted Firmware-A (ARM Trusted Firmware)
 * **MCUboot** - Secure bootloader for 32-bit MCUs (Zephyr, Mbed OS)
 
-## CPU Architectures (2025)
+## CPU Architectures
 
 ### Dominant Architectures
 
@@ -99,7 +99,7 @@ This guide aligns with internationally recognized standards and frameworks:
 * **32-bit**: ARM Cortex-M, RISC-V RV32, most modern MCUs
 * **64-bit**: ARM Cortex-A (AArch64), RISC-V RV64, x86-64
 
-## Operating System Platforms (2025)
+## Operating System Platforms
 
 ### Embedded Linux Distributions
 
@@ -135,7 +135,7 @@ This guide aligns with internationally recognized standards and frameworks:
 * **Windows Embedded Compact** (Windows CE) - End-of-life
 * **Windows 10 IoT** - Replaced by Windows 11 IoT Enterprise
 
-## Programming Languages (2025)
+## Programming Languages
 
 ### Systems Programming (Firmware/Drivers)
 
@@ -163,7 +163,7 @@ This guide aligns with internationally recognized standards and frameworks:
 * **PHP** - Legacy devices (security concerns, avoid for new projects)
 * **Classic ASP** - Obsolete (end-of-life, security risk)
 
-## Product Lifespan and Support Requirements (2025)
+## Product Lifespan and Support Requirements
 
 Embedded device lifespans vary by industry, with security support obligations increasingly mandated by regulation:
 
@@ -193,7 +193,7 @@ Embedded device lifespans vary by industry, with security support obligations in
 
 ---
 
-## Modern Security Considerations (2025)
+## Modern Security Considerations
 
 ### Hardware Security Features
 

@@ -33,7 +33,7 @@ User accounts within an embedded device should not be static in nature. Features
 
 ---
 
-## Hardware-Based Device Identity (2025)
+## Hardware-Based Device Identity
 
 ### Overview
 

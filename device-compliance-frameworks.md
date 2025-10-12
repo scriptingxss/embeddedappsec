@@ -1,4 +1,4 @@
-# Modern Compliance Frameworks for Embedded and IoT Security (2025)
+# Modern Compliance Frameworks for Embedded and IoT Security
 
 This document provides guidance on aligning embedded device security with current regulatory and industry compliance frameworks.
 

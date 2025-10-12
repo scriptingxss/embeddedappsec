@@ -15,7 +15,7 @@ These vulnerabilities have been exploited in high-profile attacks, including the
 
 ---
 
-## ODM/OEM Supply Chain Security Risks (2025 Update)
+## ODM/OEM Supply Chain Security Risks
 
 Original Design Manufacturers (ODMs) and contract manufacturers frequently introduce **hidden backdoors** for their own support and factory testing purposes. These backdoors often persist into mass-production firmware, creating systemic vulnerabilities across entire product lines.
 
