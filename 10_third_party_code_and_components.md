@@ -66,7 +66,7 @@ Find your installed-packages.txt from your yocto build. For information on that 
 
 **As of Yocto 2.2 Morty, a built-in** `cve-check` [**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass) **was added to help automate checking of recipes against public CVEs at build time. See the following Yocto page for additional details:** [**https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html**](https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html)
 
-### Yocto Project CVE Checking and Vulnerability Management (2024-2025)
+### Yocto Project CVE Checking and Vulnerability Management
 
 The Yocto Project provides comprehensive built-in vulnerability management capabilities that have been significantly enhanced in recent releases. The **cve-check** infrastructure compares software packages against the NIST National Vulnerability Database (NVD) to identify known security issues.
 
@@ -158,7 +158,7 @@ Document the justification in your recipe or security documentation:
 CVE_CHECK_IGNORE += "CVE-2023-12345 CVE-2023-67890"
 ```
 
-#### Yocto CVE Infrastructure Updates (2024)
+#### Yocto CVE Infrastructure Updates
 
 **Recent Enhancements**:
 - **Scarthgap 5.0 LTS (May 2024)**: Enhanced CVE database sync, improved reporting
@@ -240,7 +240,7 @@ yocto-cve-check:
 
 **Considerations (Disclaimer: The List below is non-exhaustive):**
 
-### Modern SBOM (Software Bill of Materials) Tools (2025)
+### Modern SBOM Tools
 
 A Software Bill of Materials is now critical for supply chain security and compliance. Modern SBOM formats and tools include:
 
@@ -281,7 +281,7 @@ A Software Bill of Materials is now critical for supply chain security and compl
 * **Rust/Cargo**: [cargo-sbom](https://github.com/psastras/sbom-rs)
 * **Go**: [syft](https://github.com/anchore/syft), [cyclonedx-gomod](https://github.com/CycloneDX/cyclonedx-gomod)
 
-### Yocto Project Native SBOM Generation (2024-2025)
+### Yocto Project Native SBOM Generation
 
 The Yocto Project has **native, comprehensive SBOM generation capabilities** supporting both SPDX and CycloneDX formats. Recent releases have significantly enhanced SBOM functionality to meet modern supply chain security requirements and EU Cyber Resilience Act compliance.
 
@@ -639,12 +639,799 @@ make legal-info
    * [Lynis](https://cisofy.com/lynis/) - System hardening auditing
    * [LibScanner](https://github.com/scriptingxss/LibScanner) - Yocto-specific CVE scanner
 
-#### Compliance Requirements (2025)
+#### Compliance Requirements
 
 * **US Executive Order 14028**: Federal software must have SBOM
 * **EU Cyber Resilience Act (CRA)**: Manufacturers must maintain SBOM
 * **NTIA Minimum Elements**: Essential SBOM components defined
 * **FDA Medical Device Cybersecurity**: SBOM required for submissions
+
+## Advanced SBOM Automation Workflows
+
+Beyond basic SBOM generation, modern embedded development requires automated SBOM workflows that integrate with CI/CD pipelines, vulnerability databases, and compliance reporting systems.
+
+### Multi-Format SBOM Generation Pipeline
+
+**Automated SBOM generation for multiple formats**:
+
+```yaml
+# .gitlab-ci.yml - Comprehensive SBOM generation
+stages:
+  - build
+  - sbom-generation
+  - sbom-analysis
+  - compliance-check
+
+yocto-build:
+  stage: build
+  script:
+    - source oe-init-build-env
+    - echo 'INHERIT += "create-spdx-3.0 buildhistory"' >> conf/local.conf
+    - bitbake core-image-minimal
+  artifacts:
+    paths:
+      - tmp/deploy/spdx/**/*.spdx.json
+      - buildhistory/
+    expire_in: 30 days
+
+sbom-multi-format:
+  stage: sbom-generation
+  needs:
+    - yocto-build
+  script:
+    # Generate SPDX (already created by Yocto)
+    - cp tmp/deploy/spdx/images/core-image-minimal.spdx.json sbom-spdx.json
+
+    # Convert SPDX to CycloneDX
+    - |
+      docker run --rm -v $(pwd):/work cyclonedx/cyclonedx-cli \
+        convert --input-file /work/sbom-spdx.json \
+                --output-file /work/sbom-cyclonedx.json \
+                --input-format spdxjson \
+                --output-format json
+
+    # Generate human-readable HTML report
+    - |
+      docker run --rm -v $(pwd):/work \
+        ghcr.io/ckotzbauer/sbom-operator:latest \
+        render --input /work/sbom-cyclonedx.json \
+               --output /work/sbom-report.html
+
+    # Generate CSV for spreadsheet analysis
+    - |
+      python3 << 'EOF'
+      import json
+      import csv
+
+      with open('sbom-cyclonedx.json', 'r') as f:
+          sbom = json.load(f)
+
+      with open('sbom-inventory.csv', 'w', newline='') as csvfile:
+          writer = csv.writer(csvfile)
+          writer.writerow(['Name', 'Version', 'License', 'Supplier', 'CPE'])
+
+          for component in sbom.get('components', []):
+              writer.writerow([
+                  component.get('name', 'N/A'),
+                  component.get('version', 'N/A'),
+                  ','.join([lic.get('id', 'N/A') for lic in component.get('licenses', [])]),
+                  component.get('supplier', {}).get('name', 'N/A'),
+                  component.get('cpe', 'N/A')
+              ])
+      EOF
+
+  artifacts:
+    paths:
+      - sbom-spdx.json
+      - sbom-cyclonedx.json
+      - sbom-report.html
+      - sbom-inventory.csv
+    expire_in: 1 year
+
+sbom-vulnerability-scan:
+  stage: sbom-analysis
+  needs:
+    - sbom-multi-format
+  script:
+    # Scan with multiple tools for comprehensive coverage
+
+    # 1. Grype scan
+    - grype sbom:sbom-spdx.json -o json > grype-results.json
+    - grype sbom:sbom-spdx.json -o table
+
+    # 2. Trivy scan
+    - trivy sbom sbom-spdx.json --format json --output trivy-results.json
+    - trivy sbom sbom-spdx.json --format table
+
+    # 3. OSV-Scanner
+    - osv-scanner --sbom=sbom-spdx.json --format json --output osv-results.json
+
+    # 4. Aggregate results
+    - |
+      python3 << 'EOF'
+      import json
+      from collections import defaultdict
+
+      # Aggregate vulnerabilities from all scanners
+      all_vulns = defaultdict(lambda: {'scanners': [], 'severity': 'UNKNOWN'})
+
+      # Parse Grype results
+      with open('grype-results.json', 'r') as f:
+          grype = json.load(f)
+          for match in grype.get('matches', []):
+              vuln_id = match['vulnerability']['id']
+              all_vulns[vuln_id]['scanners'].append('grype')
+              all_vulns[vuln_id]['severity'] = match['vulnerability'].get('severity', 'UNKNOWN')
+
+      # Parse Trivy results
+      with open('trivy-results.json', 'r') as f:
+          trivy = json.load(f)
+          for result in trivy.get('Results', []):
+              for vuln in result.get('Vulnerabilities', []):
+                  vuln_id = vuln['VulnerabilityID']
+                  all_vulns[vuln_id]['scanners'].append('trivy')
+                  all_vulns[vuln_id]['severity'] = vuln.get('Severity', 'UNKNOWN')
+
+      # Generate summary report
+      critical = sum(1 for v in all_vulns.values() if v['severity'] == 'CRITICAL')
+      high = sum(1 for v in all_vulns.values() if v['severity'] == 'HIGH')
+      medium = sum(1 for v in all_vulns.values() if v['severity'] == 'MEDIUM')
+      low = sum(1 for v in all_vulns.values() if v['severity'] == 'LOW')
+
+      print(f"Vulnerability Summary:")
+      print(f"  CRITICAL: {critical}")
+      print(f"  HIGH: {high}")
+      print(f"  MEDIUM: {medium}")
+      print(f"  LOW: {low}")
+      print(f"  Total: {len(all_vulns)}")
+
+      # Fail if critical/high vulnerabilities found
+      if critical > 0 or high > 0:
+          print(f"\n❌ FAIL: Found {critical} critical and {high} high severity vulnerabilities")
+          exit(1)
+      EOF
+
+  artifacts:
+    when: always
+    paths:
+      - grype-results.json
+      - trivy-results.json
+      - osv-results.json
+    reports:
+      junit: vulnerability-report.xml
+
+compliance-check:
+  stage: compliance-check
+  needs:
+    - sbom-multi-format
+  script:
+    # Validate SBOM completeness
+    - |
+      python3 << 'EOF'
+      import json
+      import sys
+
+      with open('sbom-cyclonedx.json', 'r') as f:
+          sbom = json.load(f)
+
+      # NTIA Minimum Elements check
+      errors = []
+
+      # 1. Author name
+      if not sbom.get('metadata', {}).get('authors'):
+          errors.append("Missing author information")
+
+      # 2. Timestamp
+      if not sbom.get('metadata', {}).get('timestamp'):
+          errors.append("Missing timestamp")
+
+      # 3. Component name, version, supplier
+      for component in sbom.get('components', []):
+          if not component.get('name'):
+              errors.append(f"Component missing name")
+          if not component.get('version'):
+              errors.append(f"Component {component.get('name')} missing version")
+          if not component.get('supplier') and not component.get('publisher'):
+              errors.append(f"Component {component.get('name')} missing supplier")
+
+      # 4. Dependency relationships
+      if not sbom.get('dependencies'):
+          errors.append("Missing dependency relationships")
+
+      if errors:
+          print("SBOM Compliance Errors:")
+          for error in errors:
+              print(f"  - {error}")
+          sys.exit(1)
+      else:
+          print("✅ SBOM meets NTIA minimum elements")
+      EOF
+
+    # License compliance check
+    - |
+      python3 << 'EOF'
+      import json
+
+      with open('sbom-cyclonedx.json', 'r') as f:
+          sbom = json.load(f)
+
+      # Forbidden licenses (copyleft for proprietary products)
+      forbidden = ['GPL-2.0', 'GPL-3.0', 'AGPL-3.0']
+      violations = []
+
+      for component in sbom.get('components', []):
+          licenses = component.get('licenses', [])
+          for lic in licenses:
+              lic_id = lic.get('license', {}).get('id', '')
+              if any(forbidden_lic in lic_id for forbidden_lic in forbidden):
+                  violations.append(f"{component['name']}: {lic_id}")
+
+      if violations:
+          print("⚠️  License compliance violations:")
+          for v in violations:
+              print(f"  - {v}")
+      else:
+          print("✅ No license violations found")
+      EOF
+
+  allow_failure: false
+```
+
+### Dependency-Track Integration
+
+**Continuous SBOM monitoring with Dependency-Track**:
+
+```yaml
+# .gitlab-ci.yml - Dependency-Track upload
+dependency-track-upload:
+  stage: sbom-analysis
+  needs:
+    - sbom-multi-format
+  script:
+    # Upload SBOM to Dependency-Track for continuous monitoring
+    - |
+      PROJECT_UUID=$(curl -s -X GET "${DTRACK_URL}/api/v1/project/lookup?name=embedded-device&version=1.0" \
+        -H "X-Api-Key: ${DTRACK_API_KEY}" | jq -r '.uuid')
+
+      if [ "$PROJECT_UUID" == "null" ]; then
+        # Create new project
+        PROJECT_UUID=$(curl -s -X PUT "${DTRACK_URL}/api/v1/project" \
+          -H "Content-Type: application/json" \
+          -H "X-Api-Key: ${DTRACK_API_KEY}" \
+          -d '{
+            "name": "embedded-device",
+            "version": "1.0",
+            "classifier": "APPLICATION"
+          }' | jq -r '.uuid')
+      fi
+
+      # Upload SBOM
+      curl -X POST "${DTRACK_URL}/api/v1/bom" \
+        -H "Content-Type: multipart/form-data" \
+        -H "X-Api-Key: ${DTRACK_API_KEY}" \
+        -F "project=${PROJECT_UUID}" \
+        -F "bom=@sbom-cyclonedx.json"
+
+    # Wait for analysis to complete
+    - sleep 30
+
+    # Fetch vulnerability results
+    - |
+      FINDINGS=$(curl -s -X GET "${DTRACK_URL}/api/v1/finding/project/${PROJECT_UUID}" \
+        -H "X-Api-Key: ${DTRACK_API_KEY}")
+
+      CRITICAL=$(echo "$FINDINGS" | jq '[.[] | select(.vulnerability.severity=="CRITICAL")] | length')
+      HIGH=$(echo "$FINDINGS" | jq '[.[] | select(.vulnerability.severity=="HIGH")] | length')
+
+      echo "Dependency-Track Results:"
+      echo "  Critical: $CRITICAL"
+      echo "  High: $HIGH"
+
+      if [ "$CRITICAL" -gt 0 ] || [ "$HIGH" -gt 0 ]; then
+        echo "❌ FAIL: Critical or high vulnerabilities found in Dependency-Track"
+        exit 1
+      fi
+```
+
+**Dependency-Track Yocto Recipe**:
+
+```bitbake
+# dependency-track_4.9.bb
+DESCRIPTION = "Dependency-Track - SBOM vulnerability analysis platform"
+LICENSE = "Apache-2.0"
+
+SRC_URI = "https://github.com/DependencyTrack/dependency-track/releases/download/${PV}/dependency-track-apiserver.jar \
+           file://dependency-track.service"
+
+inherit systemd java
+
+RDEPENDS:${PN} = "openjdk-11"
+
+do_install() {
+    install -d ${D}${datadir}/dependency-track
+    install -m 0644 ${WORKDIR}/dependency-track-apiserver.jar ${D}${datadir}/dependency-track/
+
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/dependency-track.service ${D}${systemd_system_unitdir}/
+
+    install -d ${D}${sysconfdir}/dependency-track
+    cat > ${D}${sysconfdir}/dependency-track/application.properties << 'EOF'
+alpine.database.mode=external
+alpine.database.url=jdbc:postgresql://localhost:5432/dtrack
+alpine.database.driver=org.postgresql.Driver
+alpine.database.username=dtrack
+alpine.database.password=CHANGE_ME
+
+# Enable API authentication
+alpine.api.key.required=true
+EOF
+}
+
+SYSTEMD_SERVICE:${PN} = "dependency-track.service"
+```
+
+### GitHub/GitLab Security Scanning Integration
+
+**GitHub Actions Workflow**:
+
+```yaml
+# .github/workflows/sbom-security.yml
+name: SBOM Generation and Security Scanning
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM
+
+jobs:
+  sbom-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0
+        with:
+          format: spdx-json
+          output-file: sbom-spdx.json
+
+      - name: Generate CycloneDX SBOM
+        run: |
+          docker run --rm -v $(pwd):/work cyclonedx/cyclonedx-cli \
+            convert --input-file /work/sbom-spdx.json \
+                    --output-file /work/sbom-cyclonedx.json \
+                    --input-format spdxjson \
+                    --output-format json
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom-files
+          path: |
+            sbom-spdx.json
+            sbom-cyclonedx.json
+
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+    needs: sbom-generate
+    steps:
+      - name: Download SBOM
+        uses: actions/download-artifact@v3
+        with:
+          name: sbom-files
+
+      - name: Scan with Grype
+        uses: anchore/scan-action@v3
+        with:
+          sbom: sbom-spdx.json
+          fail-build: true
+          severity-cutoff: high
+
+      - name: Scan with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'sbom'
+          input: sbom-spdx.json
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  dependency-track-upload:
+    runs-on: ubuntu-latest
+    needs: sbom-generate
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download SBOM
+        uses: actions/download-artifact@v3
+        with:
+          name: sbom-files
+
+      - name: Upload to Dependency-Track
+        env:
+          DTRACK_URL: ${{ secrets.DTRACK_URL }}
+          DTRACK_API_KEY: ${{ secrets.DTRACK_API_KEY }}
+        run: |
+          curl -X POST "${DTRACK_URL}/api/v1/bom" \
+            -H "Content-Type: multipart/form-data" \
+            -H "X-Api-Key: ${DTRACK_API_KEY}" \
+            -F "project=embedded-device" \
+            -F "projectVersion=1.0" \
+            -F "bom=@sbom-cyclonedx.json"
+```
+
+### SBOM Differential Analysis
+
+**Detect supply chain changes between releases**:
+
+```python
+#!/usr/bin/env python3
+# sbom-diff.py - Compare SBOMs between releases
+
+import json
+import sys
+from typing import Set, Dict, Tuple
+
+def load_sbom(filename: str) -> Dict:
+    with open(filename, 'r') as f:
+        return json.load(f)
+
+def extract_components(sbom: Dict) -> Set[Tuple[str, str]]:
+    """Extract (name, version) tuples from SBOM"""
+    components = set()
+    for component in sbom.get('components', []):
+        name = component.get('name', 'unknown')
+        version = component.get('version', 'unknown')
+        components.add((name, version))
+    return components
+
+def compare_sboms(old_sbom: Dict, new_sbom: Dict):
+    old_components = extract_components(old_sbom)
+    new_components = extract_components(new_sbom)
+
+    added = new_components - old_components
+    removed = old_components - new_components
+    common = old_components & new_components
+
+    print("SBOM Differential Analysis")
+    print("=" * 50)
+    print(f"Total components (old): {len(old_components)}")
+    print(f"Total components (new): {len(new_components)}")
+    print(f"Added: {len(added)}")
+    print(f"Removed: {len(removed)}")
+    print(f"Unchanged: {len(common)}")
+    print()
+
+    if added:
+        print("Added Components:")
+        for name, version in sorted(added):
+            print(f"  + {name}@{version}")
+        print()
+
+    if removed:
+        print("Removed Components:")
+        for name, version in sorted(removed):
+            print(f"  - {name}@{version}")
+        print()
+
+    # Check for version changes
+    old_by_name = {name: version for name, version in old_components}
+    new_by_name = {name: version for name, version in new_components}
+
+    version_changes = []
+    for name in old_by_name:
+        if name in new_by_name and old_by_name[name] != new_by_name[name]:
+            version_changes.append((name, old_by_name[name], new_by_name[name]))
+
+    if version_changes:
+        print("Version Changes:")
+        for name, old_ver, new_ver in sorted(version_changes):
+            print(f"  ~ {name}: {old_ver} → {new_ver}")
+        print()
+
+    # Risk assessment
+    risk_score = 0
+    if len(added) > 10:
+        risk_score += 2
+        print("⚠️  HIGH RISK: Many new components added (supply chain expansion)")
+    if len(removed) > 10:
+        risk_score += 1
+        print("⚠️  MEDIUM RISK: Many components removed")
+    if len(version_changes) > 20:
+        risk_score += 1
+        print("⚠️  MEDIUM RISK: Many version updates")
+
+    if risk_score == 0:
+        print("✅ LOW RISK: Minimal supply chain changes")
+
+    return risk_score
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Usage: sbom-diff.py <old-sbom.json> <new-sbom.json>")
+        sys.exit(1)
+
+    old_sbom = load_sbom(sys.argv[1])
+    new_sbom = load_sbom(sys.argv[2])
+
+    risk = compare_sboms(old_sbom, new_sbom)
+    sys.exit(min(risk, 2))  # Exit code 0=low risk, 1=medium, 2=high
+```
+
+**Integration in CI/CD**:
+
+```yaml
+sbom-diff-analysis:
+  stage: compliance-check
+  script:
+    # Download previous release SBOM
+    - curl -o sbom-previous.json "${ARTIFACT_SERVER}/releases/v1.0/sbom.json"
+
+    # Compare with current build
+    - python3 sbom-diff.py sbom-previous.json sbom-cyclonedx.json
+
+    # Fail if high risk
+    - |
+      RISK_CODE=$?
+      if [ $RISK_CODE -eq 2 ]; then
+        echo "❌ HIGH RISK supply chain changes detected"
+        exit 1
+      fi
+```
+
+## Continuous Vulnerability Monitoring
+
+### Automated CVE Alert System
+
+**Real-time CVE monitoring for deployed devices**:
+
+```python
+#!/usr/bin/env python3
+# cve-monitor.py - Monitor deployed SBOMs for new CVEs
+
+import json
+import requests
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime, timedelta
+
+class CVEMonitor:
+    def __init__(self, sbom_path: str, nvd_api_key: str):
+        self.sbom_path = sbom_path
+        self.nvd_api_key = nvd_api_key
+        self.nvd_url = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+
+    def load_sbom(self):
+        with open(self.sbom_path, 'r') as f:
+            sbom = json.load(f)
+
+        components = []
+        for component in sbom.get('components', []):
+            cpe = component.get('cpe')
+            if cpe:
+                components.append({
+                    'name': component.get('name'),
+                    'version': component.get('version'),
+                    'cpe': cpe
+                })
+        return components
+
+    def check_recent_cves(self, cpe: str, days: int = 7):
+        """Check NVD for CVEs published in last N days"""
+        pub_start = (datetime.now() - timedelta(days=days)).isoformat()
+        pub_end = datetime.now().isoformat()
+
+        params = {
+            'cpeName': cpe,
+            'pubStartDate': pub_start,
+            'pubEndDate': pub_end
+        }
+        headers = {
+            'apiKey': self.nvd_api_key
+        }
+
+        response = requests.get(self.nvd_url, params=params, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('vulnerabilities', [])
+        return []
+
+    def monitor(self):
+        components = self.load_sbom()
+        new_vulnerabilities = []
+
+        print(f"Monitoring {len(components)} components for new CVEs...")
+
+        for component in components:
+            cpe = component['cpe']
+            cves = self.check_recent_cves(cpe, days=7)
+
+            if cves:
+                for cve_item in cves:
+                    cve = cve_item['cve']
+                    new_vulnerabilities.append({
+                        'component': component['name'],
+                        'version': component['version'],
+                        'cve_id': cve['id'],
+                        'description': cve.get('descriptions', [{}])[0].get('value', 'N/A'),
+                        'severity': cve.get('metrics', {}).get('cvssMetricV31', [{}])[0].get('cvssData', {}).get('baseSeverity', 'UNKNOWN')
+                    })
+
+        return new_vulnerabilities
+
+    def send_alert(self, vulnerabilities: list, recipients: list):
+        if not vulnerabilities:
+            print("No new vulnerabilities found")
+            return
+
+        msg = MIMEMultipart()
+        msg['From'] = 'cve-monitor@company.com'
+        msg['To'] = ', '.join(recipients)
+        msg['Subject'] = f'⚠️ New CVEs Detected in Deployed Firmware ({len(vulnerabilities)} found)'
+
+        body = "New vulnerabilities detected in deployed firmware components:\n\n"
+
+        for vuln in vulnerabilities:
+            body += f"Component: {vuln['component']} {vuln['version']}\n"
+            body += f"CVE: {vuln['cve_id']}\n"
+            body += f"Severity: {vuln['severity']}\n"
+            body += f"Description: {vuln['description'][:200]}...\n"
+            body += f"Link: https://nvd.nist.gov/vuln/detail/{vuln['cve_id']}\n"
+            body += "-" * 80 + "\n\n"
+
+        msg.attach(MIMEText(body, 'plain'))
+
+        # Send email
+        with smtplib.SMTP('smtp.company.com', 587) as server:
+            server.starttls()
+            server.login('cve-monitor@company.com', 'password')
+            server.send_message(msg)
+
+        print(f"Alert sent to {recipients}")
+
+if __name__ == '__main__':
+    monitor = CVEMonitor(
+        sbom_path='/path/to/deployed-sbom.json',
+        nvd_api_key='YOUR_NVD_API_KEY'
+    )
+
+    vulnerabilities = monitor.monitor()
+
+    if vulnerabilities:
+        monitor.send_alert(
+            vulnerabilities,
+            recipients=['security@company.com', 'ops@company.com']
+        )
+```
+
+**Cron-based CVE Monitoring**:
+
+```bash
+# /etc/cron.daily/cve-monitor.sh
+#!/bin/bash
+
+# Monitor deployed firmware for new CVEs
+python3 /opt/cve-monitor/cve-monitor.py
+
+# Check exit status
+if [ $? -ne 0 ]; then
+    echo "CVE monitoring failed" | mail -s "CVE Monitor Error" ops@company.com
+fi
+```
+
+### VEX (Vulnerability Exploitability eXchange) Support
+
+**Generate VEX documents to communicate vulnerability status**:
+
+```python
+#!/usr/bin/env python3
+# generate-vex.py - Create VEX document for known CVEs
+
+import json
+from datetime import datetime
+
+def generate_vex(sbom_path: str, cve_analysis: dict):
+    """
+    Generate CycloneDX VEX document
+
+    cve_analysis: {
+        'CVE-2023-12345': {
+            'status': 'not_affected',  # or 'affected', 'fixed', 'under_investigation'
+            'justification': 'component_not_present',
+            'detail': 'Vulnerable function is not compiled in our build'
+        }
+    }
+    """
+
+    with open(sbom_path, 'r') as f:
+        sbom = json.load(f)
+
+    vex = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.5",
+        "version": 1,
+        "metadata": {
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "component": sbom['metadata']['component']
+        },
+        "vulnerabilities": []
+    }
+
+    for cve_id, analysis in cve_analysis.items():
+        vuln_entry = {
+            "id": cve_id,
+            "source": {
+                "name": "NVD",
+                "url": f"https://nvd.nist.gov/vuln/detail/{cve_id}"
+            },
+            "analysis": {
+                "state": analysis['status'],
+                "justification": analysis.get('justification', 'code_not_reachable'),
+                "detail": analysis['detail'],
+                "response": ["update" if analysis['status'] == 'fixed' else "will_not_fix"]
+            }
+        }
+        vex['vulnerabilities'].append(vuln_entry)
+
+    return vex
+
+if __name__ == '__main__':
+    # Example: Document that CVE-2023-12345 doesn't affect our build
+    cve_analysis = {
+        'CVE-2023-12345': {
+            'status': 'not_affected',
+            'justification': 'vulnerable_code_not_in_execute_path',
+            'detail': 'The vulnerable SSL_read() function is not used in our configuration. We use TLS 1.3 only.'
+        },
+        'CVE-2023-67890': {
+            'status': 'fixed',
+            'justification': 'patch_applied',
+            'detail': 'Patched in openssl-3.0.8-r1 Yocto recipe'
+        }
+    }
+
+    vex = generate_vex('sbom-cyclonedx.json', cve_analysis)
+
+    with open('firmware-vex.json', 'w') as f:
+        json.dump(vex, f, indent=2)
+
+    print("VEX document generated: firmware-vex.json")
+```
+
+## OWASP IoT Ecosystem Integration
+
+### Supply Chain Security Mapping
+
+* **OWASP ISVS**: V6.1.1 - Software Bill of Materials is maintained and available
+* **OWASP ISVS**: V6.1.2 - Third-party components are tracked and monitored for vulnerabilities
+* **OWASP ISVS**: V6.2.1 - Cryptographic signing is used to verify software integrity
+* **OWASP ISTG**: ISTG-FW-INFO-002 - Identify third-party components and versions
+* **OWASP FSTM**: Stage 2 - Obtain firmware and extract SBOM information
+* **OWASP IoTGoat**: Practice firmware extraction and component identification
+
+### Compliance Framework Alignment
+
+**EU Cyber Resilience Act (CRA)**:
+- Annex I: Product SBOM required
+- Article 11: Security updates for product lifetime
+- Article 14: Vulnerability disclosure requirements
+
+**US Executive Order 14028**:
+- Section 4(e): SBOM required for federal software
+- NTIA minimum elements compliance
+- Continuous vulnerability monitoring
+
+**FDA Medical Device Cybersecurity**:
+- Premarket: SBOM submission required
+- Postmarket: Vulnerability management and patching
+- Transparency logs for security updates
 
 ## Additional References <a href="#additional-references" id="additional-references"></a>
 
