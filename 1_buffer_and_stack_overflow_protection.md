@@ -1,104 +1,97 @@
 # Buffer and Stack Overflow Protection
 
-Prevent the use of known dangerous functions and APIs in effort to protect against memory-corruption vulnerabilities within firmware. (e.g. Use of [unsafe C functions](https://wiki.sei.cmu.edu/confluence/display/c/VOID+MSC34-C.+Do+not+use+deprecated+and+obsolete+functions) - [strcat, strcpy, sprintf, scanf](http://cwe.mitre.org/data/definitions/676.html#Demonstrative%20Examples)). Memory-corruption vulnerabilities, such as buffer overflows, can consist of overflowing the stack ([Stack overflow](https://en.wikipedia.org/wiki/Stack_buffer_overflow)) or overflowing the heap ([Heap overflow](https://en.wikipedia.org/wiki/Heap_overflow)). For simplicity purposes, this document does not distinguish between these two types of vulnerabilities. In the event a buffer overflow has been detected and exploited by an attacker, the instruction pointer register is overwritten to execute the arbitrary malicious code provided by the attacker.
+## The Persistent Problem of Memory Safety
 
-**Finding Vulnerable C functions in source code. Example: Utilize the "find" command below within a "C" repository to find vulnerable C functions such as "strncpy" and "strlen" in source code.**
+Buffer overflow vulnerabilities remain **the most prevalent and critical security issue** in embedded systems—despite decades of compiler protections, static analysis tools, and secure coding guidelines. Memory-corruption vulnerabilities occur when data exceeds allocated buffer boundaries, allowing attackers to execute arbitrary code, bypass security controls, or crash devices.
 
-```
-find . -type f -name '*.c' -print0|xargs -0 grep -e 'strncpy.*strlen'|wc -l
-```
+**Why hasn't this problem been solved?**
 
-**An OR grep expression could be utilized with the following expression:**
+Despite widespread availability of compiler hardening flags (ASLR, stack canaries, FORTIFY_SOURCE), buffer overflow CVEs continue to plague embedded devices. The challenge isn't technical—**it's systemic, economic, and rooted in the supply chain**.
 
-```
-$ grep -E '(strcpy|strcat|strncat|sprintf|strlen|memcpy|fopen|gets)' fuzzgoat.c
-   memcpy (&state.settings, settings, sizeof (json_settings));
-            {  sprintf (error, "Unexpected EOF in string (at %d:%d)", line_and_col);
-                        sprintf (error, "Invalid character value `%c` (at %d:%d)", b, line_and_col);
-                            sprintf (error, "Invalid character value `%c` (at %d:%d)", b, line_and_col);
-                  {  sprintf (error, "%d:%d: Unexpected EOF in block comment", line_and_col);
-               {  sprintf (error, "%d:%d: Comment not allowed here", line_and_col);
-               {  sprintf (error, "%d:%d: EOF unexpected", line_and_col);
-                     sprintf (error, "%d:%d: Unexpected `%c` in comment opening sequence", line_and_col, b);
-                  sprintf (error, "%d:%d: Trailing garbage: `%c`",
-                  {  sprintf (error, "%d:%d: Unexpected ]", line_and_col);
-                        sprintf (error, "%d:%d: Expected , before %c",
-                        sprintf (error, "%d:%d: Expected : before %c",
-                        {  sprintf (error, "%d:%d: Unexpected %c when seeking value", line_and_col, b);
-                     {  sprintf (error, "%d:%d: Expected , before \"", line_and_col);
-                     sprintf (error, "%d:%d: Unexpected `%c` in object", line_and_col, b);
-                        {  sprintf (error, "%d:%d: Unexpected `0` before `%c`", line_and_col, b);
-                  {  sprintf (error, "%d:%d: Expected digit before `.`", line_and_col);
-                     {  sprintf (error, "%d:%d: Expected digit after `.`", line_and_col);
-                  {  sprintf (error, "%d:%d: Expected digit after `e`", line_and_col);
-   sprintf (error, "%d:%d: Unknown value", line_and_col);
-   strcpy (error, "Memory allocation failure");
-   sprintf (error, "%d:%d: Too long (caught overflow)", line_and_col);
-         strcpy (error_buf, error);
-         strcpy (error_buf, "Unknown error");
-```
+### The Supply Chain Reality
 
-**Below, example output of flawfinder is shown run against C source code.**
+**BSP Vendors and ODMs**: Board Support Packages (BSPs) from semiconductor manufacturers and Original Design Manufacturers (ODMs) are predominantly written in C/C++. These vendors:
+- Supply foundational code to thousands of device manufacturers
+- Rarely update legacy codebases due to validation costs
+- Prioritize time-to-market over security refactoring
+- Face economic barriers to rewriting critical algorithms in memory-safe languages
 
-```
-$ flawfinder fuzzgoat.c
-Flawfinder version 1.31, (C) 2001-2014 David A. Wheeler.
-Number of rules (primarily dangerous function names) in C/C++ ruleset: 169
-Examining fuzzgoat.c
+**Economic Factors**:
+- **Existing infrastructure**: Countless embedded implementations exist in C/C++ for device drivers, cryptographic algorithms, protocol stacks
+- **Upfront investment**: Rewriting in Rust/Go requires significant time and resources
+- **Lack of expertise**: Embedded developers skilled in memory-safe languages remain scarce
+- **Long device lifespans**: 10-20+ year lifecycles mean legacy code persists for decades
 
-FINAL RESULTS:
+**Result**: Even manufacturers who implement compiler hardening in their application code inherit vulnerable BSP code from upstream suppliers.
 
-fuzzgoat.c:1049:  [4] (buffer) strcpy:
-  Does not check for buffer overflows when copying to destination (CWE-120).
-  Consider using strcpy_s, strncpy, or strlcpy (warning, strncpy is easily
-  misused).
-fuzzgoat.c:368:  [2] (buffer) memcpy:
-  Does not check for buffer overflows when copying to destination (CWE-120).
-  Make sure destination can always hold the source data.
-fuzzgoat.c:401:  [2] (buffer) sprintf:
-  Does not check for buffer overflows (CWE-120). Use sprintf_s, snprintf, or
-  vsnprintf. Risk is low because the source has a constant maximum length.
-<SNIP>
-fuzzgoat.c:1036:  [2] (buffer) strcpy:
-  Does not check for buffer overflows when copying to destination (CWE-120).
-  Consider using strcpy_s, strncpy, or strlcpy (warning, strncpy is easily
-  misused). Risk is low because the source is a constant string.
-fuzzgoat.c:1041:  [2] (buffer) sprintf:
-  Does not check for buffer overflows (CWE-120). Use sprintf_s, snprintf, or
-  vsnprintf. Risk is low because the source has a constant maximum length.
-fuzzgoat.c:1051:  [2] (buffer) strcpy:
-  Does not check for buffer overflows when copying to destination (CWE-120).
-  Consider using strcpy_s, strncpy, or strlcpy (warning, strncpy is easily
-  misused). Risk is low because the source is a constant string.
-ANALYSIS SUMMARY:
+### The Hard Truth About Compiler Protections
 
-Hits = 24
-Lines analyzed = 1082 in approximately 0.02 seconds (59316 lines/second)
-Physical Source Lines of Code (SLOC) = 765
-Hits@level = [0]   0 [1]   0 [2]  23 [3]   0 [4]   1 [5]   0
-Hits@level+ = [0+]  24 [1+]  24 [2+]  24 [3+]   1 [4+]   1 [5+]   0
-Hits/KSLOC@level+ = [0+] 31.3725 [1+] 31.3725 [2+] 31.3725 [3+] 1.30719 [4+] 1.30719 [5+]   0
-Minimum risk level = 1
-Not every hit is necessarily a security vulnerability.
-There may be other security vulnerabilities; review your code!
-See 'Secure Programming for Linux and Unix HOWTO'
-(http://www.dwheeler.com/secure-programs) for more information.
-```
+**Compiler hardening flags are mitigation, not prevention**:
+- **ASLR (Address Space Layout Randomization)**: Makes exploitation harder, but information leaks can defeat it
+- **Stack canaries**: Detect overwrites but don't prevent the vulnerability
+- **FORTIFY_SOURCE**: Catches some buffer overflows at compile-time, misses others at runtime
+- **Static analysis**: Environment-specific bugs slip through (different compilers, hardware, operating systems)
 
-Usage of deprecated functions, [**Noncompliant Code Example**](https://wiki.sei.cmu.edu/confluence/display/c/VOID+STR35-C.+Do+not+copy+data+from+an+unbounded+source+to+a+fixed-length+array):This noncompliant code example assumes that gets() will not read more than BUFSIZ - 1 characters from stdin. This is an invalid assumption, and the resulting operation can cause a buffer overflow. Note further that BUFSIZ is a macro integer constant, defined in stdio.h, representing a suggested argument to setvbuf() and not the maximum size of such an input buffer.
+**These protections are essential**, but they **raise the exploitation bar**—they don't eliminate the vulnerability class.
 
-The gets() function reads characters from the stdin into a destination array until end-of-file is encountered or a newline character is read. Any newline character is discarded, and a null character is written immediately after the last character read into the array.
+### The Path Forward: Memory-Safe Languages
 
-```c
-#include <stdio.h>
+**The only true solution** to eliminate memory-corruption vulnerabilities is transitioning to memory-safe languages:
 
-void func(void) {
-  char buf[BUFSIZ];
-  if (gets(buf) == NULL) {
-    /* Handle error */
-  }
-}
-```
+**Rust for Embedded**:
+- Ownership system prevents use-after-free, double-free, buffer overflows **at compile time**
+- No runtime overhead for safety guarantees
+- Growing ecosystem: `embedded-hal`, RTIC, Embassy frameworks
+- Already used in: Linux kernel, Android, Zephyr RTOS
+
+**Adoption in Progress**:
+- **Linux Kernel**: Rust support added in v6.1 (December 2022), drivers being written in Rust
+- **Android**: Memory-safe Bluetooth, WiFi stacks
+- **Zephyr RTOS**: Experimental Rust application support
+- **Critical Infrastructure**: Google, Microsoft, AWS funding Rust embedded development
+
+**Strategic Transition** (from [OWASP "Memory Safe or Bust?"](https://dev.to/owasp/memory-safe-or-bust-17cb)):
+1. **Gradual adoption**: Start with new modules, not full rewrites
+2. **Create organizational roadmaps**: Define memory-safety milestones
+3. **Demand change from BSP vendors**: Semiconductor manufacturers must invest in memory-safe toolchains
+4. **Standards alignment**: Use OWASP ASVS, SAMM for security-first development
+
+### Pragmatic Guidance for Today's C/C++ Codebases
+
+**Until the ecosystem transitions to memory-safe languages**, this chapter provides:
+- Compiler hardening flags to **mitigate** exploitation (not prevent vulnerabilities)
+- Static analysis and fuzzing to **detect** memory errors
+- Safe coding practices to **reduce** dangerous function usage
+- Yocto/Buildroot integration for **build-time** security
+
+**Key Message**: Compiler protections are a **necessary interim measure**, not a permanent solution. Device manufacturers should:
+1. Apply all compiler hardening flags (this chapter)
+2. Demand memory-safe code from BSP vendors
+3. Plan gradual Rust/Go adoption for new development
+4. Contribute to open-source memory-safe embedded ecosystem
+
+---
+
+## Dangerous C Functions to Avoid
+
+For C/C++ codebases (the current reality), eliminate these unsafe functions:
+
+| Dangerous Function | Why Unsafe | Safe Alternative |
+|-------------------|------------|------------------|
+| `gets()` | No bounds checking | `fgets(buf, size, stdin)` |
+| `strcpy()` | No length limit | `strncpy()` or `strlcpy()` |
+| `sprintf()` | No buffer size check | `snprintf(buf, size, fmt, ...)` |
+| `strcat()` | Can overflow destination | `strncat()` or `strlcat()` |
+| `scanf("%s")` | Unbounded input | `scanf("%50s")` with limit |
+| `memcpy()` | No overlap checking | `memmove()` for overlapping buffers |
+
+**Detection Tools** (use in CI/CD):
+- **Static Analysis**: `clang-tidy`, `semgrep`, `cppcheck`, CodeQL
+- **Compiler Warnings**: `-Wall -Wextra -Werror` catches issues at compile time
+- **Runtime Detection**: AddressSanitizer (`-fsanitize=address`) for testing
+- **Fuzzing**: AFL, libFuzzer for discovering edge cases
+
+---
 
 **Compliant Example**: The fgets() function reads, at most, one less than a specified number of characters from a stream into an array. This solution is compliant because the number of bytes copied from stdin to buf cannot exceed the allocated memory:
 

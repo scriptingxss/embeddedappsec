@@ -25,6 +25,40 @@ Threat modeling typically includes the following activities:
 
 Threat modeling should be done **early, and as often as possible**. Threat model owners are best in the hands of the software teams and should be considered a **living document** that is updated as new features are planned.
 
+### Threat Modeling Manifesto Alignment
+
+This guide aligns with the [Threat Modeling Manifesto](https://www.threatmodelingmanifesto.org/) principles:
+
+**Values** (we prioritize):
+- **Finding and fixing design issues** over checkbox compliance
+- **People and collaboration** over processes and tools
+- **Understanding as a journey** over a security snapshot
+- **Doing threat modeling** over discussing it
+- **Continuous refinement** over single delivery
+
+**Core Questions for Embedded Threat Modeling**:
+1. **What are we working on?** - Device architecture, components, data flows, trust boundaries
+2. **What can go wrong?** - Apply STRIDE, PASTA, LINDDUN, or TARA frameworks
+3. **What are we going to do about it?** - Mitigations, risk prioritization, implementation
+4. **Did we do a good enough job?** - Validation, iteration, living document updates
+
+**Anti-Patterns to Avoid**:
+- ❌ **Hero threat modeler dependency** - Threat modeling should be collaborative, not dependent on one expert
+- ❌ **Analysis paralysis** - Analyzing problems extensively without seeking solutions
+- ❌ **Tunnel vision** - Overfocusing on specific elements (e.g., only network attacks, ignoring physical/supply chain)
+- ❌ **Perfection seeking** - Waiting for the perfect model instead of iterating
+- ❌ **Checkbox compliance** - Treating threat modeling as a one-time deliverable for audits
+- ❌ **Tool obsession** - Prioritizing tools over understanding and collaboration
+
+**Embedded-Specific Considerations**:
+- Threat models must account for long device lifespans (10-20+ years)
+- Physical access threats are often more critical than in IT systems
+- Supply chain and manufacturing threats (ODM backdoors, component substitution)
+- Update limitations (no internet connectivity, limited flash wear cycles)
+- Resource constraints affect mitigation options
+
+**Recommended Pattern**: Integrate threat modeling into sprint planning, firmware releases, and compliance reviews. Update models when adding features, onboarding new team members, or responding to emerging threats.
+
 ---
 
 ## Modern Threat Modeling Frameworks
@@ -132,7 +166,7 @@ TARA is mandated by **ISO/SAE 21434** and **UNECE WP.29** for automotive cyberse
 **TARA Example - Connected Vehicle**:
 ```
 Asset: Vehicle Gateway ECU (connects cellular to CAN bus)
-Threat: Remote attacker exploits cellular modem vulnerability (CVE-2024-XXXXX)
+Threat: Remote attacker exploits cellular modem vulnerability (CVE-2023-12345 example)
 Attack Path: Internet -> Cellular Modem -> Gateway ECU -> CAN bus -> Brake ECU
 Impact: Safety (ASIL D - highest), catastrophic injury/death
 Attack Feasibility:
@@ -1256,7 +1290,7 @@ Attack Surface Inventory:
 
 5. Third-Party Components:
    - FreeRTOS v10.5.1 (known CVEs: none critical)
-   - Mbed TLS 3.3.0 (known CVEs: CVE-2024-XXXXX - patched)
+   - Mbed TLS 3.3.0 (known CVEs: none critical in this version)
    - cJSON parser (fuzzing: passed 1M iterations)
 
 Attack Surface Score: 23 entry points (Target: <20 for low-risk profile)
@@ -2368,15 +2402,5 @@ Threat models should answer the following four questions:
 * [MITRE ATT&CK for Mobile](https://attack.mitre.org/matrices/mobile/) - IoT and mobile threats
 * [CVE Database](https://cve.mitre.org/) - Common Vulnerabilities and Exposures
 * [NIST NVD](https://nvd.nist.gov/) - National Vulnerability Database
-
----
-
-**Document Owner**: OWASP Embedded Application Security Project
-
----
-
-*This chapter has been modernized from the 2018 original to reflect 2025 threat modeling practices, including AI/ML threats, GenAI code risks, modern frameworks (PASTA, LINDDUN, TARA, STRIDE-AI, MITRE EMB3D), open source tooling, and regulatory compliance (EU Cyber Resilience Act, ISO/SAE 21434, FDA 2023 guidance, IEC 62443-4-2).*
-
-*🤖 Generated with [Claude Code](https://claude.com/claude-code)*
 
 *Co-Authored-By: Claude <noreply@anthropic.com>*

@@ -1,68 +1,39 @@
 # Third Party Code and Components
 
-Following setup of the toolchain, it is important to ensure that the kernel, software packages, and third party libraries are updated to protect against publicly known vulnerabilities. Software such as Rompager or embedded build tools such as Buildroot should be checked against vulnerability databases as well as their ChangeLogs to determine when and if an update is needed. It is important to note this process should be tested by developers and/or QA teams prior to release builds as updates to embedded systems can cause issues with the operations of those systems.
+## Software Supply Chain Security for Embedded Systems
 
-Embedded projects should maintain a “Bill of Materials” of the third party and open source software included in its firmware images. This Bill of Materials should be checked to confirm that none of the third party software included has any unpatched vulnerabilities and also. Up to date vulnerability information may be found through the National Vulnerability Database or Open Hub.
+Modern embedded devices depend on hundreds of third-party components—operating systems, libraries, frameworks, and toolchains. Each component represents a potential vulnerability that could compromise device security. The 2020 SolarWinds attack and subsequent Executive Order 14028 (2021) elevated software supply chain security to a critical national security concern.
 
-Several solutions exist for cataloging and auditing third party software. Many solutions are built into your build environment such as:
+**Why Supply Chain Security Matters for Embedded**:
+- **Long device lifespans**: 10-20+ year lifecycles mean vulnerabilities discovered years after deployment
+- **Difficult patching**: Many embedded devices lack OTA update mechanisms
+- **Regulatory requirements**: EU Cyber Resilience Act, NTIA SBOM mandates, FDA medical device guidance
+- **Attack surface**: A single vulnerable third-party library can compromise an entire product line
 
-* C / C++
-  * `Makefile`
-* Go
-  * Use the official `dep` [tool](https://github.com/golang/dep)
-* Node
-  * `npm list`
-* Python
-  * `pip freeze`
-* Ruby
-  * `gem dependency`
-* Lua
-  * See the `rockspec file`
-* Java
-  * `mvn dependency:tree`
-  * `gradle app:dependencies`
-* Yocto
-  * `buildhistory`
-* Buildroot (free)
-  * `make legal-info`
-* Package Managers (free)
-*
-  * `dpkg --list`
-  * `rpm -qa`
-  * `yum list`
-  * `apt list --installed`
-* RetireJS for Javascript projects (free)
+**Key Concepts**:
 
-**A sample BOM is shown below:**
+1. **Software Bill of Materials (SBOM)**: Comprehensive inventory of all software components
+   - Required by EU CRA (2024), Executive Order 14028, NTIA minimum elements
+   - Formats: SPDX (ISO/IEC 5962:2021), CycloneDX (OWASP)
 
-| **Component** | Version | Vulnerabilities - CVEs | Notes       |
-| ------------- | ------- | ---------------------- | ----------- |
-| jQuery        | 1.4.4   | CVE-2011-4969          |             |
-| libxml2       | 2.9.4   | CVE-2016-5131          | To be fixed |
+2. **Vulnerability Management**: Continuous monitoring and patching of third-party components
+   - CVE databases (NIST NVD, MITRE)
+   - Automated scanning (Grype, Trivy, OSV-Scanner)
 
-Software BOM's also include licensing and contextual information relating to the function of the component or justification for using the specific version.
+3. **License Compliance**: Ensuring third-party licenses are compatible with your product
+   - GPL implications for embedded firmware
+   - SPDX license identifiers
 
-**Retirejs in a JavaScript project directory Example:**
+**Modern Embedded SBOM Tools**:
+- **Yocto/OpenEmbedded**: Built-in `buildhistory` and SPDX SBOM generation (see comprehensive section below)
+- **Buildroot**: `make legal-info` for license and dependency tracking
+- **Syft**: Generate SBOMs from container images and filesystems
+- **CycloneDX CLI**: Convert between SBOM formats
+- **Dependency-Track**: Continuous SBOM monitoring and vulnerability tracking
 
-```bash
-$ retire .
-Loading from cache: https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/jsrepository.json
-Loading from cache: https://raw.githubusercontent.com/RetireJS/retire.js/master/repository/npmrepository.json
-/js/jquery-1.4.4.min.js
- ↳ jquery 1.4.4.min has known vulnerabilities: severity: medium; CVE: CVE-2011-4969; http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2011-4969 http://research.insecurelabs.org/jquery/test/ severity: medium; bug: 11290, summary: Selector interpreted as HTML; http://bugs.jquery.com/ticket/11290 http://research.insecurelabs.org/jquery/test/ severity: medium; issue: 2432, summary: 3rd party CORS request may execute; https://github.com/jquery/jquery/issues/2432 http://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/
-/js/jquery-1.4.4.min.js
- ↳ jquery 1.4.4.min has known vulnerabilities: severity: medium; CVE: CVE-2011-4969; http://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2011-4969 http://research.insecurelabs.org/jquery/test/ severity: medium; bug: 11290, summary: Selector interpreted as HTML; http://bugs.jquery.com/ticket/11290 http://research.insecurelabs.org/jquery/test/ severity: medium; issue: 2432, summary: 3rd party CORS request may execute; https://github.com/jquery/jquery/issues/2432 http://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/
-/javascript/vendor/jquery-1.9.1.min.js
- ↳ jquery 1.9.1.min has known vulnerabilities: severity: medium; issue: 2432, summary: 3rd party CORS request may execute; https://github.com/jquery/jquery/issues/2432 http://blog.jquery.com/2016/01/08/jquery-2-2-and-1-12-released/
-/javascript/vendor/jquery-migrate-1.1.1.min.js
- ↳ jquery-migrate 1.1.1.min has known vulnerabilities: severity: medium; release: jQuery Migrate 1.2.0 Released, summary: cross-site-scripting; http://blog.jquery.com/2013/05/01/jquery-migrate-1-2-0-released/ severity: medium; bug: 11290, summary: Selector interpreted as HTML; http://bugs.jquery.com/ticket/11290 http://research.insecurelabs.org/jquery/test/
-/javascript/vendor/moment.min.js
- ↳ moment.js 2.10.6 has known vulnerabilities: severity: low; summary: reDOS - regular expression denial of service; https://github.com/moment/moment/issues/2936
-```
+This chapter provides comprehensive guidance on managing third-party code throughout the embedded device lifecycle, with detailed Yocto Project integration examples.
 
-
-
-Find your installed-packages.txt from your yocto build. For information on that see: [http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#understanding-what-the-build-history-contains](http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#understanding-what-the-build-history-contains)
+---
 
 **As of Yocto 2.2 Morty, a built-in** `cve-check` [**BitBake class**](https://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/classes/cve-check.bbclass) **was added to help automate checking of recipes against public CVEs at build time. See the following Yocto page for additional details:** [**https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html**](https://docs.yoctoproject.org/dev/dev-manual/vulnerabilities.html)
 

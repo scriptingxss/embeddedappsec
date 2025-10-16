@@ -1,72 +1,124 @@
 # Firmware Updates and Cryptographic Signatures
 
-Ensure robust update mechanisms utilize cryptographically signed firmware images upon download and when applicable, for updating functions pertaining to third party software. Cryptographic signature allows for verification that files have not been modified or otherwise tampered with since the developer created and signed them. The signing and verification process uses public-key cryptography and it is difficult to forge a digital signature \(e.g. PGP signature\) without first gaining access to the private key. In the event a private key is compromised, developers of the software must revoke the compromised key and will need to re-sign all previous firmware releases with the new key.
+## Cryptographic Firmware Verification Principles
 
-**Verifying a kernel image signature Example:**
+Modern embedded systems use cryptographic signatures to ensure firmware authenticity and integrity. This prevents attackers from installing malicious firmware, even with physical device access.
 
-Downloading the kernel images
+**Core Principles**:
+1. **Asymmetric Cryptography**: Private key signs firmware (kept secure), public key verifies (embedded in device)
+2. **Chain of Trust**: Each boot stage verifies the next (ROM → Bootloader → Kernel → Rootfs)
+3. **Anti-Rollback**: Prevent downgrade attacks to vulnerable firmware versions
+4. **Secure Storage**: Public keys stored in one-time-programmable (OTP) memory or secure elements
 
-```bash
-wget [https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.6.6.tar.xz](https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.6.6.tar.xz)
+### Modern Firmware Signing: U-Boot FIT Images
 
-wget [https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.6.6.tar.sign](https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.6.6.tar.sign)
+**FIT (Flattened Image Tree)** is the modern standard for embedded Linux firmware images, replacing legacy uImage format.
+
+**FIT Image Structure**:
+```
+firmware.itb (Flattened Image Tree Binary)
+├── Kernel image (compressed)
+├── Device tree blob (DTB)
+├── Initramfs (optional)
+└── Digital signatures (RSA-2048/4096 or ECDSA P-256/384)
 ```
 
-**Download the public key from a PGP keyserver in order to verify the signature.**
+**Example: Creating and Signing a FIT Image**
 
+**1. Generate RSA Key Pair** (do this once, protect private key!):
 ```bash
-# gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 38DBBDC86092693E
-gpg: /root/.gnupg/trustdb.gpg: trustdb created
-gpg: key 38DBBDC86092693E: public key "Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>" imported
-gpg: no ultimately trusted keys found
-gpg: Total number processed: 1
-gpg:               imported: 1
+# Generate 4096-bit RSA key pair
+openssl genpkey -algorithm RSA -out keys/dev-private.key -pkeyopt rsa_keygen_bits:4096
+
+# Extract public key
+openssl rsa -in keys/dev-private.key -pubout -out keys/dev-public.key
 ```
 
-**Uncompressing and verifying the .tar firmware image against the signature:**
+**2. Create FIT Image Source (.its file)**:
+```dts
+/dts-v1/;
 
-```bash
-# xz -cd linux-4.6.6.tar.xz | gpg2 --verify linux-4.6.6.tar.sign -
-gpg: Signature made Wed 10 Aug 2016 06:55:15 AM EDT
-gpg:                using RSA key 38DBBDC86092693E
-gpg: Good signature from "Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>" [unknown]
-gpg: WARNING: This key is not certified with a trusted signature!
-gpg:          There is no indication that the signature belongs to the owner.
-Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
+/ {
+    description = "Signed firmware for production device";
+    #address-cells = <1>;
+
+    images {
+        kernel {
+            description = "Linux Kernel 6.6 LTS";
+            data = /incbin/("./Image.gz");
+            type = "kernel";
+            arch = "arm64";
+            os = "linux";
+            compression = "gzip";
+            load = <0x80080000>;
+            entry = <0x80080000>;
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+
+        fdt {
+            description = "Device Tree Blob";
+            data = /incbin/("./device-tree.dtb");
+            type = "flat_dt";
+            arch = "arm64";
+            compression = "none";
+            hash-1 {
+                algo = "sha256";
+            };
+        };
+    };
+
+    configurations {
+        default = "config-1";
+        config-1 {
+            description = "Production Configuration";
+            kernel = "kernel";
+            fdt = "fdt";
+            signature {
+                algo = "sha256,rsa4096";
+                key-name-hint = "dev";
+                sign-images = "kernel", "fdt";
+            };
+        };
+    };
+};
 ```
 
-Notice the WARNING: This key is not certified with a trusted signature! You will now need to verify that the key used to sign the archive really does belong to the owner \(in our example, Greg Kroah-Hartman\). There are several ways you can do this:
-
-1. Use the Kernel.org web of trust. This will require that you first locate the members of kernel.org in your area and sign their keys. Short of meeting the actual owner of the PGP key in real life, this is your best option to verify the validity of a PGP key signature.
-2. Review the list of signatures on the developer's key by using `gpg --list-sigs`. Email as many people who have signed the key as possible, preferably at different organizations \(or at least different domains\). Ask them to confirm that they have signed the key in question. You should attach, at best, marginal trust to the responses you receive in this manner \(if you receive any\).
-3. Use the following site to see trust paths from Linus Torvalds' key to the key used to sign the tarball: pgp.cs.uu.nl. Put Linus's key into the "from" field and the key you got in the output above into the "to" field. Normally, only Linus or people with Linus's direct signature will be in charge of releasing kernels. 
-
-If you get "BAD signature"  
-If at any time you see "BAD signature" output from `gpg --verify`, please check the following first:
-
-1. Make sure that you are verifying the signature against the .tar version of the archive, not the compressed \(.tar.xz\) version.
-2. Make sure the the downloaded file is correct and not truncated or otherwise corrupted.
-
-**Demonstrating \#1 above, verifying a signature incorrectly Example**:
-
+**3. Build and Sign FIT Image**:
 ```bash
-# gpg --verify linux-4.6.6.tar.sign linux-4.6.6.tar.xz 
-gpg: Signature made Wed 10 Aug 2016 06:55:15 AM EDT
-gpg:                using RSA key 38DBBDC86092693E
-gpg: BAD signature from "Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>" [unknown]
+# Create unsigned FIT image
+mkimage -f firmware.its firmware-unsigned.itb
+
+# Sign with private key
+mkimage -F -k keys/ -K u-boot.dtb -r firmware-unsigned.itb
+
+# Result: firmware.itb (signed)
 ```
 
-**Verifying a signature correctly Example**:
-
+**4. Verify Signature** (U-Boot bootloader):
 ```bash
-# gpg --verify linux-4.6.6.tar.sign linux-4.6.6.tar
-gpg: Signature made Wed 10 Aug 2016 06:55:15 AM EDT
-gpg:                using RSA key 38DBBDC86092693E
-gpg: Good signature from "Greg Kroah-Hartman (Linux kernel stable release signing key) <greg@kroah.com>" [unknown]
-gpg: WARNING: This key is not certified with a trusted signature!
-gpg:          There is no indication that the signature belongs to the owner.
-Primary key fingerprint: 647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
+# U-Boot will automatically verify signature before booting
+# If signature invalid, boot process halts
+
+# Manual verification for testing:
+fit_check firmware.itb
 ```
+
+**Production Key Management**:
+- **Development keys**: Used during development, keys kept in source control
+- **Production keys**: Stored in Hardware Security Module (HSM), accessed only by CI/CD
+- **Key rotation**: Plan for key compromise (include public key version in FIT)
+- **Secure boot chain**: Public key hash burned into SoC OTP/eFuses
+
+**Hardware Root of Trust Integration**:
+- TPM 2.0: Store public keys in TPM NVRAM, verify with `tpm2_verifysignature`
+- OP-TEE: Verify signatures in Trusted Execution Environment
+- Secure Element: Offload signature verification to ATECC608, EdgeLock SE050
+
+For comprehensive Yocto Project integration of U-Boot verified boot, see [Yocto Project Secure Boot Implementation](#yocto-project-secure-boot-implementation) below.
+
+---
 
 **Considerations:**
 

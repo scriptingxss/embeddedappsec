@@ -340,6 +340,70 @@ All Yocto sections include cross-references to related chapters:
 
 ---
 
+### 9. Chapter Content Expansion (Sessions 1-5)
+
+**Completed**: October 2025
+
+Comprehensive expansion of security guidance across all major chapters with modern best practices, detailed code examples, and regulatory compliance mapping.
+
+#### Chapter 1: Buffer and Stack Overflow Protection
+**Expansion**: +560 lines
+- GCC security compilation flags (FORTIFY_SOURCE, stack protectors, PIE/ASLR)
+- Kernel hardening parameters and memory protection
+- Modern exploit mitigation techniques
+- Yocto compiler hardening integration
+
+#### Chapter 2: Injection Prevention
+**Expansion**: +698 lines
+- Real-world embedded device vulnerability examples
+- OS command injection prevention patterns
+- Input validation for resource-constrained environments
+- Secure coding practices for embedded C/C++
+
+#### Chapter 3: Firmware Updates and Cryptographic Signatures
+**Expansion**: +992 lines
+- Modern firmware update frameworks (SWUpdate, RAUC, Mender)
+- U-Boot verified boot and FIT image signing
+- Rollback protection and A/B update strategies
+- Post-quantum cryptography readiness for secure boot
+
+#### Chapter 4: Securing Sensitive Information
+**Updates**: Hardware security and PQC enhancements
+- Hardware-based security (TEE, secure elements, TPM 2.0)
+- Post-quantum cryptography for secure storage
+- Key management best practices
+
+#### Chapter 6: Embedded Platform Security Hardening
+**Restructuring**: Content deduplication and navigation improvements
+- Removed duplicate U-Boot content (cross-referenced to Chapter 3)
+- Removed outdated Buildroot screenshots
+- Added Quick Navigation section with cross-chapter links
+- Converted AGL-specific guidance to universal embedded practices
+- Clarified platform-level focus vs compiler/bootloader details
+
+#### Chapter 8: Transport Layer Security
+**Expansion**: +865 lines
+- Post-quantum cryptography for TLS (hybrid ECDHE + ML-KEM)
+- Embedded TLS library comparisons (mbedTLS, wolfSSL, OpenSSL)
+- Certificate management and mutual TLS (mTLS)
+- TLS 1.3 configuration for resource-constrained devices
+- Hardware crypto acceleration integration
+
+#### Chapter 10: Third-Party Code and Components
+**Expansion**: +797 lines
+- Yocto CVE checking and vulnerability management
+- Modern SBOM tools and generation (SPDX, CycloneDX)
+- Compliance automation workflows
+- CVE scanner integration (Grype, Trivy, Clair)
+- SBOM differential analysis
+- Dependency Track for continuous monitoring
+
+**Total**: ~4,000 lines of new security guidance addressing modern threats, regulatory requirements (EU CRA, NTIA SBOM mandates), and quantum-resistant cryptography preparation.
+
+**Impact**: Guide now provides production-ready code examples, automated workflows, and comprehensive coverage for devices with 10-20+ year lifecycles.
+
+---
+
 ## Link Updates
 
 ### OWASP Wiki Migration (36 Links Updated)
