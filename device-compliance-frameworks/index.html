@@ -1,0 +1,2818 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Best Practices for Embedded Device Security">
+      
+      
+        <meta name="author" content="OWASP Embedded Application Security Project">
+      
+      
+        <link rel="canonical" href="https://scriptingxss.github.io/embeddedappsec/device-compliance-frameworks/">
+      
+      
+        <link rel="prev" href="../owasp-iot-ecosystem-alignment/">
+      
+      
+        <link rel="next" href="../project-roadmap/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Device Compliance Frameworks - OWASP Embedded Application Security</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modern-compliance-frameworks-for-embedded-and-iot-security" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="OWASP Embedded Application Security" class="md-header__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OWASP Embedded Application Security
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Device Compliance Frameworks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../preface/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../1_buffer_and_stack_overflow_protection/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Best Practices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../owasp-iot-ecosystem-alignment/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../project-roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Project Information
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="OWASP Embedded Application Security" class="md-nav__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    OWASP Embedded Application Security
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Security Best Practices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Security Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1_buffer_and_stack_overflow_protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Buffer and Stack Overflow Protection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2_injection_prevention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Injection Prevention
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_firmware_updates_and_cryptographic_signatures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Firmware Updates and Cryptographic Signatures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_securing_sensitive_information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Securing Sensitive Information
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5identity_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Identity Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_embedded_framework_and_c-based_toolchain_hardeni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedded Platform Security Hardening
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_usage_of_debugging_code_and_interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Debugging Code and Interfaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_transport_layer_security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transport Layer Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9_usage_of_data_collection_and_storage_-_privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Data Collection and Storage - Privacy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_third_party_code_and_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Third Party Code and Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threat-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Threat Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Appendices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Appendices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../owasp-iot-ecosystem-alignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OWASP IoT Ecosystem Alignment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Device Compliance Frameworks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Device Compliance Frameworks
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eu-cyber-resilience-act-cra" class="md-nav__link">
+    <span class="md-ellipsis">
+      EU Cyber Resilience Act (CRA)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EU Cyber Resilience Act (CRA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-for-embedded-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation for Embedded Devices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etsi-en-303-645" class="md-nav__link">
+    <span class="md-ellipsis">
+      ETSI EN 303 645
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ETSI EN 303 645">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#13-key-provisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      13 Key Provisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping-to-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapping to Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iec-62443" class="md-nav__link">
+    <span class="md-ellipsis">
+      IEC 62443
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IEC 62443">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-levels-sl" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Levels (SL)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Mapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nist-iot-cybersecurity" class="md-nav__link">
+    <span class="md-ellipsis">
+      NIST IoT Cybersecurity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NIST IoT Cybersecurity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-baseline-capabilities-nistir-8259a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Baseline Capabilities (NISTIR 8259A)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nist-sp-800-213-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      NIST SP 800-213 Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fda-medical-device-cybersecurity" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDA Medical Device Cybersecurity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FDA Medical Device Cybersecurity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fda-cybersecurity-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDA Cybersecurity Tiers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automotive-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automotive Standards
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automotive Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isosae-21434-road-vehicles-cybersecurity-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      ISO/SAE 21434 - Road Vehicles Cybersecurity Engineering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#un-r155r156-unece-regulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      UN R155/R156 (UNECE Regulations)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automotive-specific-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automotive-Specific Guidance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#us-executive-order-14028" class="md-nav__link">
+    <span class="md-ellipsis">
+      US Executive Order 14028
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="US Executive Order 14028">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-mandates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Mandates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-requirements-per-ntia-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Requirements (Per NTIA Guidelines)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#california-iot-security-law-sb-327" class="md-nav__link">
+    <span class="md-ellipsis">
+      California IoT Security Law (SB-327)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="California IoT Security Law (SB-327)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-provisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Provisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practice-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practice Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Mapping
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-priority-by-market" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Priority by Market
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Checklist
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      During Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Release
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compliance-tools-and-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Tools and Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industry-organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industry Organizations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#government-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Government Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project Information
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Project Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about-owasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About OWASP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog 2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Table of Contents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#eu-cyber-resilience-act-cra" class="md-nav__link">
+    <span class="md-ellipsis">
+      EU Cyber Resilience Act (CRA)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="EU Cyber Resilience Act (CRA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-for-embedded-devices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation for Embedded Devices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etsi-en-303-645" class="md-nav__link">
+    <span class="md-ellipsis">
+      ETSI EN 303 645
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ETSI EN 303 645">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#13-key-provisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      13 Key Provisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping-to-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mapping to Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iec-62443" class="md-nav__link">
+    <span class="md-ellipsis">
+      IEC 62443
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IEC 62443">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#security-levels-sl" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security Levels (SL)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Mapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nist-iot-cybersecurity" class="md-nav__link">
+    <span class="md-ellipsis">
+      NIST IoT Cybersecurity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NIST IoT Cybersecurity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-baseline-capabilities-nistir-8259a" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Baseline Capabilities (NISTIR 8259A)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nist-sp-800-213-recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      NIST SP 800-213 Recommendations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fda-medical-device-cybersecurity" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDA Medical Device Cybersecurity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FDA Medical Device Cybersecurity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-requirements_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fda-cybersecurity-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      FDA Cybersecurity Tiers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automotive-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automotive Standards
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automotive Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#isosae-21434-road-vehicles-cybersecurity-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      ISO/SAE 21434 - Road Vehicles Cybersecurity Engineering
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#un-r155r156-unece-regulations" class="md-nav__link">
+    <span class="md-ellipsis">
+      UN R155/R156 (UNECE Regulations)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automotive-specific-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automotive-Specific Guidance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#us-executive-order-14028" class="md-nav__link">
+    <span class="md-ellipsis">
+      US Executive Order 14028
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="US Executive Order 14028">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-mandates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Mandates
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-requirements-per-ntia-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Requirements (Per NTIA Guidelines)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#california-iot-security-law-sb-327" class="md-nav__link">
+    <span class="md-ellipsis">
+      California IoT Security Law (SB-327)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="California IoT Security Law (SB-327)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-provisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Provisions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practice-interpretation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Best Practice Interpretation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Mapping
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance Mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-reference-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-priority-by-market" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implementation Priority by Market
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Checklist
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#during-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      During Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pre-Release
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Release
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compliance-tools-and-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance Tools and Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#industry-organizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Industry Organizations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#government-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Government Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/scriptingxss/embeddedappsec/edit/newrevision/device-compliance-frameworks.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec/raw/newrevision/device-compliance-frameworks.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="modern-compliance-frameworks-for-embedded-and-iot-security">Modern Compliance Frameworks for Embedded and IoT Security<a class="headerlink" href="#modern-compliance-frameworks-for-embedded-and-iot-security" title="Permanent link">&para;</a></h1>
+<p>This document provides guidance on aligning embedded device security with current regulatory and industry compliance frameworks.</p>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="#eu-cyber-resilience-act-cra">EU Cyber Resilience Act (CRA)</a></li>
+<li><a href="#etsi-en-303-645">ETSI EN 303 645</a></li>
+<li><a href="#iec-62443">IEC 62443</a></li>
+<li><a href="#nist-iot-cybersecurity">NIST IoT Cybersecurity</a></li>
+<li><a href="#fda-medical-device-cybersecurity">FDA Medical Device Cybersecurity</a></li>
+<li><a href="#automotive-standards">Automotive (ISO/SAE 21434, UN R155/R156)</a></li>
+<li><a href="#us-executive-order-14028">US Executive Order 14028</a></li>
+<li><a href="#california-iot-security-law">California IoT Security Law (SB-327)</a></li>
+<li><a href="#compliance-mapping">Compliance Mapping</a></li>
+</ol>
+<hr />
+<h2 id="eu-cyber-resilience-act-cra">EU Cyber Resilience Act (CRA)<a class="headerlink" href="#eu-cyber-resilience-act-cra" title="Permanent link">&para;</a></h2>
+<p><strong>Status</strong>: Approved 2025, phased implementation through 2027
+<strong>Scope</strong>: Products with digital elements sold in EU market
+<strong>Authority</strong>: European Commission</p>
+<h3 id="key-requirements">Key Requirements<a class="headerlink" href="#key-requirements" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Secure by Design</strong>:</li>
+<li>Security integrated throughout product lifecycle</li>
+<li>Risk-based approach to cybersecurity</li>
+<li>
+<p>Documented security risk assessments</p>
+</li>
+<li>
+<p><strong>Vulnerability Management</strong>:</p>
+</li>
+<li>Handle vulnerabilities throughout product lifetime</li>
+<li>Provide security updates for minimum 5 years (or expected lifetime)</li>
+<li>
+<p>Report actively exploited vulnerabilities within 24 hours to ENISA</p>
+</li>
+<li>
+<p><strong>Software Bill of Materials (SBOM)</strong>:</p>
+</li>
+<li>Maintain comprehensive SBOM</li>
+<li>Make available to authorities upon request</li>
+<li>
+<p>Track all components and dependencies</p>
+</li>
+<li>
+<p><strong>Essential Cybersecurity Requirements</strong> (Annex I):</p>
+</li>
+<li>No known exploitable vulnerabilities</li>
+<li>Secure by default configuration</li>
+<li>Protection against unauthorized access</li>
+<li>Minimize attack surface</li>
+<li>Secure software updates with rollback</li>
+<li>Log security-relevant events</li>
+<li>
+<p>Ensure data confidentiality and integrity</p>
+</li>
+<li>
+<p><strong>Conformity Assessment</strong>:</p>
+</li>
+<li>Critical products (Annex III): Third-party assessment</li>
+<li>Other products: Self-assessment with documentation</li>
+</ol>
+<h3 id="implementation-for-embedded-devices">Implementation for Embedded Devices<a class="headerlink" href="#implementation-for-embedded-devices" title="Permanent link">&para;</a></h3>
+<p><strong>Required Documentation</strong>:
+* EU Declaration of Conformity
+* Technical documentation
+* Security risk assessment
+* SBOM
+* Instructions for secure use</p>
+<p><strong>Best Practice References</strong>:
+* Chapter 3: Firmware Updates → Aligns with CRA secure update requirements
+* Chapter 4: Securing Sensitive Information → Supports data protection requirements
+* Chapter 10: Third Party Code → SBOM and component management</p>
+<h3 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">EU Cyber Resilience Act</a></li>
+<li><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:52022PC0454">CRA Full Text</a></li>
+</ul>
+<hr />
+<h2 id="etsi-en-303-645">ETSI EN 303 645<a class="headerlink" href="#etsi-en-303-645" title="Permanent link">&para;</a></h2>
+<p><strong>Title</strong>: Cyber Security for Consumer Internet of Things
+<strong>Version</strong>: V2.1.1 (2020-06)
+<strong>Scope</strong>: Consumer IoT devices
+<strong>Status</strong>: Referenced by UK and EU regulations</p>
+<h3 id="13-key-provisions">13 Key Provisions<a class="headerlink" href="#13-key-provisions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>No universal default passwords</strong></li>
+<li><strong>Implement vulnerability disclosure policy</strong></li>
+<li><strong>Keep software updated</strong></li>
+<li><strong>Securely store sensitive security parameters</strong></li>
+<li><strong>Communicate securely</strong></li>
+<li><strong>Minimize exposed attack surfaces</strong></li>
+<li><strong>Ensure software integrity</strong></li>
+<li><strong>Ensure personal data is secure</strong></li>
+<li><strong>Make systems resilient to outages</strong></li>
+<li><strong>Examine system telemetry data</strong></li>
+<li><strong>Make it easy for users to delete user data</strong></li>
+<li><strong>Make installation and maintenance easy</strong></li>
+<li><strong>Validate input data</strong></li>
+</ol>
+<h3 id="mapping-to-best-practices">Mapping to Best Practices<a class="headerlink" href="#mapping-to-best-practices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ETSI Provision</th>
+<th>Guide Chapter</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Provision 1</td>
+<td>Chapter 5 (Identity Management)</td>
+<td>Unique passwords per device, password complexity</td>
+</tr>
+<tr>
+<td>Provision 2</td>
+<td>Chapter 7 (Debugging Code)</td>
+<td>Vulnerability disclosure process</td>
+</tr>
+<tr>
+<td>Provision 3</td>
+<td>Chapter 3 (Firmware Updates)</td>
+<td>Secure OTA updates, automatic updates</td>
+</tr>
+<tr>
+<td>Provision 4</td>
+<td>Chapter 4 (Securing Sensitive Info)</td>
+<td>Hardware security (TEE/SE), encryption</td>
+</tr>
+<tr>
+<td>Provision 5</td>
+<td>Chapter 8 (TLS)</td>
+<td>TLS 1.3, certificate validation</td>
+</tr>
+<tr>
+<td>Provision 6</td>
+<td>Chapter 6 (Platform Hardening)</td>
+<td>Minimize services, disable debug interfaces</td>
+</tr>
+<tr>
+<td>Provision 7</td>
+<td>Chapter 3 (Firmware Updates)</td>
+<td>Cryptographic signatures, secure boot</td>
+</tr>
+<tr>
+<td>Provision 8</td>
+<td>Chapter 9 (Privacy)</td>
+<td>Data minimization, secure storage</td>
+</tr>
+<tr>
+<td>Provision 13</td>
+<td>Chapter 2 (Injection Prevention)</td>
+<td>Input validation, sanitization</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources_1">Resources<a class="headerlink" href="#resources_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.etsi.org/deliver/etsi_en/303600_303699/303645/">ETSI EN 303 645 Specification</a></li>
+<li><a href="https://www.etsi.org/images/files/ETSIWhitePapers/etsi_wp31_CYBER_Implementation_Guide.pdf">Implementation Guide</a></li>
+</ul>
+<hr />
+<h2 id="iec-62443">IEC 62443<a class="headerlink" href="#iec-62443" title="Permanent link">&para;</a></h2>
+<p><strong>Title</strong>: Industrial Communication Networks - IT Security for Networks and Systems
+<strong>Scope</strong>: Industrial Automation and Control Systems (IACS)
+<strong>Parts</strong>: 4-1 (Secure Product Development), 4-2 (Technical Security Requirements)</p>
+<h3 id="security-levels-sl">Security Levels (SL)<a class="headerlink" href="#security-levels-sl" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SL 1</strong>: Protection against casual or coincidental violation</li>
+<li><strong>SL 2</strong>: Protection against intentional violation using simple means</li>
+<li><strong>SL 3</strong>: Protection against intentional violation using sophisticated means</li>
+<li><strong>SL 4</strong>: Protection against intentional violation using sophisticated means with extended resources</li>
+</ul>
+<h3 id="key-requirements_1">Key Requirements<a class="headerlink" href="#key-requirements_1" title="Permanent link">&para;</a></h3>
+<p><strong>IEC 62443-4-1 (Secure Development Lifecycle)</strong>:
+1. Security management
+2. Specification of security requirements
+3. Secure by design
+4. Secure implementation
+5. Security verification and validation
+6. Security update management
+7. Security guidelines</p>
+<p><strong>IEC 62443-4-2 (Technical Requirements)</strong>:
+* Foundational Requirements (FR):
+  * FR 1: Identification and Authentication Control
+  * FR 2: Use Control
+  * FR 3: System Integrity
+  * FR 4: Data Confidentiality
+  * FR 5: Restricted Data Flow
+  * FR 6: Timely Response to Events
+  * FR 7: Resource Availability</p>
+<h3 id="implementation-mapping">Implementation Mapping<a class="headerlink" href="#implementation-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>IEC 62443 FR</th>
+<th>Guide Chapter</th>
+<th>Key Controls</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR 1</td>
+<td>Chapter 5</td>
+<td>Multi-factor authentication, unique device identity</td>
+</tr>
+<tr>
+<td>FR 2</td>
+<td>Chapter 5</td>
+<td>Role-based access control, least privilege</td>
+</tr>
+<tr>
+<td>FR 3</td>
+<td>Chapter 3, 6</td>
+<td>Secure boot, platform integrity, input validation</td>
+</tr>
+<tr>
+<td>FR 4</td>
+<td>Chapter 4, 8</td>
+<td>Encryption at rest/transit, key management</td>
+</tr>
+<tr>
+<td>FR 5</td>
+<td>Chapter 6</td>
+<td>Network segmentation, SELinux zone isolation, firewall rules</td>
+</tr>
+<tr>
+<td>FR 6</td>
+<td>Chapter 6</td>
+<td>Logging, monitoring, SELinux audit, incident response</td>
+</tr>
+<tr>
+<td>FR 7</td>
+<td>Chapter 6</td>
+<td>DoS protection, resource management, MAC enforcement</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources_2">Resources<a class="headerlink" href="#resources_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards">ISA/IEC 62443 Standards</a></li>
+<li><a href="https://webstore.iec.ch/publication/33615">IEC 62443-4-1</a></li>
+<li><a href="https://webstore.iec.ch/publication/34421">IEC 62443-4-2</a></li>
+</ul>
+<hr />
+<h2 id="nist-iot-cybersecurity">NIST IoT Cybersecurity<a class="headerlink" href="#nist-iot-cybersecurity" title="Permanent link">&para;</a></h2>
+<p><strong>Title</strong>: NIST Cybersecurity for IoT Program
+<strong>Key Publications</strong>:
+* NISTIR 8259 series
+* NIST SP 800-213 (IoT Device Cybersecurity Guidance)</p>
+<h3 id="core-baseline-capabilities-nistir-8259a">Core Baseline Capabilities (NISTIR 8259A)<a class="headerlink" href="#core-baseline-capabilities-nistir-8259a" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Device Identification</strong></li>
+<li><strong>Device Configuration</strong></li>
+<li><strong>Data Protection</strong></li>
+<li><strong>Logical Access to Interfaces</strong></li>
+<li><strong>Software/Firmware Update</strong></li>
+<li><strong>Cybersecurity State Awareness</strong></li>
+</ol>
+<h3 id="nist-sp-800-213-recommendations">NIST SP 800-213 Recommendations<a class="headerlink" href="#nist-sp-800-213-recommendations" title="Permanent link">&para;</a></h3>
+<p><strong>Before Purchase</strong>:
+* Review manufacturer's cybersecurity capabilities
+* Evaluate update/support lifecycle
+* Assess data handling practices</p>
+<p><strong>During Integration</strong>:
+* Change default credentials
+* Disable unnecessary services
+* Configure secure communications
+* Implement network segmentation</p>
+<p><strong>Operational Phase</strong>:
+* Monitor for anomalies
+* Apply updates promptly
+* Review logs regularly
+* Maintain asset inventory</p>
+<h3 id="resources_3">Resources<a class="headerlink" href="#resources_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.nist.gov/itl/applied-cybersecurity/nist-cybersecurity-iot-program">NIST IoT Cybersecurity</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/ir/2020/NIST.IR.8259A.pdf">NISTIR 8259A</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-213.pdf">NIST SP 800-213</a></li>
+</ul>
+<hr />
+<h2 id="fda-medical-device-cybersecurity">FDA Medical Device Cybersecurity<a class="headerlink" href="#fda-medical-device-cybersecurity" title="Permanent link">&para;</a></h2>
+<p><strong>Authority</strong>: US Food and Drug Administration
+<strong>Guidance</strong>: Cybersecurity in Medical Devices (2023)
+<strong>Scope</strong>: Medical devices with software/connectivity</p>
+<h3 id="key-requirements_2">Key Requirements<a class="headerlink" href="#key-requirements_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Premarket Submissions</strong>:</li>
+<li>Cybersecurity Bill of Materials (CBOM/SBOM)</li>
+<li>Threat modeling and risk analysis</li>
+<li>Security architecture and design</li>
+<li>Software verification and validation</li>
+<li>
+<p>Instructions for secure use</p>
+</li>
+<li>
+<p><strong>Post-Market</strong>:</p>
+</li>
+<li>Vulnerability management plan</li>
+<li>Coordinated vulnerability disclosure</li>
+<li>Security update deployment</li>
+<li>
+<p>End-of-support planning</p>
+</li>
+<li>
+<p><strong>Specific Controls</strong>:</p>
+</li>
+<li>Authentication and authorization</li>
+<li>Encryption (data at rest and in transit)</li>
+<li>Secure communications (TLS 1.2+)</li>
+<li>Audit logging</li>
+<li>Physical tamper protection</li>
+<li>Secure software updates</li>
+</ol>
+<h3 id="fda-cybersecurity-tiers">FDA Cybersecurity Tiers<a class="headerlink" href="#fda-cybersecurity-tiers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tier 1</strong>: Minimal cybersecurity concerns</li>
+<li><strong>Tier 2</strong>: Moderate cybersecurity concerns</li>
+<li><strong>Tier 3</strong>: Major cybersecurity concerns (life-sustaining devices)</li>
+</ul>
+<p>Higher tiers require more rigorous security controls and documentation.</p>
+<h3 id="resources_4">Resources<a class="headerlink" href="#resources_4" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity">FDA Medical Device Cybersecurity</a></li>
+<li><a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cybersecurity-medical-devices-quality-system-considerations-and-content-premarket-submissions">Premarket Guidance (2023)</a></li>
+</ul>
+<hr />
+<h2 id="automotive-standards">Automotive Standards<a class="headerlink" href="#automotive-standards" title="Permanent link">&para;</a></h2>
+<h3 id="isosae-21434-road-vehicles-cybersecurity-engineering">ISO/SAE 21434 - Road Vehicles Cybersecurity Engineering<a class="headerlink" href="#isosae-21434-road-vehicles-cybersecurity-engineering" title="Permanent link">&para;</a></h3>
+<p><strong>Published</strong>: 2021
+<strong>Scope</strong>: Cybersecurity for road vehicles throughout lifecycle</p>
+<p><strong>Key Phases</strong>:
+1. Concept Phase
+2. Product Development
+3. Production
+4. Operations and Maintenance
+5. End of Cybersecurity Support</p>
+<p><strong>Security Requirements</strong>:
+* Threat Analysis and Risk Assessment (TARA)
+* Cybersecurity by design
+* Secure development lifecycle
+* Vulnerability management
+* Incident response</p>
+<h3 id="un-r155r156-unece-regulations">UN R155/R156 (UNECE Regulations)<a class="headerlink" href="#un-r155r156-unece-regulations" title="Permanent link">&para;</a></h3>
+<p><strong>R155</strong>: Cybersecurity Management System (mandatory 2025)
+<strong>R156</strong>: Software Update Management System (mandatory 2025)</p>
+<p><strong>R155 Requirements</strong>:
+* Cybersecurity management system
+* Risk assessment methodology
+* Secure vehicle design
+* Testing and verification
+* Post-production monitoring</p>
+<p><strong>R156 Requirements</strong>:
+* Secure software update processes
+* Verification of authenticity
+* Protection against unauthorized updates
+* User notification procedures</p>
+<h3 id="automotive-specific-guidance">Automotive-Specific Guidance<a class="headerlink" href="#automotive-specific-guidance" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Standard Requirement</th>
+<th>Guide Chapter</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secure Boot</td>
+<td>Chapter 3, 6</td>
+<td>U-Boot hardening, verified boot</td>
+</tr>
+<tr>
+<td>OTA Updates</td>
+<td>Chapter 3</td>
+<td>Uptane, secure update protocols</td>
+</tr>
+<tr>
+<td>V2X Security</td>
+<td>Chapter 8</td>
+<td>TLS 1.3, certificate management</td>
+</tr>
+<tr>
+<td>ECU Hardening</td>
+<td>Chapter 6</td>
+<td>Platform hardening, toolchain security, service reduction</td>
+</tr>
+<tr>
+<td>Key Management</td>
+<td>Chapter 4</td>
+<td>HSM integration, TEE usage</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources_5">Resources<a class="headerlink" href="#resources_5" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.iso.org/standard/70918.html">ISO/SAE 21434</a></li>
+<li><a href="https://unece.org/transport/documents/2021/03/standards/un-regulation-no-155-cyber-security-and-cyber">UN R155</a></li>
+<li><a href="https://unece.org/transport/documents/2021/03/standards/un-regulation-no-156-software-update-and-software">UN R156</a></li>
+<li><a href="https://uptane.github.io/">Uptane for Automotive OTA</a></li>
+</ul>
+<hr />
+<h2 id="us-executive-order-14028">US Executive Order 14028<a class="headerlink" href="#us-executive-order-14028" title="Permanent link">&para;</a></h2>
+<p><strong>Title</strong>: Improving the Nation's Cybersecurity
+<strong>Date</strong>: May 2021
+<strong>Scope</strong>: Federal software procurement and critical infrastructure</p>
+<h3 id="key-mandates">Key Mandates<a class="headerlink" href="#key-mandates" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Zero Trust Architecture</strong></li>
+<li><strong>Supply Chain Security</strong>:</li>
+<li>SBOM required for all software</li>
+<li>SLSA compliance recommended</li>
+<li>
+<p>Software provenance tracking</p>
+</li>
+<li>
+<p><strong>Enhanced Logging</strong>:</p>
+</li>
+<li>Comprehensive security event logging</li>
+<li>Centralized log aggregation</li>
+<li>
+<p>Minimum retention periods</p>
+</li>
+<li>
+<p><strong>Vulnerability Disclosure</strong>:</p>
+</li>
+<li>Coordinated vulnerability disclosure (CVD)</li>
+<li>Security.txt implementation</li>
+<li>Transparency in handling vulnerabilities</li>
+</ol>
+<h3 id="sbom-requirements-per-ntia-guidelines">SBOM Requirements (Per NTIA Guidelines)<a class="headerlink" href="#sbom-requirements-per-ntia-guidelines" title="Permanent link">&para;</a></h3>
+<p><strong>Minimum Elements</strong>:
+* Supplier name
+* Component name
+* Version of component
+* Other unique identifiers
+* Dependency relationships
+* Author of SBOM data</p>
+<p><strong>Format</strong>: SPDX or CycloneDX</p>
+<h3 id="resources_6">Resources<a class="headerlink" href="#resources_6" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.whitehouse.gov/briefing-room/presidential-actions/2021/05/12/executive-order-on-improving-the-nations-cybersecurity/">Executive Order 14028</a></li>
+<li><a href="https://www.ntia.gov/files/ntia/publications/sbom_minimum_elements_report.pdf">NTIA SBOM Minimum Elements</a></li>
+<li><a href="https://www.cisa.gov/zero-trust-maturity-model">CISA Zero Trust Maturity Model</a></li>
+</ul>
+<hr />
+<h2 id="california-iot-security-law-sb-327">California IoT Security Law (SB-327)<a class="headerlink" href="#california-iot-security-law-sb-327" title="Permanent link">&para;</a></h2>
+<p><strong>Effective</strong>: January 2020
+<strong>Scope</strong>: IoT devices sold in California
+<strong>Requirement</strong>: Reasonable security features</p>
+<h3 id="key-provisions">Key Provisions<a class="headerlink" href="#key-provisions" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Unique Passwords</strong>:</li>
+<li>No default passwords shared across devices</li>
+<li>Either preprogrammed unique password per device</li>
+<li>
+<p>Or force password change on first use</p>
+</li>
+<li>
+<p><strong>Reasonable Security</strong>:</p>
+</li>
+<li>Appropriate to nature and function of device</li>
+<li>Appropriate to information it may collect, contain, or transmit</li>
+<li>Protection against unauthorized access, destruction, use, modification, or disclosure</li>
+</ol>
+<h3 id="best-practice-interpretation">Best Practice Interpretation<a class="headerlink" href="#best-practice-interpretation" title="Permanent link">&para;</a></h3>
+<p>The law is intentionally broad, but "reasonable security" should include:
+* Secure authentication (Chapter 5)
+* Data encryption (Chapter 4, 8)
+* Secure updates (Chapter 3)
+* Privacy protections (Chapter 9)
+* Input validation (Chapter 2)</p>
+<h3 id="resources_7">Resources<a class="headerlink" href="#resources_7" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=201720180SB327">SB-327 Full Text</a></li>
+<li><a href="https://oag.ca.gov/privacy/ccpa">California IoT Security Law Guide</a></li>
+</ul>
+<hr />
+<h2 id="compliance-mapping">Compliance Mapping<a class="headerlink" href="#compliance-mapping" title="Permanent link">&para;</a></h2>
+<h3 id="quick-reference-table">Quick Reference Table<a class="headerlink" href="#quick-reference-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Regulation</th>
+<th>Geographic Scope</th>
+<th>Device Type</th>
+<th>Key Requirements</th>
+<th>Related Chapters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EU CRA</strong></td>
+<td>European Union</td>
+<td>All products with digital elements</td>
+<td>SBOM, vuln mgmt, secure updates, 5-yr support</td>
+<td>3, 4, 10</td>
+</tr>
+<tr>
+<td><strong>ETSI EN 303 645</strong></td>
+<td>EU/UK</td>
+<td>Consumer IoT</td>
+<td>13 provisions, no default passwords, secure comms</td>
+<td>2, 3, 5, 6, 8</td>
+</tr>
+<tr>
+<td><strong>IEC 62443</strong></td>
+<td>Global</td>
+<td>Industrial/OT</td>
+<td>Security levels, secure development, technical controls</td>
+<td>All chapters</td>
+</tr>
+<tr>
+<td><strong>NIST IoT</strong></td>
+<td>US Federal</td>
+<td>IoT devices</td>
+<td>6 core capabilities, device identity, updates</td>
+<td>3, 4, 5, 6</td>
+</tr>
+<tr>
+<td><strong>FDA</strong></td>
+<td>United States</td>
+<td>Medical devices</td>
+<td>SBOM, threat model, vuln disclosure, security tiers</td>
+<td>3, 4, 10, 11</td>
+</tr>
+<tr>
+<td><strong>ISO/SAE 21434</strong></td>
+<td>Automotive</td>
+<td>Vehicles/ECUs</td>
+<td>TARA, secure SDLC, post-production monitoring</td>
+<td>All chapters</td>
+</tr>
+<tr>
+<td><strong>UN R155/R156</strong></td>
+<td>Europe/Japan+</td>
+<td>Vehicles</td>
+<td>Cybersecurity mgmt system, secure OTA</td>
+<td>3, 6</td>
+</tr>
+<tr>
+<td><strong>EO 14028</strong></td>
+<td>US Federal</td>
+<td>Software procurement</td>
+<td>SBOM, zero trust, enhanced logging</td>
+<td>6, 10</td>
+</tr>
+<tr>
+<td><strong>CA SB-327</strong></td>
+<td>California</td>
+<td>Consumer IoT</td>
+<td>Unique passwords, reasonable security</td>
+<td>5, all</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implementation-priority-by-market">Implementation Priority by Market<a class="headerlink" href="#implementation-priority-by-market" title="Permanent link">&para;</a></h3>
+<p><strong>Targeting EU Market</strong>:
+1. EU Cyber Resilience Act compliance (top priority)
+2. ETSI EN 303 645 alignment
+3. SBOM generation (SPDX/CycloneDX)
+4. 5-year security support commitment</p>
+<p><strong>Targeting US Federal</strong>:
+1. NIST IoT guidance implementation
+2. SBOM with NTIA minimum elements
+3. SLSA framework adoption
+4. FedRAMP considerations (if cloud-connected)</p>
+<p><strong>Automotive Industry</strong>:
+1. ISO/SAE 21434 compliance
+2. UN R155/R156 certification
+3. Uptane OTA implementation
+4. AUTOSAR security modules</p>
+<p><strong>Medical Devices</strong>:
+1. FDA premarket cybersecurity submission
+2. SBOM for all components
+3. Vulnerability management plan
+4. Coordinated disclosure program</p>
+<p><strong>General Consumer IoT</strong>:
+1. ETSI EN 303 645 (UK/EU)
+2. CA SB-327 (if selling in California)
+3. NIST guidance as best practice
+4. Industry-specific standards (if applicable)</p>
+<hr />
+<h2 id="compliance-checklist">Compliance Checklist<a class="headerlink" href="#compliance-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="pre-development">Pre-Development<a class="headerlink" href="#pre-development" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Identify applicable regulations based on target markets</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Perform threat modeling (Chapter 11)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Document security requirements</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Establish secure development lifecycle</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Set up SBOM generation toolchain (Chapter 10)</li>
+</ul>
+<h3 id="during-development">During Development<a class="headerlink" href="#during-development" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Implement security controls per compliance requirements</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Follow best practices from this guide (Chapters 1-10)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Conduct security testing (leverage OWASP ISTG)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Generate and maintain SBOM</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Document security architecture</li>
+</ul>
+<h3 id="pre-release">Pre-Release<a class="headerlink" href="#pre-release" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Security verification and validation</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Penetration testing (use OWASP FSTM methodology)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Vulnerability assessment</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Create security documentation for users</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Prepare compliance declarations</li>
+</ul>
+<h3 id="post-release">Post-Release<a class="headerlink" href="#post-release" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Vulnerability disclosure process</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Security update deployment</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Incident response procedures</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Continuous monitoring</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Regular security assessments</li>
+</ul>
+<hr />
+<h2 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
+<h3 id="compliance-tools-and-frameworks">Compliance Tools and Frameworks<a class="headerlink" href="#compliance-tools-and-frameworks" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.openchainproject.org/">OpenChain</a> - Open source compliance</li>
+<li><a href="https://spdx.dev/">SPDX</a> - SBOM standard</li>
+<li><a href="https://cyclonedx.org/">CycloneDX</a> - SBOM for security</li>
+<li><a href="https://slsa.dev/">SLSA</a> - Supply chain security</li>
+<li><a href="https://www.sigstore.dev/">Sigstore</a> - Software signing</li>
+</ul>
+<h3 id="industry-organizations">Industry Organizations<a class="headerlink" href="#industry-organizations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.iiconsortium.org/">IIC (Industrial Internet Consortium)</a> - Industrial IoT security</li>
+<li><a href="https://openconnectivity.org/">OCF (Open Connectivity Foundation)</a> - IoT standards</li>
+<li><a href="https://www.gsma.com/iot/iot-security/">GSMA IoT Security</a> - Mobile IoT security</li>
+<li><a href="https://csa-iot.org/">CSA (Connectivity Standards Alliance)</a> - Matter protocol</li>
+</ul>
+<h3 id="government-resources">Government Resources<a class="headerlink" href="#government-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience/securing-internet-things">CISA IoT Security</a></li>
+<li><a href="https://www.enisa.europa.eu/topics/iot-and-smart-infrastructures">ENISA IoT Security</a></li>
+<li><a href="https://www.bsi.bund.de/EN/Home/home_node.html">BSI (German Federal Office)</a> - IoT security guidelines</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 OWASP Foundation
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/scriptingxss" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.share", "search.highlight", "navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.sections", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

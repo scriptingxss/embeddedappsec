@@ -1,0 +1,2775 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Best Practices for Embedded Device Security">
+      
+      
+        <meta name="author" content="OWASP Embedded Application Security Project">
+      
+      
+        <link rel="canonical" href="https://scriptingxss.github.io/embeddedappsec/CHANGELOG-2025/">
+      
+      
+        <link rel="prev" href="../about-owasp/">
+      
+      
+        <link rel="next" href="../LICENSE/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Changelog 2025 - OWASP Embedded Application Security</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#owasp-embedded-application-security-2025-changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="OWASP Embedded Application Security" class="md-header__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OWASP Embedded Application Security
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog 2025
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../preface/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../1_buffer_and_stack_overflow_protection/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Best Practices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../owasp-iot-ecosystem-alignment/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../project-roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Project Information
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="OWASP Embedded Application Security" class="md-nav__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    OWASP Embedded Application Security
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Security Best Practices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Security Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1_buffer_and_stack_overflow_protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Buffer and Stack Overflow Protection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2_injection_prevention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Injection Prevention
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_firmware_updates_and_cryptographic_signatures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Firmware Updates and Cryptographic Signatures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_securing_sensitive_information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Securing Sensitive Information
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5identity_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Identity Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_embedded_framework_and_c-based_toolchain_hardeni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedded Platform Security Hardening
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_usage_of_debugging_code_and_interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Debugging Code and Interfaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_transport_layer_security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transport Layer Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9_usage_of_data_collection_and_storage_-_privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Data Collection and Storage - Privacy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_third_party_code_and_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Third Party Code and Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threat-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Threat Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Appendices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Appendices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../owasp-iot-ecosystem-alignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OWASP IoT Ecosystem Alignment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device-compliance-frameworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Device Compliance Frameworks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project Information
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Project Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about-owasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About OWASP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Changelog 2025
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog 2025
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#major-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Major Updates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Major Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-owasp-iot-ecosystem-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. OWASP IoT Ecosystem Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-device-compliance-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Device Compliance Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-post-quantum-cryptography-pqc-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Post-Quantum Cryptography (PQC) Readiness
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-modern-tls-cryptography-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Modern TLS &amp; Cryptography Standards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-hardware-security-modules-trusted-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Hardware Security Modules &amp; Trusted Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-supply-chain-security-sbom-modernization" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Supply Chain Security &amp; SBOM Modernization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-command-injection-vulnerability-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Command Injection Vulnerability Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-yocto-project-build-system-security-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Yocto Project Build System Security Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-chapter-content-expansion-sessions-1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Chapter Content Expansion (Sessions 1-5)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Updates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Link Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-wiki-migration-36-links-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP Wiki Migration (36 Links Updated)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cert-secure-coding-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      CERT Secure Coding Updates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#year-updates-2024-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      Year Updates (2024 → 2025)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Corrections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Corrections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#empty-files-populated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empty Files Populated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typo-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typo Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Statistics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Content Additions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      Files Modified
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-updates_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Updates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owasp-iot-ecosystem-mapping-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Ecosystem Mapping Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-quantum-cryptography-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Quantum Cryptography Timeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Quantum Cryptography Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2025-2026-preparation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2025-2026: Preparation &amp; Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-2027-hybrid-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-2027: Hybrid Deployment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2028-pqc-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      2028+: PQC-Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technology-versions-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technology Versions Updated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technology Versions Updated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlscryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS/Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources Added
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resources Added">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-quantum-cryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Quantum Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iot-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Ecosystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance &amp; Standards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breaking Changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Breaking Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#none" class="md-nav__link">
+    <span class="md-ellipsis">
+      None
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecation-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deprecation Notices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deprecation Notices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-for-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations for Migration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-for-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      Planned for 2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#major-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Major Updates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Major Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-owasp-iot-ecosystem-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. OWASP IoT Ecosystem Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-device-compliance-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Device Compliance Frameworks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-post-quantum-cryptography-pqc-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Post-Quantum Cryptography (PQC) Readiness
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-modern-tls-cryptography-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Modern TLS &amp; Cryptography Standards
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-hardware-security-modules-trusted-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Hardware Security Modules &amp; Trusted Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-supply-chain-security-sbom-modernization" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Supply Chain Security &amp; SBOM Modernization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-command-injection-vulnerability-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Command Injection Vulnerability Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-yocto-project-build-system-security-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Yocto Project Build System Security Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-chapter-content-expansion-sessions-1-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Chapter Content Expansion (Sessions 1-5)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#link-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Updates
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Link Updates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-wiki-migration-36-links-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP Wiki Migration (36 Links Updated)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cert-secure-coding-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      CERT Secure Coding Updates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#year-updates-2024-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      Year Updates (2024 → 2025)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-corrections" class="md-nav__link">
+    <span class="md-ellipsis">
+      File Corrections
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File Corrections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#empty-files-populated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Empty Files Populated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typo-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typo Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Statistics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Statistics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#content-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Content Additions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#files-modified" class="md-nav__link">
+    <span class="md-ellipsis">
+      Files Modified
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#link-updates_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Link Updates
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#owasp-iot-ecosystem-mapping-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Ecosystem Mapping Summary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-quantum-cryptography-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Quantum Cryptography Timeline
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Post-Quantum Cryptography Timeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2025-2026-preparation-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      2025-2026: Preparation &amp; Testing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-2027-hybrid-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-2027: Hybrid Deployment
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2028-pqc-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      2028+: PQC-Only
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#technology-versions-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      Technology Versions Updated
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Technology Versions Updated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlscryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS/Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sbom-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      SBOM Tools
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hardware Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources-added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Resources Added
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Resources Added">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-quantum-cryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Post-Quantum Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iot-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Ecosystem
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compliance &amp; Standards
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Breaking Changes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Breaking Changes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#none" class="md-nav__link">
+    <span class="md-ellipsis">
+      None
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecation-notices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deprecation Notices
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deprecation Notices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cryptography" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cryptography
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-for-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommendations for Migration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Roadmap
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#planned-for-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      Planned for 2026
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/scriptingxss/embeddedappsec/edit/newrevision/CHANGELOG-2025.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec/raw/newrevision/CHANGELOG-2025.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="owasp-embedded-application-security-2025-changelog">OWASP Embedded Application Security - 2025 Changelog<a class="headerlink" href="#owasp-embedded-application-security-2025-changelog" title="Permanent link">&para;</a></h1>
+<p><strong>Version</strong>: 2025.1</p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This document tracks all updates made to the OWASP Embedded Application Security Best Practices guide during the 2025 modernization effort. The guide has been comprehensively updated to reflect current security standards, emerging threats (including quantum computing), and modern compliance requirements.</p>
+<hr />
+<h2 id="major-updates">Major Updates<a class="headerlink" href="#major-updates" title="Permanent link">&para;</a></h2>
+<h3 id="1-owasp-iot-ecosystem-integration">1. OWASP IoT Ecosystem Integration<a class="headerlink" href="#1-owasp-iot-ecosystem-integration" title="Permanent link">&para;</a></h3>
+<p><strong>New Document</strong>: <a href="../owasp-iot-ecosystem-alignment/">Appendix A: OWASP IoT Ecosystem Alignment</a></p>
+<p>All 13 chapters now include comprehensive mappings to the OWASP IoT Security ecosystem:</p>
+<ul>
+<li><strong>OWASP ISVS</strong> (IoT Security Verification Standard): Testable security requirements</li>
+<li><strong>OWASP ISTG</strong> (IoT Security Testing Guide): Testing procedures and methodologies</li>
+<li><strong>OWASP FSTM</strong> (Firmware Security Testing Methodology): Firmware analysis stages</li>
+<li><strong>OWASP IoTGoat</strong>: Hands-on vulnerable firmware for practice</li>
+</ul>
+<p><strong>Impact</strong>: Developers can now easily map embedded security best practices to testable requirements and training resources.</p>
+<p><strong>Chapters Updated</strong>: All 13 chapters</p>
+<hr />
+<h3 id="2-device-compliance-frameworks">2. Device Compliance Frameworks<a class="headerlink" href="#2-device-compliance-frameworks" title="Permanent link">&para;</a></h3>
+<p><strong>New Document</strong>: <a href="../device-compliance-frameworks/">Appendix B: Device Compliance Frameworks</a></p>
+<p>Added comprehensive guidance for 9 major compliance frameworks:</p>
+<table>
+<thead>
+<tr>
+<th>Framework</th>
+<th>Market/Industry</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EU Cyber Resilience Act</td>
+<td>EU Consumer Products</td>
+<td>Effective 2024</td>
+</tr>
+<tr>
+<td>ETSI EN 303 645</td>
+<td>EU IoT Devices</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>IEC 62443</td>
+<td>Industrial/OT</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>NIST IoT Cybersecurity</td>
+<td>US Federal</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>FDA Cybersecurity</td>
+<td>Medical Devices</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>ISO/SAE 21434</td>
+<td>Automotive</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>UNECE WP.29</td>
+<td>Automotive (EU)</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>Executive Order 14028</td>
+<td>US Federal</td>
+<td>Active</td>
+</tr>
+<tr>
+<td>CA SB-327</td>
+<td>California IoT</td>
+<td>Active</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Impact</strong>: Embedded developers can identify compliance requirements by market and map them to implementation priorities.</p>
+<hr />
+<h3 id="3-post-quantum-cryptography-pqc-readiness">3. Post-Quantum Cryptography (PQC) Readiness<a class="headerlink" href="#3-post-quantum-cryptography-pqc-readiness" title="Permanent link">&para;</a></h3>
+<p>Added comprehensive PQC guidance to protect against quantum computing threats:</p>
+<h4 id="chapter-3-firmware-updates-and-cryptographic-signatures">Chapter 3: Firmware Updates and Cryptographic Signatures<a class="headerlink" href="#chapter-3-firmware-updates-and-cryptographic-signatures" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Post-Quantum Cryptography Readiness for Secure Boot (2025+)"</p>
+<ul>
+<li>NIST PQC digital signature standards (ML-DSA, SLH-DSA, FN-DSA)</li>
+<li>Hybrid cryptography approach (Classical + PQC signatures)</li>
+<li>Bootloader implementation with hybrid signature verification</li>
+<li>Hardware acceleration requirements</li>
+<li>Storage considerations (13x signature size increase)</li>
+<li>Migration roadmap: 2025-2026 → 2026-2027 → 2028+</li>
+</ul>
+<p><strong>Code Examples</strong>: Hybrid ECDSA + ML-DSA signature verification in C</p>
+<h4 id="chapter-4-securing-sensitive-information">Chapter 4: Securing Sensitive Information<a class="headerlink" href="#chapter-4-securing-sensitive-information" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Post-Quantum Cryptography for Secure Storage (2025+)"</p>
+<ul>
+<li>NIST PQC key encapsulation mechanisms (ML-KEM/Kyber)</li>
+<li>Hybrid encryption (ECDH + ML-KEM)</li>
+<li>AES-256 upgrade guidance for quantum resistance</li>
+<li>TEE/HSM integration for PQC keys</li>
+<li>Storage overhead planning (~1-2KB per encrypted object)</li>
+<li>Progressive re-encryption migration strategy</li>
+</ul>
+<p><strong>Code Examples</strong>: Hybrid key encapsulation and AES-256-GCM encryption</p>
+<h4 id="chapter-8-transport-layer-security">Chapter 8: Transport Layer Security<a class="headerlink" href="#chapter-8-transport-layer-security" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Post-Quantum Cryptography for TLS (2025+)"</p>
+<ul>
+<li>Hybrid TLS 1.3 with PQC (ECDHE + ML-KEM)</li>
+<li>OpenSSL 3.x with liboqs integration</li>
+<li>wolfSSL PQC support</li>
+<li>Performance impact analysis (handshake: +2-4ms, bandwidth: +2.3KB)</li>
+<li>Certificate Authority PQC readiness timeline</li>
+<li>Testing tools and procedures</li>
+</ul>
+<p><strong>Code Examples</strong>: Embedded HTTPS server with hybrid PQC support</p>
+<p><strong>Threat Addressed</strong>: "Harvest Now, Decrypt Later" (HNDL) attacks - critical for devices with 10-20+ year lifecycles</p>
+<hr />
+<h3 id="4-modern-tls-cryptography-standards">4. Modern TLS &amp; Cryptography Standards<a class="headerlink" href="#4-modern-tls-cryptography-standards" title="Permanent link">&para;</a></h3>
+<p><strong>Chapter Updated</strong>: <a href="../8_transport_layer_security/">8_transport_layer_security.md</a></p>
+<ul>
+<li><strong>TLS 1.3</strong> (RFC 8446) now the recommended standard (TLS 1.2 minimum)</li>
+<li>Modern cipher suites: <code>TLS_AES_256_GCM_SHA384</code>, <code>TLS_CHACHA20_POLY1305_SHA256</code></li>
+<li>Perfect Forward Secrecy (PFS) requirements</li>
+<li>Certificate lifecycle management and automation</li>
+<li>OCSP stapling and certificate transparency</li>
+<li>Compliance with PCI DSS 4.0, NIST SP 800-52 Rev. 2</li>
+</ul>
+<hr />
+<h3 id="5-hardware-security-modules-trusted-execution">5. Hardware Security Modules &amp; Trusted Execution<a class="headerlink" href="#5-hardware-security-modules-trusted-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Chapter Updated</strong>: <a href="../4_securing_sensitive_information/">4_securing_sensitive_information.md</a></p>
+<p>Added comprehensive guidance on hardware-backed security:</p>
+<p><strong>Trusted Execution Environments (TEE)</strong>:
+- ARM TrustZone implementation examples
+- Intel SGX for x86 embedded systems
+- TPM 2.0 integration patterns</p>
+<p><strong>Secure Elements</strong>:
+- Microchip ATECC608 (I2C crypto chip)
+- NXP EdgeLock SE050 (secure element)
+- Infineon OPTIGA Trust M (automotive-grade)</p>
+<p><strong>Code Examples</strong>: C implementations for TEE key storage and secure crypto operations</p>
+<hr />
+<h3 id="6-supply-chain-security-sbom-modernization">6. Supply Chain Security &amp; SBOM Modernization<a class="headerlink" href="#6-supply-chain-security-sbom-modernization" title="Permanent link">&para;</a></h3>
+<p><strong>Chapter Updated</strong>: <a href="../10_third_party_code_and_components/">10_third_party_code_and_components.md</a></p>
+<p><strong>SBOM Standards</strong>:
+- <strong>SPDX</strong> (ISO/IEC 5962:2021) - standardized format
+- <strong>CycloneDX</strong> - OWASP project for security-focused SBOMs</p>
+<p><strong>Modern Tools</strong>:
+- <strong>Syft</strong>: Generate SBOMs from containers and filesystems
+- <strong>Trivy</strong>: Comprehensive vulnerability scanner
+- <strong>Grype</strong>: Vulnerability matching engine
+- <strong>OSV-Scanner</strong>: Open Source Vulnerabilities scanner
+- <strong>Dependency-Track</strong>: Continuous SBOM monitoring</p>
+<p><strong>Supply Chain Security</strong>:
+- SLSA framework (Supply Chain Levels for Software Artifacts)
+- Sigstore for artifact signing
+- In-Toto for supply chain integrity</p>
+<p><strong>Compliance</strong>: Meets Executive Order 14028 and EU Cyber Resilience Act SBOM requirements</p>
+<hr />
+<h3 id="7-command-injection-vulnerability-examples">7. Command Injection Vulnerability Examples<a class="headerlink" href="#7-command-injection-vulnerability-examples" title="Permanent link">&para;</a></h3>
+<p><strong>Chapter Updated</strong>: <a href="../2_injection_prevention/">2_injection_prevention.md</a></p>
+<p>Added 2 real-world embedded device injection vulnerability examples:</p>
+<h4 id="example-1-os-command-injection-in-embedded-web-application">Example 1: OS Command Injection in Embedded Web Application<a class="headerlink" href="#example-1-os-command-injection-in-embedded-web-application" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Vulnerable</strong>: Network diagnostic feature using <code>system()</code> with unsanitized user input</li>
+<li><strong>Secure</strong>: IP validation, allowlisting, <code>execve()</code> with argument array (no shell)</li>
+<li><strong>OWASP IoT Mapping</strong>: ISVS V2.3.1, ISTG ISTG-UI-INFO-001, FSTM Stage 6</li>
+</ul>
+<h4 id="example-2-newline-command-injection-in-configuration-files">Example 2: Newline Command Injection in Configuration Files<a class="headerlink" href="#example-2-newline-command-injection-in-configuration-files" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Vulnerable</strong>: Writing WiFi configuration without newline validation</li>
+<li><strong>Secure</strong>: Comprehensive input validation with character allowlisting</li>
+<li><strong>OWASP IoT Mapping</strong>: ISVS V2.3.2, ISTG ISTG-FW-CONF-001, FSTM Stage 4</li>
+</ul>
+<p>Both examples include:
+- Complete vulnerable code in C
+- Complete secure implementation in C
+- Mapping to OWASP IoT ecosystem (ISVS, ISTG, FSTM, IoTGoat)</p>
+<hr />
+<h3 id="8-yocto-project-build-system-security-integration">8. Yocto Project Build System Security Integration<a class="headerlink" href="#8-yocto-project-build-system-security-integration" title="Permanent link">&para;</a></h3>
+<p><strong>Completed</strong>: October 5, 2025</p>
+<p>Added comprehensive Yocto Project security guidance across multiple chapters, making this the definitive resource for secure embedded Linux development using Yocto.</p>
+<h4 id="chapter-6-embedded-platform-security-hardening">Chapter 6: Embedded Platform Security Hardening<a class="headerlink" href="#chapter-6-embedded-platform-security-hardening" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Yocto Project Build System Security (2024-2025)" (~780 lines)</p>
+<p><strong>Comprehensive Coverage</strong>:
+- <strong>Yocto Scarthgap 5.0 LTS Security Foundation</strong>: Core components, security enhancements
+- <strong>Compiler Security Flags</strong>: Detailed explanation of security_flags.inc
+  - Stack protection (<code>-fstack-protector-strong</code>)
+  - FORTIFY_SOURCE (buffer overflow detection)
+  - PIE/ASLR for address randomization
+  - Format string protection
+  - RELRO (read-only relocations)
+  - GCC <code>-fhardened</code> flag (comprehensive protection)
+- <strong>Kernel Hardening in Yocto</strong>:
+  - Kernel configuration fragments (<code>.cfg</code> files)
+  - KASLR (Kernel Address Space Layout Randomization)
+  - KPTI (Kernel Page Table Isolation)
+  - meta-security hardening configurations
+  - Kernel hardening checker integration
+  - Kernel module signing
+- <strong>Mandatory Access Control (MAC) Systems</strong>:
+  - SELinux, AppArmor, SMACK comparison table
+  - Complete configuration examples for each MAC system
+  - Policy creation and testing procedures
+- <strong>Integrity Measurement Architecture (IMA/EVM)</strong>:
+  - File integrity verification
+  - Configuration and policy examples
+- <strong>Read-Only Root Filesystem with Overlays</strong>:
+  - OverlayFS configuration for selective writes
+  - tmpfs for volatile data
+- <strong>Reproducible Builds</strong>: Verification procedures
+- <strong>Making Images More Secure</strong>: Official Yocto guide integration
+- <strong>Yocto Security Best Practices Checklist</strong>: Complete 40-point checklist</p>
+<p><strong>Code Examples</strong>: 20+ BitBake configuration snippets, kernel config fragments, verification commands</p>
+<h4 id="chapter-1-buffer-and-stack-overflow-protection">Chapter 1: Buffer and Stack Overflow Protection<a class="headerlink" href="#chapter-1-buffer-and-stack-overflow-protection" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Yocto Project Compiler Hardening for Buffer Overflow Protection" (~190 lines)</p>
+<p><strong>Coverage</strong>:
+- Stack protection configuration and flags
+- FORTIFY_SOURCE for buffer overflow detection
+- GCC <code>-fhardened</code> flag for maximum protection
+- PIE/ASLR for exploit mitigation
+- Verification tools (checksec, readelf)
+- Buildroot vs. Yocto comparison table
+- Per-recipe security flag customization
+- Integration with Chapter 6 for comprehensive coverage</p>
+<p><strong>Code Examples</strong>: BitBake configurations, high-security recipe example, verification commands</p>
+<h4 id="chapter-4-securing-sensitive-information_1">Chapter 4: Securing Sensitive Information<a class="headerlink" href="#chapter-4-securing-sensitive-information_1" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "TEE and Hardware Security Integration with Yocto Project" (~370 lines)</p>
+<p><strong>Coverage</strong>:
+- <strong>OP-TEE Integration</strong> (ARM TrustZone):
+  - Full configuration for meta-security layer
+  - Machine-specific setup (Raspberry Pi 4, i.MX8)
+  - Creating Trusted Application (TA) recipes
+  - Complete TA code example
+- <strong>TPM 2.0 Support</strong>:
+  - Kernel configuration for TPM
+  - TPM tools integration (tpm2-tss, tpm2-tools)
+  - TPM application recipe examples
+  - Key storage code example
+- <strong>Secure Element Integration</strong> (I2C/SPI):
+  - ATECC608, NXP EdgeLock SE050, OPTIGA Trust M
+  - Device tree configuration
+  - CryptoAuthLib recipe
+  - Application integration examples
+- <strong>Hardware Security Best Practices</strong>:
+  - Secure boot chain with hardware root of trust
+  - dm-crypt with TPM for encrypted storage
+  - Development vs. production key provisioning
+  - Attestation and remote provisioning
+- <strong>Verification and Testing</strong>: Commands for OP-TEE, TPM, Secure Elements</p>
+<p><strong>Code Examples</strong>: 10+ BitBake recipes, C code for TEE/TPM/SE integration, device tree overlays</p>
+<h4 id="chapter-3-firmware-updates-and-cryptographic-signatures_1">Chapter 3: Firmware Updates and Cryptographic Signatures<a class="headerlink" href="#chapter-3-firmware-updates-and-cryptographic-signatures_1" title="Permanent link">&para;</a></h4>
+<p><strong>Section Added</strong>: "Yocto Project Secure Boot Implementation" (~180 lines)</p>
+<p><strong>Coverage</strong>:
+- U-Boot Verified Boot configuration
+- FIT image signing setup
+- Key generation procedures
+- Kernel FIT image signing
+- Hardware root of trust integration (TPM, OP-TEE)
+- Production vs. development key management
+- Complete secure boot chain (ROM → SPL → U-Boot → Kernel → Rootfs → Runtime)
+- Testing and verification procedures</p>
+<p><strong>Code Examples</strong>: BitBake secure boot configuration, key generation commands, verification tests</p>
+<h4 id="chapter-10-third-party-code-and-components">Chapter 10: Third Party Code and Components<a class="headerlink" href="#chapter-10-third-party-code-and-components" title="Permanent link">&para;</a></h4>
+<p><strong>Already Complete</strong>: Comprehensive Yocto CVE checking and SBOM generation content was already present in the guide. No updates needed.</p>
+<p><strong>Existing Coverage</strong>:
+- CVE checking with <code>cve-check</code> class
+- Advanced CVE filtering (kernel .config upload)
+- Third-party vulnerability tools (meta-timesys, meta-cvescan)
+- CI/CD CVE integration
+- SPDX SBOM generation (2.2 and 3.0.1 formats)
+- CycloneDX integration
+- buildhistory package tracking
+- SBOM validation and quality checks
+- EU Cyber Resilience Act compliance
+- Vulnerability scanning with SBOMs (Grype, OSV-Scanner, Trivy)</p>
+<h4 id="cross-references">Cross-References<a class="headerlink" href="#cross-references" title="Permanent link">&para;</a></h4>
+<p>All Yocto sections include cross-references to related chapters:
+- Chapter 1 → Chapter 6 (platform and toolchain hardening)
+- Chapter 3 → Chapter 4 (hardware root of trust) and Chapter 6 (platform security)
+- Chapter 4 → Chapter 3 (secure boot) and Chapter 6 (platform hardening)
+- Chapter 6 → Chapter 10 (CVE checking and SBOM)</p>
+<h4 id="resources-added">Resources Added<a class="headerlink" href="#resources-added" title="Permanent link">&para;</a></h4>
+<p><strong>Yocto Project Documentation</strong>:
+- Yocto Project Official Documentation - Making Images More Secure
+- Yocto Project Security Wiki
+- Yocto Security Hardening: Security Flags
+- Yocto Kernel Development &amp; Security Hardening
+- meta-security Layer Index
+- meta-selinux Git Repository
+- Reproducible Builds in Yocto</p>
+<p><strong>Hardware and Security Tools</strong>:
+- Kernel Hardening Checker (kernel config audit)
+- OP-TEE in Yocto documentation
+- TPM 2.0 Software Stack (TSS)
+- Microchip ATECC608 Yocto Integration
+- NXP i.MX Security (EdgeLock SE050)
+- Infineon OPTIGA Trust M
+- Timesys VigiShield (commercial CVE monitoring)</p>
+<h4 id="impact">Impact<a class="headerlink" href="#impact" title="Permanent link">&para;</a></h4>
+<p><strong>For Developers</strong>:
+- Complete Yocto security configuration guidance in one place
+- Specific BitBake configuration for all security features
+- Production-ready code examples and recipes
+- Clear comparison tables (Buildroot vs. Yocto, SELinux vs. AppArmor vs. SMACK)</p>
+<p><strong>For Organizations</strong>:
+- Regulatory compliance guidance (FDA, automotive, industrial, EU CRA)
+- Hardware security integration for high-security markets
+- CVE management and SBOM generation for supply chain security
+- Reproducible builds for supply chain verification</p>
+<p><strong>Coverage</strong>: The OWASP Embedded Application Security guide is now the most comprehensive open-source resource for secure Yocto-based embedded Linux development.</p>
+<hr />
+<h3 id="9-chapter-content-expansion-sessions-1-5">9. Chapter Content Expansion (Sessions 1-5)<a class="headerlink" href="#9-chapter-content-expansion-sessions-1-5" title="Permanent link">&para;</a></h3>
+<p><strong>Completed</strong>: October 2025</p>
+<p>Comprehensive expansion of security guidance across all major chapters with modern best practices, detailed code examples, and regulatory compliance mapping.</p>
+<h4 id="chapter-1-buffer-and-stack-overflow-protection_1">Chapter 1: Buffer and Stack Overflow Protection<a class="headerlink" href="#chapter-1-buffer-and-stack-overflow-protection_1" title="Permanent link">&para;</a></h4>
+<p><strong>Expansion</strong>: +560 lines
+- GCC security compilation flags (FORTIFY_SOURCE, stack protectors, PIE/ASLR)
+- Kernel hardening parameters and memory protection
+- Modern exploit mitigation techniques
+- Yocto compiler hardening integration</p>
+<h4 id="chapter-2-injection-prevention">Chapter 2: Injection Prevention<a class="headerlink" href="#chapter-2-injection-prevention" title="Permanent link">&para;</a></h4>
+<p><strong>Expansion</strong>: +698 lines
+- Real-world embedded device vulnerability examples
+- OS command injection prevention patterns
+- Input validation for resource-constrained environments
+- Secure coding practices for embedded C/C++</p>
+<h4 id="chapter-3-firmware-updates-and-cryptographic-signatures_2">Chapter 3: Firmware Updates and Cryptographic Signatures<a class="headerlink" href="#chapter-3-firmware-updates-and-cryptographic-signatures_2" title="Permanent link">&para;</a></h4>
+<p><strong>Expansion</strong>: +992 lines
+- Modern firmware update frameworks (SWUpdate, RAUC, Mender)
+- U-Boot verified boot and FIT image signing
+- Rollback protection and A/B update strategies
+- Post-quantum cryptography readiness for secure boot</p>
+<h4 id="chapter-4-securing-sensitive-information_2">Chapter 4: Securing Sensitive Information<a class="headerlink" href="#chapter-4-securing-sensitive-information_2" title="Permanent link">&para;</a></h4>
+<p><strong>Updates</strong>: Hardware security and PQC enhancements
+- Hardware-based security (TEE, secure elements, TPM 2.0)
+- Post-quantum cryptography for secure storage
+- Key management best practices</p>
+<h4 id="chapter-6-embedded-platform-security-hardening_1">Chapter 6: Embedded Platform Security Hardening<a class="headerlink" href="#chapter-6-embedded-platform-security-hardening_1" title="Permanent link">&para;</a></h4>
+<p><strong>Restructuring</strong>: Content deduplication and navigation improvements
+- Removed duplicate U-Boot content (cross-referenced to Chapter 3)
+- Removed outdated Buildroot screenshots
+- Added Quick Navigation section with cross-chapter links
+- Converted AGL-specific guidance to universal embedded practices
+- Clarified platform-level focus vs compiler/bootloader details</p>
+<h4 id="chapter-8-transport-layer-security_1">Chapter 8: Transport Layer Security<a class="headerlink" href="#chapter-8-transport-layer-security_1" title="Permanent link">&para;</a></h4>
+<p><strong>Expansion</strong>: +865 lines
+- Post-quantum cryptography for TLS (hybrid ECDHE + ML-KEM)
+- Embedded TLS library comparisons (mbedTLS, wolfSSL, OpenSSL)
+- Certificate management and mutual TLS (mTLS)
+- TLS 1.3 configuration for resource-constrained devices
+- Hardware crypto acceleration integration</p>
+<h4 id="chapter-10-third-party-code-and-components_1">Chapter 10: Third-Party Code and Components<a class="headerlink" href="#chapter-10-third-party-code-and-components_1" title="Permanent link">&para;</a></h4>
+<p><strong>Expansion</strong>: +797 lines
+- Yocto CVE checking and vulnerability management
+- Modern SBOM tools and generation (SPDX, CycloneDX)
+- Compliance automation workflows
+- CVE scanner integration (Grype, Trivy, Clair)
+- SBOM differential analysis
+- Dependency Track for continuous monitoring</p>
+<p><strong>Total</strong>: ~4,000 lines of new security guidance addressing modern threats, regulatory requirements (EU CRA, NTIA SBOM mandates), and quantum-resistant cryptography preparation.</p>
+<p><strong>Impact</strong>: Guide now provides production-ready code examples, automated workflows, and comprehensive coverage for devices with 10-20+ year lifecycles.</p>
+<hr />
+<h2 id="link-updates">Link Updates<a class="headerlink" href="#link-updates" title="Permanent link">&para;</a></h2>
+<h3 id="owasp-wiki-migration-36-links-updated">OWASP Wiki Migration (36 Links Updated)<a class="headerlink" href="#owasp-wiki-migration-36-links-updated" title="Permanent link">&para;</a></h3>
+<p>All OWASP wiki links migrated from deprecated infrastructure to current URLs:</p>
+<p><strong>Old Format</strong>: <code>https://www.owasp.org/index.php/[Topic]</code>
+<strong>New Format</strong>: <code>https://owasp.org/www-[project]/[topic]</code></p>
+<p><strong>Files Updated</strong>:
+1. 1_buffer_and_stack_overflow_protection.md (4 links)
+2. 2_injection_prevention.md (3 links)
+3. 3_firmware_updates_and_cryptographic_signatures.md (2 links)
+4. 4_securing_sensitive_information.md (5 links)
+5. 5identity_management.md (2 links)
+6. 6_embedded_framework_and_c-based_toolchain_hardeni.md (6 links)
+7. 7_usage_of_debugging_code_and_interfaces.md (1 link)
+8. 8_transport_layer_security.md (4 links)
+9. 9_usage_of_data_collection_and_storage_-_privacy.md (3 links)
+10. 10_third_party_code_and_components.md (4 links)
+11. threat-model.md (2 links)</p>
+<h3 id="cert-secure-coding-updates">CERT Secure Coding Updates<a class="headerlink" href="#cert-secure-coding-updates" title="Permanent link">&para;</a></h3>
+<p>Updated CERT Secure Coding references to new wiki domain:</p>
+<p><strong>Old</strong>: <code>https://www.securecoding.cert.org/*</code>
+<strong>New</strong>: <code>https://wiki.sei.cmu.edu/confluence/display/seccode/*</code></p>
+<hr />
+<h2 id="year-updates-2024-2025">Year Updates (2024 → 2025)<a class="headerlink" href="#year-updates-2024-2025" title="Permanent link">&para;</a></h2>
+<p>Updated 36 references across 8 files:</p>
+<ol>
+<li><strong>README.md</strong>: Project title and description</li>
+<li><strong>SUMMARY.md</strong>: Table of contents</li>
+<li><strong>8_transport_layer_security.md</strong>: TLS version recommendations, PCI DSS compliance dates</li>
+<li><strong>10_third_party_code_and_components.md</strong>: SBOM standards, tool versions</li>
+<li><strong>project-roadmap.md</strong>: Roadmap timeline updated to 2025-2026</li>
+<li><strong>owasp-iot-ecosystem-alignment.md</strong>: OWASP IoT project status</li>
+<li><strong>device-compliance-frameworks.md</strong>: Compliance framework effective dates</li>
+<li><strong>threat-model.md</strong>: Threat landscape updates</li>
+</ol>
+<hr />
+<h2 id="file-corrections">File Corrections<a class="headerlink" href="#file-corrections" title="Permanent link">&para;</a></h2>
+<h3 id="empty-files-populated">Empty Files Populated<a class="headerlink" href="#empty-files-populated" title="Permanent link">&para;</a></h3>
+<p><strong>project-roadmap.md</strong>:
+- Added comprehensive 5-phase roadmap (2025-2026)
+- Defined deliverables, timeline, and success criteria</p>
+<p><strong>acknowledgments.md</strong>:
+- Added contributor recognition section
+- Acknowledged OWASP community and project contributors</p>
+<h3 id="typo-fixes">Typo Fixes<a class="headerlink" href="#typo-fixes" title="Permanent link">&para;</a></h3>
+<p><strong>Threat modeling chapter</strong>:
+- Fixed: "Theat Modeling" → "Threat Modeling"</p>
+<hr />
+<h2 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h2>
+<h3 id="content-additions">Content Additions<a class="headerlink" href="#content-additions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>40+ new code examples</strong> (C implementations for PQC, injection prevention, TEE, Yocto BitBake configs)</li>
+<li><strong>3 comprehensive PQC sections</strong> (~500 lines of content)</li>
+<li><strong>4 comprehensive Yocto sections</strong> (~1,520 lines of content across 4 chapters)</li>
+<li><strong>2 new appendix documents</strong> (OWASP IoT Ecosystem, Compliance Frameworks)</li>
+<li><strong>9 compliance frameworks</strong> documented</li>
+<li><strong>4 OWASP IoT projects</strong> integrated</li>
+<li><strong>2 command injection examples</strong> with vulnerable + secure code</li>
+<li><strong>1 comprehensive Yocto security checklist</strong> (40 points)</li>
+</ul>
+<h3 id="files-modified">Files Modified<a class="headerlink" href="#files-modified" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>13 chapter files</strong> updated with content</li>
+<li><strong>11 chapter files</strong> updated with link fixes</li>
+<li><strong>8 files</strong> updated with year references</li>
+<li><strong>2 files</strong> created from empty state</li>
+<li><strong>2 new appendix documents</strong> created</li>
+</ul>
+<h3 id="link-updates_1">Link Updates<a class="headerlink" href="#link-updates_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>36 OWASP links</strong> migrated to new infrastructure</li>
+<li><strong>12+ CERT Secure Coding links</strong> updated</li>
+<li><strong>7 new PQC resources</strong> added</li>
+<li><strong>4 OWASP IoT project links</strong> added</li>
+</ul>
+<hr />
+<h2 id="owasp-iot-ecosystem-mapping-summary">OWASP IoT Ecosystem Mapping Summary<a class="headerlink" href="#owasp-iot-ecosystem-mapping-summary" title="Permanent link">&para;</a></h2>
+<p>Every chapter now includes specific mappings:</p>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>ISVS Requirements</th>
+<th>ISTG Test Cases</th>
+<th>FSTM Stages</th>
+<th>IoTGoat Labs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Buffer Overflow</td>
+<td>V2.1.1, V2.1.2</td>
+<td>ISTG-FW-VULN-001</td>
+<td>Stage 5</td>
+<td>Buffer overflow</td>
+</tr>
+<tr>
+<td>2. Injection</td>
+<td>V2.3.1, V2.3.2</td>
+<td>ISTG-UI-INFO-001</td>
+<td>Stage 4, 6</td>
+<td>Command injection</td>
+</tr>
+<tr>
+<td>3. Firmware Updates</td>
+<td>V3.2.1-V3.2.3</td>
+<td>ISTG-FW-INFO-001</td>
+<td>Stage 3, 5</td>
+<td>Signature bypass</td>
+</tr>
+<tr>
+<td>4. Sensitive Info</td>
+<td>V3.3.1, V3.3.2</td>
+<td>ISTG-FW-CRYPT-001</td>
+<td>Stage 4, 6</td>
+<td>Hardcoded keys</td>
+</tr>
+<tr>
+<td>5. Identity</td>
+<td>V3.1.1, V3.1.2</td>
+<td>ISTG-FW-INFO-002</td>
+<td>Stage 2</td>
+<td>Device fingerprint</td>
+</tr>
+<tr>
+<td>8. TLS</td>
+<td>V4.1.1, V4.2.1</td>
+<td>ISTG-DES-COMM-001</td>
+<td>Stage 6, 7</td>
+<td>TLS interception</td>
+</tr>
+<tr>
+<td>10. Third-Party</td>
+<td>V1.2.1, V1.2.2</td>
+<td>ISTG-FW-INFO-003</td>
+<td>Stage 1</td>
+<td>SBOM generation</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Complete mapping available in <a href="../owasp-iot-ecosystem-alignment/">Appendix A</a>)</em></p>
+<hr />
+<h2 id="post-quantum-cryptography-timeline">Post-Quantum Cryptography Timeline<a class="headerlink" href="#post-quantum-cryptography-timeline" title="Permanent link">&para;</a></h2>
+<h3 id="2025-2026-preparation-testing">2025-2026: Preparation &amp; Testing<a class="headerlink" href="#2025-2026-preparation-testing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Audit current cryptographic implementations</li>
+<li>Evaluate PQC libraries (liboqs, PQClean)</li>
+<li>Test hybrid signatures and encryption</li>
+<li>Update bootloaders for larger PQC signatures</li>
+<li>Deploy hybrid PQC in test environments</li>
+</ul>
+<h3 id="2026-2027-hybrid-deployment">2026-2027: Hybrid Deployment<a class="headerlink" href="#2026-2027-hybrid-deployment" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Production rollout of hybrid classical+PQC</li>
+<li>Maintain backward compatibility</li>
+<li>Monitor performance impact</li>
+<li>Progressive re-encryption of stored data</li>
+</ul>
+<h3 id="2028-pqc-only">2028+: PQC-Only<a class="headerlink" href="#2028-pqc-only" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Transition to PQC-only implementations</li>
+<li>Deprecate classical-only algorithms</li>
+<li>Full quantum-resistant protection</li>
+</ul>
+<hr />
+<h2 id="technology-versions-updated">Technology Versions Updated<a class="headerlink" href="#technology-versions-updated" title="Permanent link">&para;</a></h2>
+<h3 id="tlscryptography">TLS/Cryptography<a class="headerlink" href="#tlscryptography" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>TLS 1.3</strong> (RFC 8446) - Now recommended</li>
+<li><strong>TLS 1.2</strong> - Minimum acceptable version</li>
+<li><strong>AES-256-GCM</strong> - Recommended for quantum resistance</li>
+<li><strong>ChaCha20-Poly1305</strong> - Modern AEAD cipher</li>
+<li><strong>ML-DSA (Dilithium)</strong> - NIST FIPS 204 for signatures</li>
+<li><strong>ML-KEM (Kyber)</strong> - NIST FIPS 203 for key encapsulation</li>
+</ul>
+<h3 id="sbom-tools">SBOM Tools<a class="headerlink" href="#sbom-tools" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>SPDX</strong> - ISO/IEC 5962:2021</li>
+<li><strong>CycloneDX</strong> - v1.6</li>
+<li><strong>Syft</strong> - Modern SBOM generator</li>
+<li><strong>Trivy</strong> - Comprehensive scanner</li>
+<li><strong>Grype</strong> - Vulnerability matching</li>
+<li><strong>OSV-Scanner</strong> - Open source vulnerabilities</li>
+</ul>
+<h3 id="hardware-security">Hardware Security<a class="headerlink" href="#hardware-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>ARM TrustZone</strong> - TEE implementation</li>
+<li><strong>Intel SGX</strong> - x86 secure enclaves</li>
+<li><strong>TPM 2.0</strong> - Hardware root of trust</li>
+<li><strong>ATECC608</strong> - I2C crypto coprocessor</li>
+<li><strong>EdgeLock SE050</strong> - NXP secure element</li>
+<li><strong>OPTIGA Trust M</strong> - Infineon automotive SE</li>
+</ul>
+<hr />
+<h2 id="resources-added_1">Resources Added<a class="headerlink" href="#resources-added_1" title="Permanent link">&para;</a></h2>
+<h3 id="post-quantum-cryptography">Post-Quantum Cryptography<a class="headerlink" href="#post-quantum-cryptography" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://csrc.nist.gov/projects/post-quantum-cryptography">NIST PQC Project</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.203.pdf">FIPS 203 (ML-KEM)</a></li>
+<li><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.204.pdf">FIPS 204 (ML-DSA)</a></li>
+<li><a href="https://github.com/open-quantum-safe/liboqs">liboqs - Open Quantum Safe</a></li>
+<li><a href="https://github.com/open-quantum-safe/oqs-provider">OQS OpenSSL Provider</a></li>
+<li><a href="https://www.wolfssl.com/post-quantum-cryptography/">wolfSSL PQC</a></li>
+<li><a href="https://blog.cloudflare.com/post-quantum-for-all/">Cloudflare PQC Research</a></li>
+</ul>
+<h3 id="owasp-iot-ecosystem">OWASP IoT Ecosystem<a class="headerlink" href="#owasp-iot-ecosystem" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://owasp.org/www-project-internet-of-things-security-verification-standard/">OWASP ISVS</a></li>
+<li><a href="https://github.com/OWASP/IoT-Security-Testing-Guide">OWASP ISTG</a></li>
+<li><a href="https://github.com/OWASP/owasp-fstm">OWASP FSTM</a></li>
+<li><a href="https://github.com/OWASP/IoTGoat">OWASP IoTGoat</a></li>
+</ul>
+<h3 id="compliance-standards">Compliance &amp; Standards<a class="headerlink" href="#compliance-standards" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">EU Cyber Resilience Act</a></li>
+<li><a href="https://www.etsi.org/deliver/etsi_en/303600_303699/303645/02.01.01_60/en_303645v020101p.pdf">ETSI EN 303 645</a></li>
+<li><a href="https://www.isa.org/standards-and-publications/isa-standards/isa-iec-62443-series-of-standards">IEC 62443</a></li>
+<li><a href="https://www.nist.gov/programs-projects/nist-cybersecurity-iot-program">NIST IoT Cybersecurity</a></li>
+<li><a href="https://www.fda.gov/medical-devices/digital-health-center-excellence/cybersecurity">FDA Cybersecurity</a></li>
+</ul>
+<hr />
+<h2 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
+<h3 id="none">None<a class="headerlink" href="#none" title="Permanent link">&para;</a></h3>
+<p>All updates are backward compatible. The guide maintains support for existing implementations while recommending modern standards for new projects.</p>
+<hr />
+<h2 id="deprecation-notices">Deprecation Notices<a class="headerlink" href="#deprecation-notices" title="Permanent link">&para;</a></h2>
+<h3 id="cryptography">Cryptography<a class="headerlink" href="#cryptography" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>TLS 1.0/1.1</strong>: Deprecated, do not use</li>
+<li><strong>SSLv3</strong>: Deprecated, do not use</li>
+<li><strong>MD5</strong>: Deprecated for signatures</li>
+<li><strong>SHA-1</strong>: Deprecated for signatures</li>
+<li><strong>RSA-1024</strong>: Deprecated, minimum RSA-2048</li>
+<li><strong>DES/3DES</strong>: Deprecated, use AES</li>
+</ul>
+<h3 id="recommendations-for-migration">Recommendations for Migration<a class="headerlink" href="#recommendations-for-migration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>TLS 1.0/1.1 → TLS 1.2/1.3 by Q2 2026</li>
+<li>Classical-only crypto → Hybrid PQC by 2027</li>
+<li>RSA/ECDSA signatures → Consider adding ML-DSA for long-term protection</li>
+</ul>
+<hr />
+<h2 id="future-roadmap">Future Roadmap<a class="headerlink" href="#future-roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="planned-for-2026">Planned for 2026<a class="headerlink" href="#planned-for-2026" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Zero Trust Architecture for embedded systems</li>
+<li>eBPF for runtime security monitoring</li>
+<li>Rust memory safety examples</li>
+<li>Supply chain attack case studies</li>
+<li>AI/ML security considerations for edge devices</li>
+</ul>
+<h3 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h3>
+<ul>
+<li>NIST PQC standardization updates</li>
+<li>EU Cyber Resilience Act implementation</li>
+<li>TLS 1.4 standardization</li>
+<li>OWASP IoT project developments</li>
+</ul>
+<hr />
+<h2 id="contributors">Contributors<a class="headerlink" href="#contributors" title="Permanent link">&para;</a></h2>
+<p>This modernization was made possible by:
+- OWASP Embedded Application Security Project Team
+- OWASP IoT Security Project Contributors
+- NIST Post-Quantum Cryptography Project
+- Open Quantum Safe (OQS) Project
+- Community feedback and issue reporters</p>
+<hr />
+<h2 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
+<p>To verify the updates:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check OWASP IoT ecosystem references</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;OWASP ISVS\|OWASP ISTG\|OWASP FSTM\|IoTGoat&quot;</span><span class="w"> </span><span class="o">[</span><span class="m">1</span>-9<span class="o">]</span>*.md
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check PQC content</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;ML-DSA\|ML-KEM\|post-quantum&quot;</span><span class="w"> </span><span class="o">[</span><span class="m">3</span>,4,8<span class="o">]</span>*.md
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check TLS 1.3 references</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;TLS 1.3\|TLS_AES_256_GCM&quot;</span><span class="w"> </span><span class="m">8</span>*.md
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check compliance frameworks</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>cat<span class="w"> </span>device-compliance-frameworks.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;EU Cyber|ETSI|IEC 62443&quot;</span>
+</span></code></pre></div>
+<hr />
+<p><strong>Changelog Version</strong>: 2025.1</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 OWASP Foundation
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/scriptingxss" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.share", "search.highlight", "navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.sections", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1983 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Best Practices for Embedded Device Security">
+      
+      
+        <meta name="author" content="OWASP Embedded Application Security Project">
+      
+      
+        <link rel="canonical" href="https://scriptingxss.github.io/embeddedappsec/owasp-iot-ecosystem-alignment/">
+      
+      
+        <link rel="prev" href="../threat-model/">
+      
+      
+        <link rel="next" href="../device-compliance-frameworks/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>OWASP IoT Ecosystem Alignment - OWASP Embedded Application Security</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#owasp-iot-ecosystem-alignment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="OWASP Embedded Application Security" class="md-header__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OWASP Embedded Application Security
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              OWASP IoT Ecosystem Alignment
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../preface/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../1_buffer_and_stack_overflow_protection/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Best Practices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../project-roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Project Information
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="OWASP Embedded Application Security" class="md-nav__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    OWASP Embedded Application Security
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Security Best Practices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Security Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1_buffer_and_stack_overflow_protection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Buffer and Stack Overflow Protection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2_injection_prevention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Injection Prevention
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_firmware_updates_and_cryptographic_signatures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Firmware Updates and Cryptographic Signatures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_securing_sensitive_information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Securing Sensitive Information
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5identity_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Identity Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_embedded_framework_and_c-based_toolchain_hardeni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedded Platform Security Hardening
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_usage_of_debugging_code_and_interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Debugging Code and Interfaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_transport_layer_security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transport Layer Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9_usage_of_data_collection_and_storage_-_privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Data Collection and Storage - Privacy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_third_party_code_and_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Third Party Code and Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threat-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Threat Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Appendices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Appendices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    OWASP IoT Ecosystem Alignment
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    OWASP IoT Ecosystem Alignment
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-owasp-iot-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview of OWASP IoT Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of OWASP IoT Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-isvs-iot-security-verification-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP ISVS (IoT Security Verification Standard)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-istg-iot-security-testing-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP ISTG (IoT Security Testing Guide)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-fstm-firmware-security-testing-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP FSTM (Firmware Security Testing Methodology)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iotgoat" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoTGoat
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-mapping-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Mapping Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-this-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use This Alignment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Use This Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-security-assessment-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Security Assessment Teams
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-development-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Development Teams
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-training-and-education" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Training and Education
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-isvs-verification-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference: ISVS Verification Levels
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference: ISVS Verification Levels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#level-1-l1-basic-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 1 (L1): Basic Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-2-l2-defense-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 2 (L2): Defense in Depth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-3-l3-advanced-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 3 (L3): Advanced Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-by-chapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Examples by Chapter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples by Chapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Buffer Overflow Protection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-firmware-update-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Firmware Update Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iot-top-10-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Top 10 Mapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device-compliance-frameworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Device Compliance Frameworks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project Information
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Project Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about-owasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About OWASP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog 2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-owasp-iot-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview of OWASP IoT Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of OWASP IoT Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-isvs-iot-security-verification-standard" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP ISVS (IoT Security Verification Standard)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-istg-iot-security-testing-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP ISTG (IoT Security Testing Guide)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-fstm-firmware-security-testing-methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP FSTM (Firmware Security Testing Methodology)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iotgoat" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoTGoat
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comprehensive-mapping-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comprehensive Mapping Table
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-use-this-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      How to Use This Alignment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Use This Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-security-assessment-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Security Assessment Teams
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-development-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Development Teams
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-training-and-education" class="md-nav__link">
+    <span class="md-ellipsis">
+      For Training and Education
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-isvs-verification-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Reference: ISVS Verification Levels
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference: ISVS Verification Levels">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#level-1-l1-basic-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 1 (L1): Basic Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-2-l2-defense-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 2 (L2): Defense in Depth
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#level-3-l3-advanced-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Level 3 (L3): Advanced Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration Workflow
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-examples-by-chapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Practical Examples by Chapter
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical Examples by Chapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-1-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 1: Buffer Overflow Protection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-2-firmware-update-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example 2: Firmware Update Security
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Additional Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#owasp-iot-top-10-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      OWASP IoT Top 10 Mapping
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/scriptingxss/embeddedappsec/edit/newrevision/owasp-iot-ecosystem-alignment.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec/raw/newrevision/owasp-iot-ecosystem-alignment.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="owasp-iot-ecosystem-alignment">OWASP IoT Ecosystem Alignment<a class="headerlink" href="#owasp-iot-ecosystem-alignment" title="Permanent link">&para;</a></h1>
+<p>This document maps the Embedded Application Security Best Practices to the broader OWASP IoT security ecosystem, including ISVS, ISTG, FSTM, and IoTGoat.</p>
+<h2 id="overview-of-owasp-iot-projects">Overview of OWASP IoT Projects<a class="headerlink" href="#overview-of-owasp-iot-projects" title="Permanent link">&para;</a></h2>
+<h3 id="owasp-isvs-iot-security-verification-standard">OWASP ISVS (IoT Security Verification Standard)<a class="headerlink" href="#owasp-isvs-iot-security-verification-standard" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Purpose</strong>: Provides security requirements for IoT applications and ecosystems</li>
+<li><strong>URL</strong>: https://owasp.org/www-project-iot-security-verification-standard/</li>
+<li><strong>GitHub</strong>: https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS</li>
+<li><strong>Structure</strong>: Organized into verification levels (V1-V5) covering ecosystem, applications, platforms, communication, and hardware</li>
+</ul>
+<h3 id="owasp-istg-iot-security-testing-guide">OWASP ISTG (IoT Security Testing Guide)<a class="headerlink" href="#owasp-istg-iot-security-testing-guide" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Purpose</strong>: Comprehensive methodology for penetration testing IoT devices</li>
+<li><strong>URL</strong>: https://owasp.org/www-project-iot-security-testing-guide/</li>
+<li><strong>Documentation</strong>: https://owasp.org/owasp-istg/</li>
+<li><strong>GitHub</strong>: https://github.com/OWASP/owasp-istg</li>
+<li><strong>Released</strong>: March 2025</li>
+</ul>
+<h3 id="owasp-fstm-firmware-security-testing-methodology">OWASP FSTM (Firmware Security Testing Methodology)<a class="headerlink" href="#owasp-fstm-firmware-security-testing-methodology" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Purpose</strong>: 9-stage methodology for firmware security assessments</li>
+<li><strong>URL</strong>: https://scriptingxss.gitbook.io/firmware-security-testing-methodology</li>
+<li><strong>GitHub</strong>: https://github.com/scriptingxss/owasp-fstm</li>
+<li><strong>Stages</strong>: Information Gathering, Firmware Acquisition, Firmware Analysis, Filesystem Extraction, Firmware Emulation, Dynamic Analysis, Runtime Analysis, Binary Exploitation, Reporting</li>
+</ul>
+<h3 id="owasp-iotgoat">OWASP IoTGoat<a class="headerlink" href="#owasp-iotgoat" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Purpose</strong>: Deliberately vulnerable IoT firmware for training and education</li>
+<li><strong>URL</strong>: https://github.com/OWASP/IoTGoat</li>
+<li><strong>Based on</strong>: OpenWrt with intentional vulnerabilities</li>
+<li><strong>Use case</strong>: Hands-on learning and testing security tools</li>
+</ul>
+<hr />
+<h2 id="comprehensive-mapping-table">Comprehensive Mapping Table<a class="headerlink" href="#comprehensive-mapping-table" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Best Practice Chapter</th>
+<th>ISVS Requirements</th>
+<th>ISTG Test Cases</th>
+<th>FSTM Stage</th>
+<th>IoTGoat Examples</th>
+<th>Practical Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Buffer and Stack Overflow Protection</strong></td>
+<td>V2.1 (Memory Management)<br>V2.2 (Input Validation)</td>
+<td>ISTG-FW-SCDA (Static Code Analysis)<br>ISTG-FW-BINS (Binary Security)</td>
+<td>Stage 6 (Dynamic Analysis)<br>Stage 7 (Runtime Analysis)</td>
+<td>Buffer overflow challenges in web interface and services</td>
+<td>Use static analysis tools (Flawfinder, CodeChecker) to identify unsafe functions, then validate with ISTG testing methodology</td>
+</tr>
+<tr>
+<td><strong>2. Injection Prevention</strong></td>
+<td>V2.3 (Command Injection)<br>V4.2 (API Security)</td>
+<td>ISTG-FW-INFO-001 (Sensitive Info)<br>ISTG-UI (User Interfaces)</td>
+<td>Stage 7 (Runtime Analysis)<br>Stage 8 (Binary Exploitation)</td>
+<td>Command injection via web admin panel, shell injection in diagnostics page</td>
+<td>Follow ISVS V2.3 validation requirements, test using ISTG-UI test cases, practice on IoTGoat command injection vulnerabilities</td>
+</tr>
+<tr>
+<td><strong>3. Firmware Updates and Cryptographic Signatures</strong></td>
+<td>V1.1 (Update Mechanisms)<br>V1.2 (Cryptographic Verification)</td>
+<td>ISTG-FW-OTHR (Firmware Updates)<br>ISTG-DES-CRYPT (Cryptographic Implementations)</td>
+<td>Stage 8 (Binary Exploitation)<br>Stage 3 (Firmware Analysis)</td>
+<td>Insecure OTA update mechanism, missing signature validation</td>
+<td>Implement ISVS V1.1 secure update requirements, validate with ISTG firmware update test cases</td>
+</tr>
+<tr>
+<td><strong>4. Securing Sensitive Information</strong></td>
+<td>V2.6 (Sensitive Data Storage)<br>V3.3 (Secure Storage)</td>
+<td>ISTG-FW-CRYPT (Cryptography)<br>ISTG-FW-INFO-002 (Hardcoded Secrets)</td>
+<td>Stage 5 (Filesystem Extraction)<br>Stage 4 (Filesystem Analysis)</td>
+<td>Hardcoded credentials in binaries, plaintext passwords in config files</td>
+<td>Apply ISVS V2.6 secure storage requirements, use FSTM Stage 4-5 to identify secrets, test on IoTGoat hardcoded credentials</td>
+</tr>
+<tr>
+<td><strong>5. Identity Management</strong></td>
+<td>V2.4 (Authentication)<br>V2.5 (Session Management)</td>
+<td>ISTG-UI-AUTHZ (Authorization)<br>ISTG-UI-AUTHN (Authentication)</td>
+<td>Stage 6 (Dynamic Analysis)</td>
+<td>Default credentials, weak password policies</td>
+<td>Implement ISVS V2.4-V2.5 requirements, test with ISTG authentication test cases</td>
+</tr>
+<tr>
+<td><strong>6. Embedded Platform Security Hardening</strong></td>
+<td>V3.1 (Platform Configuration)<br>V3.2 (Software Hardening)</td>
+<td>ISTG-FW-CONF (Configuration Review)</td>
+<td>Stage 3 (Firmware Analysis)<br>Stage 4 (Filesystem Analysis)</td>
+<td>Unnecessary services enabled (telnet, ftp), debug interfaces active</td>
+<td>Follow ISVS V3.1-V3.2 hardening guidelines, use FSTM Stage 3-4 for configuration review</td>
+</tr>
+<tr>
+<td><strong>7. Debugging Code and Interfaces</strong></td>
+<td>V3.4 (Debug Interfaces)<br>V5.3 (Physical Interfaces)</td>
+<td>ISTG-WRLS-JTAG (Hardware Debug)<br>ISTG-FW-INFO-003 (Debug Code)</td>
+<td>Stage 2 (Firmware Acquisition)<br>Stage 6 (Dynamic Analysis)</td>
+<td>Hidden developer diagnostic page, UART shell access</td>
+<td>Implement ISVS V3.4 requirements to disable debug interfaces, test using ISTG hardware debug test cases</td>
+</tr>
+<tr>
+<td><strong>8. Transport Layer Security</strong></td>
+<td>V4.1 (Encryption)<br>V4.3 (Certificate Validation)</td>
+<td>ISTG-DES-CRYPT (Cryptography)<br>ISTG-WRLS-WIFI (Wireless)</td>
+<td>Stage 6 (Dynamic Analysis)</td>
+<td>Weak TLS configurations, missing certificate validation</td>
+<td>Apply ISVS V4.1-V4.3 TLS requirements, validate using ISTG cryptography test cases</td>
+</tr>
+<tr>
+<td><strong>9. Data Collection and Storage - Privacy</strong></td>
+<td>V1.4 (Privacy)<br>V2.6 (Data Protection)</td>
+<td>ISTG-FW-INFO (Information Gathering)</td>
+<td>Stage 5 (Filesystem Extraction)</td>
+<td>PII stored in plaintext logs</td>
+<td>Implement ISVS V1.4 privacy requirements, use FSTM to identify data leakage</td>
+</tr>
+<tr>
+<td><strong>10. Third Party Code and Components</strong></td>
+<td>V1.3 (Software BOM)<br>V3.5 (Component Analysis)</td>
+<td>ISTG-FW-INFO-003 (Component Identification)</td>
+<td>Stage 3 (Firmware Analysis)<br>Stage 9 (Reporting)</td>
+<td>Vulnerable jQuery, outdated libraries with CVEs</td>
+<td>Maintain SBOM per ISVS V1.3, use ISTG component identification, test on IoTGoat vulnerable components</td>
+</tr>
+<tr>
+<td><strong>11. Threat Modeling</strong></td>
+<td>V1.5 (Threat Modeling)</td>
+<td>ISTG Framework (Device &amp; Attacker Models)</td>
+<td>Stage 1 (Information Gathering)</td>
+<td>All vulnerability categories in IoTGoat</td>
+<td>Use ISVS V1.5 threat modeling requirements, apply ISTG device/attacker models</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-to-use-this-alignment">How to Use This Alignment<a class="headerlink" href="#how-to-use-this-alignment" title="Permanent link">&para;</a></h2>
+<h3 id="for-security-assessment-teams">For Security Assessment Teams<a class="headerlink" href="#for-security-assessment-teams" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Planning Phase</strong></li>
+<li>Review this guide's best practices for the security domain</li>
+<li>Identify applicable ISVS requirements to verify</li>
+<li>Select ISTG test cases to execute</li>
+<li>
+<p>Plan FSTM stages for firmware analysis</p>
+</li>
+<li>
+<p><strong>Testing Phase</strong></p>
+</li>
+<li>Use IoTGoat to practice testing techniques</li>
+<li>Execute ISTG test cases against target device</li>
+<li>Apply FSTM methodology for firmware examination</li>
+<li>
+<p>Document findings against ISVS requirements</p>
+</li>
+<li>
+<p><strong>Remediation Phase</strong></p>
+</li>
+<li>Reference best practice guidance for fixes</li>
+<li>Verify fixes meet ISVS requirements</li>
+<li>Retest using ISTG methodology</li>
+</ol>
+<h3 id="for-development-teams">For Development Teams<a class="headerlink" href="#for-development-teams" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Design Phase</strong></li>
+<li>Review relevant best practices</li>
+<li>Incorporate ISVS security requirements</li>
+<li>
+<p>Consider ISTG test cases in threat model</p>
+</li>
+<li>
+<p><strong>Implementation Phase</strong></p>
+</li>
+<li>Follow best practice code examples</li>
+<li>Meet ISVS verification requirements</li>
+<li>
+<p>Enable security features per guidance</p>
+</li>
+<li>
+<p><strong>Validation Phase</strong></p>
+</li>
+<li>Self-test using IoTGoat techniques</li>
+<li>Run FSTM analysis on builds</li>
+<li>Prepare for ISTG-based testing</li>
+</ol>
+<h3 id="for-training-and-education">For Training and Education<a class="headerlink" href="#for-training-and-education" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Learning Path</strong></li>
+<li>Study best practices (this guide)</li>
+<li>Understand requirements (ISVS)</li>
+<li>Learn testing methods (ISTG, FSTM)</li>
+<li>
+<p>Practice hands-on (IoTGoat)</p>
+</li>
+<li>
+<p><strong>Skill Development</strong></p>
+</li>
+<li>Use IoTGoat challenges to apply each best practice</li>
+<li>Map vulnerabilities to ISVS requirements</li>
+<li>Execute ISTG test cases</li>
+<li>Follow FSTM methodology</li>
+</ol>
+<hr />
+<h2 id="quick-reference-isvs-verification-levels">Quick Reference: ISVS Verification Levels<a class="headerlink" href="#quick-reference-isvs-verification-levels" title="Permanent link">&para;</a></h2>
+<h3 id="level-1-l1-basic-security">Level 1 (L1): Basic Security<a class="headerlink" href="#level-1-l1-basic-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Standard security controls</li>
+<li>Applicable to most IoT devices</li>
+<li>Focus on preventing common vulnerabilities</li>
+</ul>
+<h3 id="level-2-l2-defense-in-depth">Level 2 (L2): Defense in Depth<a class="headerlink" href="#level-2-l2-defense-in-depth" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enhanced security requirements</li>
+<li>For devices handling sensitive data</li>
+<li>Multiple layers of protection</li>
+</ul>
+<h3 id="level-3-l3-advanced-security">Level 3 (L3): Advanced Security<a class="headerlink" href="#level-3-l3-advanced-security" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Maximum security assurance</li>
+<li>For critical infrastructure and high-risk deployments</li>
+<li>Comprehensive security controls</li>
+</ul>
+<p><strong>Recommendation</strong>: Map best practices to appropriate ISVS level based on device risk classification.</p>
+<hr />
+<h2 id="integration-workflow">Integration Workflow<a class="headerlink" href="#integration-workflow" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                    Security Lifecycle                        │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└─────────────────────────────────────────────────────────────┘
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                              │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                              ▼
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                  ┌───────────────────────┐
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                  │  Design &amp; Planning    │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                  │  - Best Practices     │
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                  │  - Threat Modeling    │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                  │  - ISVS Requirements  │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                  └───────────────────────┘
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                              │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                              ▼
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                  ┌───────────────────────┐
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                  │   Implementation      │
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                  │  - Follow Best        │
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                  │    Practices Guide    │
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                  │  - Meet ISVS Reqs     │
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                  └───────────────────────┘
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                              │
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                              ▼
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                  ┌───────────────────────┐
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                  │  Security Testing     │
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                  │  - ISTG Test Cases    │
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                  │  - FSTM Analysis      │
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                  │  - IoTGoat Practice   │
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                  └───────────────────────┘
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                              │
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                              ▼
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                  ┌───────────────────────┐
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>                  │   Validation          │
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>                  │  - ISVS Verification  │
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>                  │  - Compliance Check   │
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>                  └───────────────────────┘
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>                              │
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>                              ▼
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>                  ┌───────────────────────┐
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>                  │  Continuous           │
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>                  │  Improvement          │
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>                  │  - Update Best        │
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>                  │    Practices          │
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>                  │  - Refine Testing     │
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>                  └───────────────────────┘
+</span></code></pre></div>
+<hr />
+<h2 id="practical-examples-by-chapter">Practical Examples by Chapter<a class="headerlink" href="#practical-examples-by-chapter" title="Permanent link">&para;</a></h2>
+<h3 id="example-1-buffer-overflow-protection">Example 1: Buffer Overflow Protection<a class="headerlink" href="#example-1-buffer-overflow-protection" title="Permanent link">&para;</a></h3>
+<p><strong>Best Practice</strong>: Use safe string functions (strncpy instead of strcpy)</p>
+<p><strong>ISVS Requirement</strong>: V2.1.1 - Memory management functions must prevent buffer overflows</p>
+<p><strong>ISTG Test</strong>: ISTG-FW-SCDA-001 - Static analysis for unsafe function usage</p>
+<p><strong>FSTM Stage</strong>: Stage 6 - Dynamic analysis with fuzzing</p>
+<p><strong>IoTGoat Practice</strong>: Exploit buffer overflow in web server</p>
+<p><strong>Implementation</strong>:
+1. Review code with flawfinder (Best Practice)
+2. Verify ISVS V2.1.1 compliance
+3. Test with ISTG-FW-SCDA-001 methodology
+4. Practice on IoTGoat buffer overflow challenge</p>
+<h3 id="example-2-firmware-update-security">Example 2: Firmware Update Security<a class="headerlink" href="#example-2-firmware-update-security" title="Permanent link">&para;</a></h3>
+<p><strong>Best Practice</strong>: Cryptographically sign firmware updates</p>
+<p><strong>ISVS Requirement</strong>: V1.1.2 - Updates must be cryptographically signed</p>
+<p><strong>ISTG Test</strong>: ISTG-FW-OTHR-001 - Firmware update mechanism analysis</p>
+<p><strong>FSTM Stage</strong>: Stage 8 - Binary exploitation of update process</p>
+<p><strong>IoTGoat Practice</strong>: Bypass update signature verification</p>
+<p><strong>Implementation</strong>:
+1. Implement GPG signature verification (Best Practice)
+2. Meet ISVS V1.1.2 requirements
+3. Test with ISTG-FW-OTHR-001
+4. Validate against IoTGoat insecure update</p>
+<hr />
+<h2 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h2>
+<h3 id="owasp-iot-top-10-mapping">OWASP IoT Top 10 Mapping<a class="headerlink" href="#owasp-iot-top-10-mapping" title="Permanent link">&para;</a></h3>
+<p>This guide's best practices address all OWASP IoT Top 10 vulnerabilities:</p>
+<ol>
+<li><strong>Weak, Guessable, or Hardcoded Passwords</strong> → Chapter 5 (Identity Management), Chapter 4 (Securing Sensitive Information)</li>
+<li><strong>Insecure Network Services</strong> → Chapter 6 (Platform Hardening), Chapter 8 (TLS)</li>
+<li><strong>Insecure Ecosystem Interfaces</strong> → Chapter 2 (Injection Prevention), Chapter 5 (Identity Management)</li>
+<li><strong>Lack of Secure Update Mechanism</strong> → Chapter 3 (Firmware Updates)</li>
+<li><strong>Use of Insecure or Outdated Components</strong> → Chapter 10 (Third Party Code)</li>
+<li><strong>Insufficient Privacy Protection</strong> → Chapter 9 (Data Collection and Storage)</li>
+<li><strong>Insecure Data Transfer and Storage</strong> → Chapter 4 (Securing Sensitive Information), Chapter 8 (TLS)</li>
+<li><strong>Lack of Device Management</strong> → Chapter 5 (Identity Management), Chapter 6 (Platform Hardening)</li>
+<li><strong>Insecure Default Settings</strong> → Chapter 6 (Platform Hardening), Chapter 7 (Debugging Code)</li>
+<li><strong>Lack of Physical Hardening</strong> → Chapter 7 (Debugging Code and Interfaces)</li>
+</ol>
+<h3 id="tools-integration">Tools Integration<a class="headerlink" href="#tools-integration" title="Permanent link">&para;</a></h3>
+<p>Combine tools from each project:
+- <strong>Static Analysis</strong>: Flawfinder (Best Practices) + ISVS checklist + ISTG-FW-SCDA test cases
+- <strong>Dynamic Analysis</strong>: FSTM emulation + ISTG runtime tests + IoTGoat targets
+- <strong>Firmware Analysis</strong>: Binwalk (Best Practices) + FSTM methodology + ISTG-FW test cases</p>
+<hr />
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>The OWASP IoT ecosystem provides a comprehensive, integrated approach to embedded and IoT security:</p>
+<ul>
+<li><strong>Best Practices</strong> (this guide): Implementation guidance and "how-to"</li>
+<li><strong>ISVS</strong>: Verification requirements and "what to achieve"</li>
+<li><strong>ISTG</strong>: Testing methodology and "how to test"</li>
+<li><strong>FSTM</strong>: Firmware analysis process and "how to analyze"</li>
+<li><strong>IoTGoat</strong>: Practice environment and "where to learn"</li>
+</ul>
+<p>Use them together for complete security coverage from design through deployment.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 OWASP Foundation
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/scriptingxss" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.share", "search.highlight", "navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.sections", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

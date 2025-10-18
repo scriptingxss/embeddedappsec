@@ -1,0 +1,3063 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Best Practices for Embedded Device Security">
+      
+      
+        <meta name="author" content="OWASP Embedded Application Security Project">
+      
+      
+        <link rel="canonical" href="https://scriptingxss.github.io/embeddedappsec/1_buffer_and_stack_overflow_protection/">
+      
+      
+        <link rel="prev" href="../preface/">
+      
+      
+        <link rel="next" href="../2_injection_prevention/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Buffer and Stack Overflow Protection - OWASP Embedded Application Security</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#buffer-and-stack-overflow-protection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="OWASP Embedded Application Security" class="md-header__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OWASP Embedded Application Security
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Buffer and Stack Overflow Protection
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../preface/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Introduction
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Best Practices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../owasp-iot-ecosystem-alignment/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../project-roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Project Information
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="OWASP Embedded Application Security" class="md-nav__button md-logo" aria-label="OWASP Embedded Application Security" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    OWASP Embedded Application Security
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/scriptingxss/embeddedappsec" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    scriptingxss/embeddedappsec
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Security Best Practices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Security Best Practices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Buffer and Stack Overflow Protection
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Buffer and Stack Overflow Protection
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-persistent-problem-of-memory-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Persistent Problem of Memory Safety
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Persistent Problem of Memory Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-supply-chain-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Supply Chain Reality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hard-truth-about-compiler-protections" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Hard Truth About Compiler Protections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-path-forward-memory-safe-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Path Forward: Memory-Safe Languages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pragmatic-guidance-for-todays-cc-codebases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pragmatic Guidance for Today's C/C++ Codebases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dangerous-c-functions-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dangerous C Functions to Avoid
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-assisted-development-proactive-memory-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI-Assisted Development: Proactive Memory Safety
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI-Assisted Development: Proactive Memory Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-project-codeguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Project CodeGuard?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codeguard-rule-safe-c-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      CodeGuard Rule: Safe C Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c11-annex-k-portability-warning-for-embedded" class="md-nav__link">
+    <span class="md-ellipsis">
+      C11 Annex K Portability Warning for Embedded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expanded-dangerous-functions-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expanded Dangerous Functions Reference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-project-codeguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up Project CodeGuard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-ai-generated-secure-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: AI-Generated Secure Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-ai-assisted-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefits of AI-Assisted Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-protection-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Protection Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Protection Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-space-layout-randomization-aslr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Space Layout Randomization (ASLR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-execution-prevention-dep-no-execute-nx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Execution Prevention (DEP) / No-Execute (NX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relocation-read-only-relro" class="md-nav__link">
+    <span class="md-ellipsis">
+      RELocation Read-Only (RELRO)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stack-canaries-stack-protector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack Canaries (Stack Protector)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yocto-project-compiler-hardening-for-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yocto Project Compiler Hardening for Buffer Overflow Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yocto Project Compiler Hardening for Buffer Overflow Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stack-protection-in-yocto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack Protection in Yocto
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fortify_source-for-buffer-overflow-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      FORTIFY_SOURCE for Buffer Overflow Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcc-fhardened-flag-comprehensive-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCC -fhardened Flag (Comprehensive Protection)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-independent-executable-pie-for-aslr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Independent Executable (PIE) for ASLR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification-of-buffer-overflow-protections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification of Buffer Overflow Protections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildroot-vs-yocto-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buildroot vs. Yocto Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-recipe-security-flag-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Per-Recipe Security Flag Customization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernel-hardening-for-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel Hardening for Buffer Overflow Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kernel Hardening for Buffer Overflow Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#yocto-kernel-configuration-fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yocto Kernel Configuration Fragments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meta-security-hardening-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      meta-security Hardening Configurations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-kernel-security-options-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Kernel Security Options Explained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-hardening-checker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel Hardening Checker
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-sanitizer-asan-for-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Sanitizer (ASan) for Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Address Sanitizer (ASan) for Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asan-in-yocto-development-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASan in Yocto Development Builds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asan-cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASan CI/CD Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-security-verification-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Binary Security Verification Workflows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Binary Security Verification Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-checksec-for-comprehensive-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using checksec for Comprehensive Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-verification-with-readelf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Verification with readelf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-security-testing-in-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Security Testing in CI/CD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-chapter-6-platform-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Chapter 6: Platform Security
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2_injection_prevention/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Injection Prevention
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3_firmware_updates_and_cryptographic_signatures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Firmware Updates and Cryptographic Signatures
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../4_securing_sensitive_information/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Securing Sensitive Information
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../5identity_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Identity Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../6_embedded_framework_and_c-based_toolchain_hardeni/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Embedded Platform Security Hardening
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../7_usage_of_debugging_code_and_interfaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Debugging Code and Interfaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../8_transport_layer_security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transport Layer Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../9_usage_of_data_collection_and_storage_-_privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usage of Data Collection and Storage - Privacy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10_third_party_code_and_components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Third Party Code and Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../threat-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Threat Modeling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Appendices
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Appendices
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../owasp-iot-ecosystem-alignment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OWASP IoT Ecosystem Alignment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../device-compliance-frameworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Device Compliance Frameworks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project Information
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Project Information
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project-roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../acknowledgments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Acknowledgments
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about-owasp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About OWASP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog 2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-persistent-problem-of-memory-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Persistent Problem of Memory Safety
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Persistent Problem of Memory Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-supply-chain-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Supply Chain Reality
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-hard-truth-about-compiler-protections" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Hard Truth About Compiler Protections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-path-forward-memory-safe-languages" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Path Forward: Memory-Safe Languages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pragmatic-guidance-for-todays-cc-codebases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pragmatic Guidance for Today's C/C++ Codebases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dangerous-c-functions-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dangerous C Functions to Avoid
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-assisted-development-proactive-memory-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      AI-Assisted Development: Proactive Memory Safety
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI-Assisted Development: Proactive Memory Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-project-codeguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is Project CodeGuard?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#codeguard-rule-safe-c-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      CodeGuard Rule: Safe C Functions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c11-annex-k-portability-warning-for-embedded" class="md-nav__link">
+    <span class="md-ellipsis">
+      C11 Annex K Portability Warning for Embedded
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#expanded-dangerous-functions-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Expanded Dangerous Functions Reference
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-project-codeguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up Project CodeGuard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-ai-generated-secure-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: AI-Generated Secure Code
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits-of-ai-assisted-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benefits of AI-Assisted Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-protection-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Protection Fundamentals
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Protection Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#address-space-layout-randomization-aslr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Space Layout Randomization (ASLR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-execution-prevention-dep-no-execute-nx" class="md-nav__link">
+    <span class="md-ellipsis">
+      Data Execution Prevention (DEP) / No-Execute (NX)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relocation-read-only-relro" class="md-nav__link">
+    <span class="md-ellipsis">
+      RELocation Read-Only (RELRO)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stack-canaries-stack-protector" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack Canaries (Stack Protector)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yocto-project-compiler-hardening-for-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yocto Project Compiler Hardening for Buffer Overflow Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Yocto Project Compiler Hardening for Buffer Overflow Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stack-protection-in-yocto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stack Protection in Yocto
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fortify_source-for-buffer-overflow-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      FORTIFY_SOURCE for Buffer Overflow Detection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gcc-fhardened-flag-comprehensive-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      GCC -fhardened Flag (Comprehensive Protection)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-independent-executable-pie-for-aslr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Independent Executable (PIE) for ASLR
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verification-of-buffer-overflow-protections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verification of Buffer Overflow Protections
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buildroot-vs-yocto-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      Buildroot vs. Yocto Comparison
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-recipe-security-flag-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Per-Recipe Security Flag Customization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kernel-hardening-for-buffer-overflow-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel Hardening for Buffer Overflow Protection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kernel Hardening for Buffer Overflow Protection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#yocto-kernel-configuration-fragments" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yocto Kernel Configuration Fragments
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#meta-security-hardening-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      meta-security Hardening Configurations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-kernel-security-options-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Kernel Security Options Explained
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kernel-hardening-checker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Kernel Hardening Checker
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#address-sanitizer-asan-for-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Address Sanitizer (ASan) for Development
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Address Sanitizer (ASan) for Development">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#asan-in-yocto-development-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASan in Yocto Development Builds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asan-cicd-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      ASan CI/CD Integration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-security-verification-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Binary Security Verification Workflows
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Binary Security Verification Workflows">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-checksec-for-comprehensive-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using checksec for Comprehensive Checks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-verification-with-readelf" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Verification with readelf
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-security-testing-in-cicd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated Security Testing in CI/CD
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-chapter-6-platform-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Chapter 6: Platform Security
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#additional-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      Additional References
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/scriptingxss/embeddedappsec/edit/newrevision/1_buffer_and_stack_overflow_protection.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec/raw/newrevision/1_buffer_and_stack_overflow_protection.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="buffer-and-stack-overflow-protection">Buffer and Stack Overflow Protection<a class="headerlink" href="#buffer-and-stack-overflow-protection" title="Permanent link">&para;</a></h1>
+<h2 id="the-persistent-problem-of-memory-safety">The Persistent Problem of Memory Safety<a class="headerlink" href="#the-persistent-problem-of-memory-safety" title="Permanent link">&para;</a></h2>
+<p>Buffer overflow vulnerabilities remain <strong>the most prevalent and critical security issue</strong> in embedded systems—despite decades of compiler protections, static analysis tools, and secure coding guidelines. Memory-corruption vulnerabilities occur when data exceeds allocated buffer boundaries, allowing attackers to execute arbitrary code, bypass security controls, or crash devices.</p>
+<p><strong>Why hasn't this problem been solved?</strong></p>
+<p>Despite widespread availability of compiler hardening flags (ASLR, stack canaries, FORTIFY_SOURCE), buffer overflow CVEs continue to plague embedded devices. The challenge isn't technical—<strong>it's systemic, economic, and rooted in the supply chain</strong>.</p>
+<h3 id="the-supply-chain-reality">The Supply Chain Reality<a class="headerlink" href="#the-supply-chain-reality" title="Permanent link">&para;</a></h3>
+<p><strong>BSP Vendors and ODMs</strong>: Board Support Packages (BSPs) from semiconductor manufacturers and Original Design Manufacturers (ODMs) are predominantly written in C/C++. These vendors:
+- Supply foundational code to thousands of device manufacturers
+- Rarely update legacy codebases due to validation costs
+- Prioritize time-to-market over security refactoring
+- Face economic barriers to rewriting critical algorithms in memory-safe languages</p>
+<p><strong>Economic Factors</strong>:
+- <strong>Existing infrastructure</strong>: Countless embedded implementations exist in C/C++ for device drivers, cryptographic algorithms, protocol stacks
+- <strong>Upfront investment</strong>: Rewriting in Rust/Go requires significant time and resources
+- <strong>Lack of expertise</strong>: Embedded developers skilled in memory-safe languages remain scarce
+- <strong>Long device lifespans</strong>: 10-20+ year lifecycles mean legacy code persists for decades</p>
+<p><strong>Result</strong>: Even manufacturers who implement compiler hardening in their application code inherit vulnerable BSP code from upstream suppliers.</p>
+<h3 id="the-hard-truth-about-compiler-protections">The Hard Truth About Compiler Protections<a class="headerlink" href="#the-hard-truth-about-compiler-protections" title="Permanent link">&para;</a></h3>
+<p><strong>Compiler hardening flags are mitigation, not prevention</strong>:
+- <strong>ASLR (Address Space Layout Randomization)</strong>: Makes exploitation harder, but information leaks can defeat it
+- <strong>Stack canaries</strong>: Detect overwrites but don't prevent the vulnerability
+- <strong>FORTIFY_SOURCE</strong>: Catches some buffer overflows at compile-time, misses others at runtime
+- <strong>Static analysis</strong>: Environment-specific bugs slip through (different compilers, hardware, operating systems)</p>
+<p><strong>These protections are essential</strong>, but they <strong>raise the exploitation bar</strong>—they don't eliminate the vulnerability class.</p>
+<h3 id="the-path-forward-memory-safe-languages">The Path Forward: Memory-Safe Languages<a class="headerlink" href="#the-path-forward-memory-safe-languages" title="Permanent link">&para;</a></h3>
+<p><strong>The only true solution</strong> to eliminate memory-corruption vulnerabilities is transitioning to memory-safe languages:</p>
+<p><strong>Rust for Embedded</strong>:
+- Ownership system prevents use-after-free, double-free, buffer overflows <strong>at compile time</strong>
+- No runtime overhead for safety guarantees
+- Growing ecosystem: <code>embedded-hal</code>, RTIC, Embassy frameworks
+- Already used in: Linux kernel, Android, Zephyr RTOS</p>
+<p><strong>Adoption in Progress</strong>:
+- <strong>Linux Kernel</strong>: Rust support added in v6.1 (December 2022), drivers being written in Rust
+- <strong>Android</strong>: Memory-safe Bluetooth, WiFi stacks
+- <strong>Zephyr RTOS</strong>: Experimental Rust application support
+- <strong>Critical Infrastructure</strong>: Google, Microsoft, AWS funding Rust embedded development</p>
+<p><strong>Strategic Transition</strong> (from <a href="https://dev.to/owasp/memory-safe-or-bust-17cb">OWASP "Memory Safe or Bust?"</a>):
+1. <strong>Gradual adoption</strong>: Start with new modules, not full rewrites
+2. <strong>Create organizational roadmaps</strong>: Define memory-safety milestones
+3. <strong>Demand change from BSP vendors</strong>: Semiconductor manufacturers must invest in memory-safe toolchains
+4. <strong>Standards alignment</strong>: Use OWASP ASVS, SAMM for security-first development</p>
+<h3 id="pragmatic-guidance-for-todays-cc-codebases">Pragmatic Guidance for Today's C/C++ Codebases<a class="headerlink" href="#pragmatic-guidance-for-todays-cc-codebases" title="Permanent link">&para;</a></h3>
+<p><strong>Until the ecosystem transitions to memory-safe languages</strong>, this chapter provides:
+- Compiler hardening flags to <strong>mitigate</strong> exploitation (not prevent vulnerabilities)
+- Static analysis and fuzzing to <strong>detect</strong> memory errors
+- Safe coding practices to <strong>reduce</strong> dangerous function usage
+- Yocto/Buildroot integration for <strong>build-time</strong> security</p>
+<p><strong>Key Message</strong>: Compiler protections are a <strong>necessary interim measure</strong>, not a permanent solution. Device manufacturers should:
+1. Apply all compiler hardening flags (this chapter)
+2. Demand memory-safe code from BSP vendors
+3. Plan gradual Rust/Go adoption for new development
+4. Contribute to open-source memory-safe embedded ecosystem</p>
+<hr />
+<h2 id="dangerous-c-functions-to-avoid">Dangerous C Functions to Avoid<a class="headerlink" href="#dangerous-c-functions-to-avoid" title="Permanent link">&para;</a></h2>
+<p>For C/C++ codebases (the current reality), eliminate these unsafe functions:</p>
+<table>
+<thead>
+<tr>
+<th>Dangerous Function</th>
+<th>Why Unsafe</th>
+<th>Safe Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gets()</code></td>
+<td>No bounds checking</td>
+<td><code>fgets(buf, size, stdin)</code></td>
+</tr>
+<tr>
+<td><code>strcpy()</code></td>
+<td>No length limit</td>
+<td><code>strncpy()</code> or <code>strlcpy()</code></td>
+</tr>
+<tr>
+<td><code>sprintf()</code></td>
+<td>No buffer size check</td>
+<td><code>snprintf(buf, size, fmt, ...)</code></td>
+</tr>
+<tr>
+<td><code>strcat()</code></td>
+<td>Can overflow destination</td>
+<td><code>strncat()</code> or <code>strlcat()</code></td>
+</tr>
+<tr>
+<td><code>scanf("%s")</code></td>
+<td>Unbounded input</td>
+<td><code>scanf("%50s")</code> with limit</td>
+</tr>
+<tr>
+<td><code>memcpy()</code></td>
+<td>No overlap checking</td>
+<td><code>memmove()</code> for overlapping buffers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Detection Tools</strong> (use in CI/CD):
+- <strong>Static Analysis</strong>: <code>clang-tidy</code>, <code>semgrep</code>, <code>cppcheck</code>, CodeQL
+- <strong>Compiler Warnings</strong>: <code>-Wall -Wextra -Werror</code> catches issues at compile time
+- <strong>Runtime Detection</strong>: AddressSanitizer (<code>-fsanitize=address</code>) for testing
+- <strong>Fuzzing</strong>: AFL, libFuzzer for discovering edge cases</p>
+<hr />
+<h2 id="ai-assisted-development-proactive-memory-safety">AI-Assisted Development: Proactive Memory Safety<a class="headerlink" href="#ai-assisted-development-proactive-memory-safety" title="Permanent link">&para;</a></h2>
+<p><strong>Preventing vulnerabilities at code generation time</strong> is more effective than detecting them after the fact. AI coding assistants (GitHub Copilot, Cursor, Claude Code) can generate insecure code patterns unless explicitly guided by security rulesets.</p>
+<p><strong><a href="https://github.com/project-codeguard/rules">Project CodeGuard</a></strong> (Cisco open-source) provides security rulesets for AI coding assistants to prevent memory safety vulnerabilities during development.</p>
+<h3 id="what-is-project-codeguard">What is Project CodeGuard?<a class="headerlink" href="#what-is-project-codeguard" title="Permanent link">&para;</a></h3>
+<p>Project CodeGuard is a framework for embedding security rules into AI-assisted development workflows. Instead of reviewing code after it's written, CodeGuard instructs AI assistants to generate secure code from the start.</p>
+<p><strong>How It Works</strong>:
+1. Security rules are placed in your project repository (<code>.github/codeguard/</code> or <code>.codeguard/</code>)
+2. AI coding assistants read these rules and apply them during code generation
+3. Unsafe patterns (e.g., <code>strcpy()</code>, <code>sprintf()</code>) are automatically avoided
+4. Safe alternatives are suggested contextually</p>
+<h3 id="codeguard-rule-safe-c-functions">CodeGuard Rule: Safe C Functions<a class="headerlink" href="#codeguard-rule-safe-c-functions" title="Permanent link">&para;</a></h3>
+<p>The <a href="https://github.com/project-codeguard/rules/blob/main/rules/codeguard-1-safe-c-functions.md"><code>codeguard-1-safe-c-functions.md</code></a> rule targets memory safety in C/C++:</p>
+<p><strong>Primary Directive</strong>: "When processing C or C++ code, ensure memory safety by recommending bounds-checking functions."</p>
+<p><strong>Functions Recommended by CodeGuard</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Dangerous Function</th>
+<th>CodeGuard Recommendation</th>
+<th>Embedded Portability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strcpy()</code></td>
+<td><code>strcpy_s()</code> (C11 Annex K)</td>
+<td>⚠️ <strong>Not portable</strong> - use <code>strncpy()</code> or <code>strlcpy()</code></td>
+</tr>
+<tr>
+<td><code>strcat()</code></td>
+<td><code>strcat_s()</code> (C11 Annex K)</td>
+<td>⚠️ <strong>Not portable</strong> - use <code>strncat()</code> or <code>strlcat()</code></td>
+</tr>
+<tr>
+<td><code>memcpy()</code></td>
+<td><code>memcpy_s()</code> (C11 Annex K)</td>
+<td>⚠️ <strong>Not portable</strong> - use <code>memmove()</code> with bounds checks</td>
+</tr>
+<tr>
+<td><code>sprintf()</code></td>
+<td><code>snprintf()</code></td>
+<td>✅ <strong>Portable</strong> - universally available</td>
+</tr>
+<tr>
+<td><code>gets()</code></td>
+<td><code>fgets()</code></td>
+<td>✅ <strong>Portable</strong> - universally available</td>
+</tr>
+<tr>
+<td><code>scanf("%s")</code></td>
+<td><code>scanf("%50s", buf)</code></td>
+<td>✅ <strong>Portable</strong> - add field width limit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c11-annex-k-portability-warning-for-embedded">C11 Annex K Portability Warning for Embedded<a class="headerlink" href="#c11-annex-k-portability-warning-for-embedded" title="Permanent link">&para;</a></h3>
+<p><strong>Critical Issue</strong>: C11 Annex K bounds-checking functions (<code>*_s()</code> functions) are <strong>optional</strong> and <strong>not universally available</strong> in embedded toolchains:</p>
+<p><strong>Toolchains Lacking C11 Annex K</strong>:
+- <strong>newlib</strong> (ARM, RISC-V, Xtensa embedded toolchains) - No <code>*_s()</code> support
+- <strong>uClibc/uClibc-ng</strong> (many embedded Linux systems) - No <code>*_s()</code> support
+- <strong>musl libc</strong> (Alpine, OpenWrt, embedded Linux) - No <code>*_s()</code> support
+- <strong>Buildroot default</strong> (uClibc-ng or musl) - No <code>*_s()</code> support</p>
+<p><strong>Toolchains With C11 Annex K</strong> (rare in embedded):
+- <strong>glibc 2.35+</strong> (with <code>--enable-c11-annex-k</code>) - Yocto Linux
+- <strong>Microsoft Visual C++</strong> - Windows embedded (not common in IoT/embedded)
+- <strong>safeclib</strong> (third-party library) - Must be manually integrated</p>
+<p><strong>Recommendation for Embedded Developers</strong>:
+1. <strong>Do NOT assume <code>*_s()</code> functions are available</strong>
+2. <strong>Use portable alternatives</strong>:
+   - <code>strncpy()</code>, <code>strncat()</code>, <code>snprintf()</code> (available everywhere)
+   - <code>strlcpy()</code>, <code>strlcat()</code> (BSD/OpenBSD, not POSIX but safer)
+   - Explicit bounds checking with standard functions
+3. <strong>If using AI assistants</strong>, configure CodeGuard with embedded-specific overrides (see setup below)</p>
+<h3 id="expanded-dangerous-functions-reference">Expanded Dangerous Functions Reference<a class="headerlink" href="#expanded-dangerous-functions-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dangerous Function</th>
+<th>Why Unsafe</th>
+<th>Portable Safe Alternative</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gets()</code></td>
+<td>No bounds checking</td>
+<td><code>fgets(buf, size, stdin)</code></td>
+<td><code>gets()</code> removed in C11</td>
+</tr>
+<tr>
+<td><code>strcpy(dst, src)</code></td>
+<td>No length limit</td>
+<td><code>strncpy(dst, src, sizeof(dst))</code></td>
+<td>Null-terminate manually if needed</td>
+</tr>
+<tr>
+<td><code>strcat(dst, src)</code></td>
+<td>Can overflow destination</td>
+<td><code>strncat(dst, src, sizeof(dst)-strlen(dst)-1)</code></td>
+<td>Calculate remaining space</td>
+</tr>
+<tr>
+<td><code>sprintf(buf, fmt, ...)</code></td>
+<td>No buffer size check</td>
+<td><code>snprintf(buf, sizeof(buf), fmt, ...)</code></td>
+<td>Always use <code>snprintf()</code></td>
+</tr>
+<tr>
+<td><code>scanf("%s", buf)</code></td>
+<td>Unbounded input</td>
+<td><code>scanf("%50s", buf)</code> with limit</td>
+<td>Use <code>fgets()</code> + <code>sscanf()</code> for better control</td>
+</tr>
+<tr>
+<td><code>memcpy(dst, src, n)</code></td>
+<td>No overlap checking, no bounds</td>
+<td><code>memmove(dst, src, n)</code> with manual bounds check</td>
+<td>Check <code>n &lt;= sizeof(dst)</code> first</td>
+</tr>
+<tr>
+<td><code>strncpy(dst, src, n)</code></td>
+<td>Doesn't guarantee null termination</td>
+<td>Manual null-termination: <code>dst[n-1] = '\0';</code></td>
+<td>After <code>strncpy()</code>, always null-terminate</td>
+</tr>
+<tr>
+<td><code>strncat(dst, src, n)</code></td>
+<td>Confusing semantics (n is max chars to append)</td>
+<td>Explicit bounds: <code>strncat(dst, src, sizeof(dst)-strlen(dst)-1)</code></td>
+<td>Common mistake: passing wrong size</td>
+</tr>
+<tr>
+<td><code>vsprintf(buf, fmt, args)</code></td>
+<td>No buffer size check</td>
+<td><code>vsnprintf(buf, sizeof(buf), fmt, args)</code></td>
+<td>For variadic wrappers</td>
+</tr>
+<tr>
+<td><code>getenv()</code> → unchecked use</td>
+<td>Environment variable length unknown</td>
+<td>Check result length before copying</td>
+<td>Example: <code>char *val = getenv("VAR"); if (val &amp;&amp; strlen(val) &lt; 50) ...</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="setting-up-project-codeguard">Setting Up Project CodeGuard<a class="headerlink" href="#setting-up-project-codeguard" title="Permanent link">&para;</a></h3>
+<p><strong>1. Install CodeGuard Rules in Your Repository</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create CodeGuard directory</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>.github/codeguard
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Download safe C functions rule</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-o<span class="w"> </span>.github/codeguard/codeguard-1-safe-c-functions.md<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>https://raw.githubusercontent.com/project-codeguard/rules/main/rules/codeguard-1-safe-c-functions.md
+</span></code></pre></div></p>
+<p><strong>2. Customize for Embedded (Override C11 Annex K)</strong>:</p>
+<p>Create <code>.github/codeguard/embedded-overrides.md</code>:
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># Embedded-Specific CodeGuard Overrides</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gs">**Context**</span>: C11 Annex K <span class="sb">`*_s()`</span> functions are not available in most embedded toolchains (newlib, uClibc, musl).
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gs">**Override Directive**</span>: When generating C/C++ code for embedded systems, use these portable alternatives:
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Instead of <span class="sb">`*_s()`</span> | Use Portable Alternative |
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|-------------------|-------------------------|
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| <span class="sb">`strcpy_s()`</span> | <span class="sb">`strncpy(dst, src, sizeof(dst)); dst[sizeof(dst)-1] = &#39;\0&#39;;`</span> |
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| <span class="sb">`strcat_s()`</span> | <span class="sb">`strncat(dst, src, sizeof(dst)-strlen(dst)-1);`</span> |
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| <span class="sb">`memcpy_s()`</span> | <span class="sb">`if (n &lt;= sizeof(dst)) memmove(dst, src, n);`</span> |
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| <span class="sb">`sprintf_s()`</span> | <span class="sb">`snprintf(buf, sizeof(buf), fmt, ...);`</span> |
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="gs">**Always**</span>:
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">-</span><span class="w"> </span>Include explicit bounds checking
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">-</span><span class="w"> </span>Null-terminate strings after <span class="sb">`strncpy()`</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">-</span><span class="w"> </span>Validate buffer sizes before operations
+</span></code></pre></div></p>
+<p><strong>3. AI Coding Assistant Setup</strong>:</p>
+<p><strong>GitHub Copilot</strong>:
+- Copilot automatically reads <code>.github/copilot-instructions.md</code>
+- Symlink CodeGuard rules: <code>ln -s .github/codeguard .github/copilot-instructions.md</code></p>
+<p><strong>Cursor IDE</strong>:
+- Place rules in <code>.cursorrules</code> file in project root
+- Cursor reads rules automatically during code generation</p>
+<p><strong>Claude Code (VSCode Extension)</strong>:
+- Place rules in <code>.claude/</code> directory
+- Claude Code reads context from project-specific rules</p>
+<p><strong>Example <code>.claude/rules.md</code></strong>:
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># Memory Safety Rules for Embedded C Development</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>When writing C/C++ code for this embedded project:
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">1.</span> <span class="gs">**Never use**</span>: <span class="sb">`gets()`</span>, <span class="sb">`strcpy()`</span>, <span class="sb">`strcat()`</span>, <span class="sb">`sprintf()`</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">2.</span> <span class="gs">**Always use**</span>: <span class="sb">`fgets()`</span>, <span class="sb">`strncpy()`</span>, <span class="sb">`strncat()`</span>, <span class="sb">`snprintf()`</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">3.</span> <span class="gs">**Null-terminate strings**</span> after <span class="sb">`strncpy()`</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">4.</span> <span class="gs">**Check buffer sizes**</span> before <span class="sb">`memcpy()`</span>/<span class="sb">`memmove()`</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">5.</span> <span class="gs">**Assume C11 Annex K is not available**</span> (no <span class="sb">`*_s()`</span> functions)
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>Follow OWASP Embedded Application Security guidelines.
+</span></code></pre></div></p>
+<h3 id="example-ai-generated-secure-code">Example: AI-Generated Secure Code<a class="headerlink" href="#example-ai-generated-secure-code" title="Permanent link">&para;</a></h3>
+<p><strong>Without CodeGuard</strong> (vulnerable):
+<div class="language-c highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">user_input</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">strcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">user_input</span><span class="p">);</span><span class="w">  </span><span class="c1">// ❌ Buffer overflow if user_input &gt; 64 bytes</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Processed: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<p><strong>With CodeGuard</strong> (secure):
+<div class="language-c highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">process_input</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">user_input</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">strncpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">user_input</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">  </span><span class="c1">// ✅ Bounds-checked</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="n">buffer</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span><span class="w">                </span><span class="c1">// ✅ Null-terminated</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Processed: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<h3 id="benefits-of-ai-assisted-security">Benefits of AI-Assisted Security<a class="headerlink" href="#benefits-of-ai-assisted-security" title="Permanent link">&para;</a></h3>
+<p><strong>Traditional Approach</strong> (reactive):
+1. Developer writes code with <code>strcpy()</code>
+2. Static analysis tool flags issue (hours/days later)
+3. Developer fixes code
+4. Repeat for every instance</p>
+<p><strong>CodeGuard Approach</strong> (proactive):
+1. Developer starts writing <code>strcpy(</code>
+2. AI suggests <code>strncpy(buf, src, sizeof(buf))</code> immediately
+3. Secure code generated on first try
+4. No security debt accumulates</p>
+<p><strong>Result</strong>: 80-90% reduction in memory safety vulnerabilities during initial development.</p>
+<h3 id="additional-resources">Additional Resources<a class="headerlink" href="#additional-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Project CodeGuard Repository</strong>: https://github.com/project-codeguard/rules</li>
+<li><strong>Safe C Functions Rule</strong>: https://github.com/project-codeguard/rules/blob/main/rules/codeguard-1-safe-c-functions.md</li>
+<li><strong>OWASP "Memory Safe or Bust?"</strong>: https://dev.to/owasp/memory-safe-or-bust-17cb</li>
+<li><strong>SEI CERT C Coding Standard</strong>: https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard</li>
+</ul>
+<hr />
+<p><strong>Compliant Example</strong>: The fgets() function reads, at most, one less than a specified number of characters from a stream into an array. This solution is compliant because the number of bytes copied from stdin to buf cannot exceed the allocated memory:</p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">enum</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">BUFFERSIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="p">};</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kt">void</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="n">BUFFERSIZE</span><span class="p">];</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">ch</span><span class="p">;</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fgets</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span><span class="w"> </span><span class="n">stdin</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="cm">/* fgets succeeds; scan for newline character */</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strchr</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">);</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;\0&#39;</span><span class="p">;</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="cm">/* Newline not found; flush stdin to end of line */</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(((</span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getchar</span><span class="p">())</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">)</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">feof</span><span class="p">(</span><span class="n">stdin</span><span class="p">)</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">ferror</span><span class="p">(</span><span class="n">stdin</span><span class="p">))</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="p">;</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="cm">/* fgets failed; handle error */</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>strncat() is a variation on the original strcat() library function. Both are used to append one NULL terminated C string to another. The danger with the original strcat() was that the caller might provide more data than can fit into the receiving buffer, thereby overrunning it. The most common result of this is a segmentation violation. A worse result is the silent and undetected corruption of whatever followed the receiving buffer in memory.</p>
+<p>strncat() adds an additional parameter allowing the user to specify the maximum number of bytes to copy. This is NOT the amount of data to copy. It is NOT the size of the source data. It is a limit to the amount of data to copy and is usually set to the size of the receiving buffer.</p>
+<p><strong>Compliant Example usage of "strncat":</strong></p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">SOME_SIZE</span><span class="p">];</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">strncat</span><span class="p">(</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">SOME_DATA</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span><span class="mi">-1</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>NonCompliant Example usage of "strncat</strong>"<strong>:</strong></p>
+<div class="language-c highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">strncat</span><span class="p">(</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">SOME_DATA</span><span class="p">,</span><span class="w"> </span><span class="n">strlen</span><span class="p">(</span><span class="w"> </span><span class="n">SOME_DATA</span><span class="w"> </span><span class="p">));</span>
+</span></code></pre></div>
+<p>The screenshot below demonstrates stack protection support being enabled while building a firmware image utilizing buildroot.\
+<img alt="" src=".gitbook/assets/embedSec1.png" /></p>
+<h2 id="memory-protection-fundamentals">Memory Protection Fundamentals<a class="headerlink" href="#memory-protection-fundamentals" title="Permanent link">&para;</a></h2>
+<p>Modern operating systems and compilers provide several layers of memory protection to prevent exploitation of buffer overflows. Understanding these mechanisms is critical for securing embedded devices.</p>
+<h3 id="address-space-layout-randomization-aslr">Address Space Layout Randomization (ASLR)<a class="headerlink" href="#address-space-layout-randomization-aslr" title="Permanent link">&para;</a></h3>
+<p><strong>ASLR</strong> randomizes the memory addresses used by system and application processes, making it difficult for attackers to predict target addresses for exploits.</p>
+<p><strong>How ASLR Works</strong>:
+- Randomizes stack, heap, and library base addresses at runtime
+- Each time a program runs, memory layout is different
+- Prevents attackers from hard-coding exploit addresses
+- Kernel ASLR (KASLR) randomizes kernel memory layout</p>
+<p><strong>Effectiveness Against Exploits</strong>:
+- Without ASLR: Attacker can reliably use fixed addresses (e.g., <code>0xbffff000</code> for stack)
+- With ASLR: Attacker must guess addresses (1 in 65,536 chance for 16-bit entropy)
+- Significantly raises exploit difficulty, especially combined with other protections</p>
+<p><strong>ASLR Requirements</strong>:
+- <strong>Position Independent Executable (PIE)</strong>: Binaries must be compiled with <code>-fpie -pie</code>
+- <strong>Kernel Support</strong>: Linux <code>CONFIG_RANDOMIZE_BASE=y</code> for KASLR
+- <strong>Runtime</strong>: No additional configuration required once enabled</p>
+<p><strong>Checking ASLR Status</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check ASLR status on Linux</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>/proc/sys/kernel/randomize_va_space
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># 0 = Disabled</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 1 = Conservative randomization (stack, heap, libraries)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># 2 = Full randomization (includes PIE executables)</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Enable full ASLR (add to /etc/sysctl.conf)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>kernel.randomize_va_space<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+</span></code></pre></div></p>
+<p><strong>Example: Memory Layout Without ASLR</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Stack:     0xbffff000 (always same address)
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Heap:      0x0804a000 (always same address)
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Libraries: 0xb7e00000 (always same address)
+</span></code></pre></div></p>
+<p><strong>Example: Memory Layout With ASLR</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Run 1:
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  Stack:     0x7ffe4c3a1000
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  Heap:      0x55c3f2a01000
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  Libraries: 0x7f8b3d400000
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>Run 2:
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>  Stack:     0x7ffd9c102000
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  Heap:      0x55f8a1e01000
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  Libraries: 0x7fb2e1c00000
+</span></code></pre></div></p>
+<h3 id="data-execution-prevention-dep-no-execute-nx">Data Execution Prevention (DEP) / No-Execute (NX)<a class="headerlink" href="#data-execution-prevention-dep-no-execute-nx" title="Permanent link">&para;</a></h3>
+<p><strong>DEP/NX</strong> marks memory regions as non-executable, preventing attackers from executing injected shellcode on the stack or heap.</p>
+<p><strong>How DEP/NX Works</strong>:
+- Processor enforces execute permissions via hardware (NX bit on x86, XN on ARM)
+- Stack and heap memory marked as <strong>writable but not executable</strong>
+- Code sections marked as <strong>executable but not writable</strong>
+- Prevents classic buffer overflow attacks that inject shellcode</p>
+<p><strong>Historical Context</strong>:
+- <strong>Before DEP/NX</strong>: Attackers could write shellcode to stack and jump to it
+- <strong>After DEP/NX</strong>: Injected code cannot execute, attack fails immediately</p>
+<p><strong>DEP/NX Mechanisms</strong>:
+- <strong>Hardware</strong>: CPU NX bit (Intel XD, AMD NX, ARM XN)
+- <strong>Compiler</strong>: <code>-Wl,-z,noexecstack</code> linker flag
+- <strong>Kernel</strong>: <code>CONFIG_STRICT_KERNEL_RWX=y</code>, <code>CONFIG_DEBUG_WX=y</code></p>
+<p><strong>Checking NX Status</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check if binary has NX enabled</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>readelf<span class="w"> </span>-l<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GNU_STACK
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># FLAGS should NOT include &#39;E&#39; (execute)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Example: GNU_STACK  RW (correct - no execute)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Alternative: Use checksec</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>checksec<span class="w"> </span>--file<span class="o">=</span>mybinary
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Should show: NX enabled</span>
+</span></code></pre></div></p>
+<p><strong>Limitations</strong>:
+- <strong>Return-Oriented Programming (ROP)</strong>: Attackers chain existing code (gadgets) instead of injecting new code
+- <strong>Mitigation</strong>: Combine NX with ASLR, CFI (Control Flow Integrity), and stack canaries</p>
+<h3 id="relocation-read-only-relro">RELocation Read-Only (RELRO)<a class="headerlink" href="#relocation-read-only-relro" title="Permanent link">&para;</a></h3>
+<p><strong>RELRO</strong> makes certain sections of a binary read-only after dynamic linking, preventing attackers from overwriting function pointers in the Global Offset Table (GOT).</p>
+<p><strong>How RELRO Works</strong>:
+- <strong>Partial RELRO</strong>: GOT is mapped before <code>.data</code> section (some protection)
+- <strong>Full RELRO</strong>: GOT is made read-only after relocation, all symbols resolved at startup</p>
+<p><strong>Attack Mitigation</strong>:
+- <strong>Without RELRO</strong>: Attacker can overwrite GOT entries to redirect function calls
+- <strong>With Full RELRO</strong>: GOT is read-only, overwrites cause immediate crash</p>
+<p><strong>RELRO Modes</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Partial RELRO (default in older systems)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>-Wl,-z,relro
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Full RELRO (recommended for security)</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>-Wl,-z,relro,-z,now
+</span></code></pre></div></p>
+<p><strong>Trade-offs</strong>:
+- <strong>Partial RELRO</strong>: Lazy binding, faster startup, weaker security
+- <strong>Full RELRO</strong>: Immediate binding, slower startup (~50-200ms), stronger security</p>
+<p><strong>Checking RELRO Status</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check RELRO with readelf</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>readelf<span class="w"> </span>-l<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GNU_RELRO
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Should show: GNU_RELRO segment</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Check if RELRO is full or partial</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>readelf<span class="w"> </span>-d<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>BIND_NOW
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># If BIND_NOW exists → Full RELRO</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># If absent → Partial RELRO</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Using checksec</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>checksec<span class="w"> </span>--file<span class="o">=</span>mybinary
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># Should show: Full RELRO</span>
+</span></code></pre></div></p>
+<h3 id="stack-canaries-stack-protector">Stack Canaries (Stack Protector)<a class="headerlink" href="#stack-canaries-stack-protector" title="Permanent link">&para;</a></h3>
+<p><strong>Stack canaries</strong> are random values placed before return addresses on the stack. If a buffer overflow occurs, the canary is overwritten, and the program aborts before the attacker can hijack control flow.</p>
+<p><strong>How Stack Canaries Work</strong>:
+1. Compiler inserts a random "canary" value before return address
+2. Before function returns, canary is checked
+3. If canary is corrupted → Buffer overflow detected → Program aborts</p>
+<p><strong>Canary Types</strong>:
+- <strong>Random Canary</strong>: Generated randomly at program start
+- <strong>Terminator Canary</strong>: Contains <code>NULL</code>, <code>CR</code>, <code>LF</code>, <code>EOF</code> (stops string functions)</p>
+<p><strong>GCC Stack Protector Levels</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>-fstack-protector<span class="w">         </span><span class="c1"># Protect functions with buffers &gt; 8 bytes</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>-fstack-protector-strong<span class="w">  </span><span class="c1"># Protect functions with arrays, pointers, local address-taken</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>-fstack-protector-all<span class="w">     </span><span class="c1"># Protect all functions (highest overhead)</span>
+</span></code></pre></div></p>
+<p><strong>Example: Stack Canary Detection</strong>:
+<div class="language-c highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">vulnerable</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="c1">// Canary placed here by compiler</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="n">strcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;This string is way too long and overflows&quot;</span><span class="p">);</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="c1">// Canary checked here before return</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1">// Output: *** stack smashing detected ***: terminated</span>
+</span></code></pre></div></p>
+<p><strong>Checking Stack Canary in Binary</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check for stack canary symbols</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>readelf<span class="w"> </span>-s<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>stack_chk
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="c1"># Should show: __stack_chk_fail, __stack_chk_guard</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Disassemble function to see canary checks</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>objdump<span class="w"> </span>-d<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A20<span class="w"> </span>vulnerable
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Look for: mov %fs:0x28,%rax (load canary)</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1">#           xor %fs:0x28,%rax (check canary)</span>
+</span></code></pre></div></p>
+<p><strong>Limitations</strong>:
+- Does not protect against heap overflows
+- Can be bypassed if attacker can leak canary value
+- Performance overhead (~2-5% for -fstack-protector-strong)</p>
+<h2 id="yocto-project-compiler-hardening-for-buffer-overflow-protection">Yocto Project Compiler Hardening for Buffer Overflow Protection<a class="headerlink" href="#yocto-project-compiler-hardening-for-buffer-overflow-protection" title="Permanent link">&para;</a></h2>
+<p>If you're using the Yocto Project build system for embedded Linux development, Yocto provides comprehensive built-in compiler flags specifically designed to prevent buffer and stack overflows. These flags are centrally managed and can be enabled project-wide.</p>
+<h3 id="stack-protection-in-yocto">Stack Protection in Yocto<a class="headerlink" href="#stack-protection-in-yocto" title="Permanent link">&para;</a></h3>
+<p><strong>Enable Stack Protection</strong> (usually enabled by default):
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># In local.conf or distro .conf
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>INHERIT += &quot;security-flags&quot;
+</span></code></pre></div></p>
+<p>This automatically enables:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>SECURITY_CFLAGS += &quot;-fstack-protector-strong&quot;
+</span></code></pre></div></p>
+<p><strong>What <code>-fstack-protector-strong</code> provides</strong>:
+- Inserts stack canaries (random values) before return addresses
+- Protects functions with arrays, pointers, or structs containing arrays
+- Detects stack buffer overflows at runtime
+- ~2-5% performance overhead (acceptable for most embedded systems)
+- Catches 90%+ of stack-based buffer overflow attacks</p>
+<p><strong>Alternative: Maximum Stack Protection</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a># For high-security applications (medical, automotive, industrial)
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>SECURITY_CFLAGS:append = &quot; -fstack-protector-all&quot;
+</span></code></pre></div></p>
+<p><strong>Note</strong>: <code>-fstack-protector-all</code> protects ALL functions but has higher performance overhead (~5-10%).</p>
+<h3 id="fortify_source-for-buffer-overflow-detection">FORTIFY_SOURCE for Buffer Overflow Detection<a class="headerlink" href="#fortify_source-for-buffer-overflow-detection" title="Permanent link">&para;</a></h3>
+<p>Yocto enables <code>FORTIFY_SOURCE</code> by default, providing compile-time and runtime checks for buffer overflows:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># Enabled by default in security_flags.inc
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>SECURITY_CFLAGS += &quot;-D_FORTIFY_SOURCE=2&quot;
+</span></code></pre></div>
+<p><strong>What <code>_FORTIFY_SOURCE=2</code> detects</strong>:
+- Buffer overflows in <code>memcpy()</code>, <code>strcpy()</code>, <code>strncpy()</code>, <code>sprintf()</code>, etc.
+- Out-of-bounds writes to arrays and buffers
+- Both compile-time warnings and runtime aborts</p>
+<p><strong>Example Protected Code</strong>:
+<div class="language-c highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">strcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;This string is way too long&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// Runtime abort with FORTIFY_SOURCE</span>
+</span></code></pre></div></p>
+<p><strong>Scarthgap 5.0 LTS Enhancement (GCC 13.2+)</strong>: Use <code>_FORTIFY_SOURCE=3</code> for even stronger protection:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a># In high-security recipes
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>CFLAGS:append = &quot; -D_FORTIFY_SOURCE=3&quot;
+</span></code></pre></div></p>
+<h3 id="gcc-fhardened-flag-comprehensive-protection">GCC -fhardened Flag (Comprehensive Protection)<a class="headerlink" href="#gcc-fhardened-flag-comprehensive-protection" title="Permanent link">&para;</a></h3>
+<p>For maximum buffer overflow protection in Yocto Scarthgap 5.0+ (GCC 13.2):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a># In local.conf or distro .conf for system-wide hardening
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>SECURITY_CFLAGS += &quot;-fhardened&quot;
+</span></code></pre></div>
+<p><strong>What <code>-fhardened</code> includes</strong>:
+- <code>-D_FORTIFY_SOURCE=3</code> (strongest buffer overflow checks)
+- <code>-fstack-protector-strong</code> (stack canary protection)
+- <code>-fstack-clash-protection</code> (stack clash attack mitigation)
+- <code>-ftrivial-auto-var-init=zero</code> (zero-initialize all automatic variables)
+- <code>-D_GLIBCXX_ASSERTIONS</code> (C++ standard library assertions)</p>
+<p><strong>When to use</strong>:
+- Medical devices (FDA-regulated)
+- Automotive (ISO 26262, UNECE WP.29)
+- Industrial control systems (IEC 62443)
+- Any high-security embedded application</p>
+<p><strong>Trade-off</strong>: ~5-10% performance overhead for significantly improved security</p>
+<h3 id="position-independent-executable-pie-for-aslr">Position Independent Executable (PIE) for ASLR<a class="headerlink" href="#position-independent-executable-pie-for-aslr" title="Permanent link">&para;</a></h3>
+<p>Yocto enables PIE by default to support Address Space Layout Randomization (ASLR):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a># Enabled by default in security_flags.inc
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>SECURITY_CFLAGS += &quot;-fpie&quot;
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>SECURITY_LDFLAGS += &quot;-pie&quot;
+</span></code></pre></div>
+<p><strong>How PIE prevents buffer overflow exploits</strong>:
+- Randomizes executable base address at runtime
+- Makes ROP (Return-Oriented Programming) attacks much harder
+- Attacker cannot predict memory layout for exploit payloads
+- Works in conjunction with kernel ASLR (<code>CONFIG_RANDOMIZE_BASE=y</code>)</p>
+<h3 id="verification-of-buffer-overflow-protections">Verification of Buffer Overflow Protections<a class="headerlink" href="#verification-of-buffer-overflow-protections" title="Permanent link">&para;</a></h3>
+<p><strong>Verify security flags are applied to your binaries</strong>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Install checksec in your Yocto build</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>bitbake<span class="w"> </span>checksec-native
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Check security properties of a binary</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>checksec<span class="w"> </span>--file<span class="o">=</span>tmp/work/.../package/usr/bin/myapp
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Expected output:</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="c1"># RELRO           STACK CANARY      NX            PIE</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="c1"># Full RELRO      Canary found      NX enabled    PIE enabled</span>
+</span></code></pre></div>
+<p><strong>Manual verification with readelf</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># Check for stack canary symbols</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>readelf<span class="w"> </span>-s<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>stack_chk
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="c1"># Should show: __stack_chk_fail, __stack_chk_guard</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="c1"># Check for PIE</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>readelf<span class="w"> </span>-h<span class="w"> </span>mybinary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Type
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="c1"># Should show: Type: DYN (Shared object file)</span>
+</span></code></pre></div></p>
+<h3 id="buildroot-vs-yocto-comparison">Buildroot vs. Yocto Comparison<a class="headerlink" href="#buildroot-vs-yocto-comparison" title="Permanent link">&para;</a></h3>
+<p>For developers migrating from Buildroot or evaluating build systems:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Buildroot</th>
+<th>Yocto Project</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Stack Protection</strong></td>
+<td>Manual via BR2_SSP_OPTION</td>
+<td>Automatic via security-flags</td>
+</tr>
+<tr>
+<td><strong>FORTIFY_SOURCE</strong></td>
+<td>Manual via BR2_FORTIFY_SOURCE</td>
+<td>Enabled by default (level 2)</td>
+</tr>
+<tr>
+<td><strong>PIE/ASLR</strong></td>
+<td>Manual via BR2_RELRO</td>
+<td>Enabled by default</td>
+</tr>
+<tr>
+<td><strong>Centralized Management</strong></td>
+<td>Per-package configuration</td>
+<td>Project-wide security_flags.inc</td>
+</tr>
+<tr>
+<td><strong>Verification Tools</strong></td>
+<td>Manual integration</td>
+<td>checksec-native built-in</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>Simpler</td>
+<td>More complex but more powerful</td>
+</tr>
+<tr>
+<td><strong>Best For</strong></td>
+<td>Simple embedded systems</td>
+<td>Production embedded Linux</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommendation</strong>:
+- <strong>Buildroot</strong>: Prototyping, simple single-application systems
+- <strong>Yocto</strong>: Production devices, compliance requirements, complex systems</p>
+<h3 id="per-recipe-security-flag-customization">Per-Recipe Security Flag Customization<a class="headerlink" href="#per-recipe-security-flag-customization" title="Permanent link">&para;</a></h3>
+<p><strong>Disable flags for performance-critical code</strong> (use with caution):
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a># In recipe (.bb file)
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>SECURITY_CFLAGS = &quot;&quot;  # Remove all security flags
+</span></code></pre></div></p>
+<p><strong>Add extra protection to specific applications</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a># crypto-daemon_1.0.bb
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>SECURITY_CFLAGS:append = &quot; -fhardened -fanalyzer&quot;
+</span></code></pre></div></p>
+<p><strong>Example: High-Security Recipe with Maximum Buffer Overflow Protection</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a># secure-app_1.0.bb
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>DESCRIPTION = &quot;Security-critical application with maximum hardening&quot;
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>LICENSE = &quot;MIT&quot;
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a># Maximum buffer overflow protection
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>SECURITY_CFLAGS:append = &quot; -fhardened&quot;
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a># Additional protections
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>CFLAGS:append = &quot; -D_FORTIFY_SOURCE=3&quot;
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>CFLAGS:append = &quot; -fstack-clash-protection&quot;
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>CFLAGS:append = &quot; -fstack-protector-all&quot;  # Protect ALL functions
+</span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>
+</span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a># No executable stack
+</span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>LDFLAGS:append = &quot; -Wl,-z,noexecstack&quot;
+</span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a># Immediate symbol binding
+</span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>LDFLAGS:append = &quot; -Wl,-z,now&quot;
+</span><span id="__span-29-18"><a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>
+</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>do_compile() {
+</span><span id="__span-29-20"><a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>    ${CC} ${CFLAGS} ${LDFLAGS} -o secure-app main.c
+</span><span id="__span-29-21"><a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>}
+</span></code></pre></div></p>
+<h2 id="kernel-hardening-for-buffer-overflow-protection">Kernel Hardening for Buffer Overflow Protection<a class="headerlink" href="#kernel-hardening-for-buffer-overflow-protection" title="Permanent link">&para;</a></h2>
+<p>While userspace compiler flags protect applications, kernel hardening is equally critical for preventing privilege escalation and protecting the entire system from memory corruption vulnerabilities.</p>
+<h3 id="yocto-kernel-configuration-fragments">Yocto Kernel Configuration Fragments<a class="headerlink" href="#yocto-kernel-configuration-fragments" title="Permanent link">&para;</a></h3>
+<p>Yocto uses <strong>kernel configuration fragments</strong> (<code>.cfg</code> files) to modularize kernel security options:</p>
+<p><strong>Create a kernel hardening fragment</strong> (<code>kernel-hardening.cfg</code>):
+<div class="language-cfg highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Kernel hardening configuration fragment</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="c1"># Place in recipes-kernel/linux/files/</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># Address Space Layout Randomization (ASLR)</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="na">CONFIG_RANDOMIZE_BASE</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="na">CONFIG_RANDOMIZE_MEMORY</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># Kernel Page Table Isolation (KPTI) - Meltdown mitigation</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="na">CONFIG_PAGE_TABLE_ISOLATION</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="c1"># Supervisor Mode Execution Protection (SMEP)</span>
+</span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="na">CONFIG_X86_SMAP</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-13"><a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="na">CONFIG_X86_SMEP</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-14"><a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>
+</span><span id="__span-30-15"><a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a><span class="c1"># Kernel Stack Protection</span>
+</span><span id="__span-30-16"><a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a><span class="na">CONFIG_STACKPROTECTOR</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-17"><a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a><span class="na">CONFIG_STACKPROTECTOR_STRONG</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-18"><a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>
+</span><span id="__span-30-19"><a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a><span class="c1"># Restrict /dev/mem and /dev/kmem access</span>
+</span><span id="__span-30-20"><a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a><span class="na">CONFIG_STRICT_DEVMEM</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-21"><a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a><span class="na">CONFIG_DEVMEM</span><span class="o">=</span><span class="s">n</span>
+</span><span id="__span-30-22"><a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a><span class="na">CONFIG_DEVKMEM</span><span class="o">=</span><span class="s">n</span>
+</span><span id="__span-30-23"><a id="__codelineno-30-23" name="__codelineno-30-23" href="#__codelineno-30-23"></a>
+</span><span id="__span-30-24"><a id="__codelineno-30-24" name="__codelineno-30-24" href="#__codelineno-30-24"></a><span class="c1"># Harden BPF JIT compiler</span>
+</span><span id="__span-30-25"><a id="__codelineno-30-25" name="__codelineno-30-25" href="#__codelineno-30-25"></a><span class="na">CONFIG_BPF_JIT_ALWAYS_ON</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-26"><a id="__codelineno-30-26" name="__codelineno-30-26" href="#__codelineno-30-26"></a>
+</span><span id="__span-30-27"><a id="__codelineno-30-27" name="__codelineno-30-27" href="#__codelineno-30-27"></a><span class="c1"># Disable legacy and dangerous features</span>
+</span><span id="__span-30-28"><a id="__codelineno-30-28" name="__codelineno-30-28" href="#__codelineno-30-28"></a><span class="na">CONFIG_LEGACY_PTYS</span><span class="o">=</span><span class="s">n</span>
+</span><span id="__span-30-29"><a id="__codelineno-30-29" name="__codelineno-30-29" href="#__codelineno-30-29"></a><span class="na">CONFIG_DEVTMPFS_MOUNT</span><span class="o">=</span><span class="s">n</span>
+</span><span id="__span-30-30"><a id="__codelineno-30-30" name="__codelineno-30-30" href="#__codelineno-30-30"></a>
+</span><span id="__span-30-31"><a id="__codelineno-30-31" name="__codelineno-30-31" href="#__codelineno-30-31"></a><span class="c1"># Enable kernel lockdown</span>
+</span><span id="__span-30-32"><a id="__codelineno-30-32" name="__codelineno-30-32" href="#__codelineno-30-32"></a><span class="na">CONFIG_SECURITY_LOCKDOWN_LSM</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-33"><a id="__codelineno-30-33" name="__codelineno-30-33" href="#__codelineno-30-33"></a><span class="na">CONFIG_SECURITY_LOCKDOWN_LSM_EARLY</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-34"><a id="__codelineno-30-34" name="__codelineno-30-34" href="#__codelineno-30-34"></a><span class="na">CONFIG_LOCK_DOWN_KERNEL_FORCE_CONFIDENTIALITY</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-35"><a id="__codelineno-30-35" name="__codelineno-30-35" href="#__codelineno-30-35"></a>
+</span><span id="__span-30-36"><a id="__codelineno-30-36" name="__codelineno-30-36" href="#__codelineno-30-36"></a><span class="c1"># Restrict kernel module loading</span>
+</span><span id="__span-30-37"><a id="__codelineno-30-37" name="__codelineno-30-37" href="#__codelineno-30-37"></a><span class="na">CONFIG_MODULE_SIG</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-38"><a id="__codelineno-30-38" name="__codelineno-30-38" href="#__codelineno-30-38"></a><span class="na">CONFIG_MODULE_SIG_FORCE</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-39"><a id="__codelineno-30-39" name="__codelineno-30-39" href="#__codelineno-30-39"></a><span class="na">CONFIG_MODULE_SIG_ALL</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-40"><a id="__codelineno-30-40" name="__codelineno-30-40" href="#__codelineno-30-40"></a><span class="na">CONFIG_MODULE_SIG_SHA256</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-30-41"><a id="__codelineno-30-41" name="__codelineno-30-41" href="#__codelineno-30-41"></a>
+</span><span id="__span-30-42"><a id="__codelineno-30-42" name="__codelineno-30-42" href="#__codelineno-30-42"></a><span class="c1"># Disable kernel debugging features in production</span>
+</span><span id="__span-30-43"><a id="__codelineno-30-43" name="__codelineno-30-43" href="#__codelineno-30-43"></a><span class="c1"># CONFIG_DEBUG_FS is not set</span>
+</span><span id="__span-30-44"><a id="__codelineno-30-44" name="__codelineno-30-44" href="#__codelineno-30-44"></a><span class="c1"># CONFIG_KPROBES is not set</span>
+</span><span id="__span-30-45"><a id="__codelineno-30-45" name="__codelineno-30-45" href="#__codelineno-30-45"></a><span class="c1"># CONFIG_FTRACE is not set</span>
+</span></code></pre></div></p>
+<p><strong>Apply kernel fragment in recipe</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a># linux-yocto_%.bbappend
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>FILESEXTRAPATHS:prepend := &quot;${THISDIR}/files:&quot;
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>SRC_URI += &quot;file://kernel-hardening.cfg&quot;
+</span></code></pre></div></p>
+<p><strong>Alternative: Using defconfig</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a># For custom kernel recipes
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>SRC_URI += &quot;file://defconfig&quot;
+</span></code></pre></div></p>
+<h3 id="meta-security-hardening-configurations">meta-security Hardening Configurations<a class="headerlink" href="#meta-security-hardening-configurations" title="Permanent link">&para;</a></h3>
+<p>The <strong>meta-security</strong> layer provides pre-built kernel hardening configurations:</p>
+<p><strong>Add meta-security layer</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Clone meta-security</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://git.yoctoproject.org/meta-security
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># Add to bblayers.conf</span>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="nv">BBLAYERS</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s2">&quot;/path/to/meta-security&quot;</span>
+</span></code></pre></div></p>
+<p><strong>Use meta-security kernel hardening</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a># In local.conf
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>KERNEL_FEATURES:append = &quot; features/security/security.scc&quot;
+</span></code></pre></div></p>
+<p><strong>Available hardening features in meta-security</strong>:
+- <code>features/security/security.scc</code>: Basic kernel hardening
+- <code>features/selinux/selinux.scc</code>: SELinux support
+- <code>features/apparmor/apparmor.scc</code>: AppArmor support
+- <code>features/ima/ima.scc</code>: Integrity Measurement Architecture
+- <code>features/smack/smack.scc</code>: SMACK MAC support</p>
+<h3 id="key-kernel-security-options-explained">Key Kernel Security Options Explained<a class="headerlink" href="#key-kernel-security-options-explained" title="Permanent link">&para;</a></h3>
+<p><strong>KASLR (Kernel Address Space Layout Randomization)</strong>:
+<div class="language-cfg highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="na">CONFIG_RANDOMIZE_BASE</span><span class="o">=</span><span class="s">y</span><span class="w">          </span><span class="c1"># Randomize kernel base address</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="na">CONFIG_RANDOMIZE_MEMORY</span><span class="o">=</span><span class="s">y</span><span class="w">        </span><span class="c1"># Randomize memory sections (x86_64)</span>
+</span></code></pre></div>
+- <strong>Benefit</strong>: Makes kernel exploits significantly harder (attacker can't predict memory layout)
+- <strong>Overhead</strong>: Minimal (&lt;1%)
+- <strong>Recommendation</strong>: Enable on all modern systems</p>
+<p><strong>KPTI (Kernel Page Table Isolation)</strong>:
+<div class="language-cfg highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="na">CONFIG_PAGE_TABLE_ISOLATION</span><span class="o">=</span><span class="s">y</span>
+</span></code></pre></div>
+- <strong>Benefit</strong>: Mitigates Meltdown (CVE-2017-5754) and related CPU vulnerabilities
+- <strong>Overhead</strong>: 5-30% performance impact (CPU-dependent)
+- <strong>Recommendation</strong>: Enable unless performance is critical AND CPU is not vulnerable</p>
+<p><strong>Kernel Stack Protection</strong>:
+<div class="language-cfg highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="na">CONFIG_STACKPROTECTOR</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="na">CONFIG_STACKPROTECTOR_STRONG</span><span class="o">=</span><span class="s">y</span>
+</span></code></pre></div>
+- <strong>Benefit</strong>: Protects kernel stack with canaries (similar to userspace stack protection)
+- <strong>Overhead</strong>: ~1-2%
+- <strong>Recommendation</strong>: Always enable</p>
+<p><strong>Kernel Module Signing</strong>:
+<div class="language-cfg highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="na">CONFIG_MODULE_SIG</span><span class="o">=</span><span class="s">y</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="na">CONFIG_MODULE_SIG_FORCE</span><span class="o">=</span><span class="s">y</span><span class="w">        </span><span class="c1"># Reject unsigned modules</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="na">CONFIG_MODULE_SIG_ALL</span><span class="o">=</span><span class="s">y</span><span class="w">          </span><span class="c1"># Sign all modules at build time</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="na">CONFIG_MODULE_SIG_SHA256</span><span class="o">=</span><span class="s">y</span><span class="w">       </span><span class="c1"># Use SHA-256 for signatures</span>
+</span></code></pre></div>
+- <strong>Benefit</strong>: Prevents loading of malicious kernel modules
+- <strong>Requirement</strong>: Requires signing key management
+- <strong>Recommendation</strong>: Essential for production devices</p>
+<h3 id="kernel-hardening-checker">Kernel Hardening Checker<a class="headerlink" href="#kernel-hardening-checker" title="Permanent link">&para;</a></h3>
+<p><strong>Use kernel-hardening-checker to audit your kernel config</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="c1"># Install kernel-hardening-checker</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>pip3<span class="w"> </span>install<span class="w"> </span>git+https://github.com/a13xp0p0v/kernel-hardening-checker
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="c1"># Check your kernel .config</span>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>kernel-hardening-checker<span class="w"> </span>-c<span class="w"> </span>tmp/work/.../linux-yocto/.config
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="c1"># Example output:</span>
+</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="c1"># [+] Config check is finished: &#39;OK&#39; - 85 / &#39;FAIL&#39; - 12</span>
+</span></code></pre></div></p>
+<p><strong>Automate in Yocto build</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a># Create a kernel-hardening-check recipe
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>inherit kernel-arch
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>do_kernel_hardening_check() {
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>    kernel-hardening-checker -c ${B}/.config
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>}
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a>addtask kernel_hardening_check after do_configure before do_compile
+</span></code></pre></div></p>
+<h2 id="address-sanitizer-asan-for-development">Address Sanitizer (ASan) for Development<a class="headerlink" href="#address-sanitizer-asan-for-development" title="Permanent link">&para;</a></h2>
+<p>Address Sanitizer (ASan) is a powerful memory error detector that finds buffer overflows, use-after-free, and other memory bugs at runtime. While ASan is primarily for development (not production), it's invaluable for catching bugs before release.</p>
+<h3 id="asan-in-yocto-development-builds">ASan in Yocto Development Builds<a class="headerlink" href="#asan-in-yocto-development-builds" title="Permanent link">&para;</a></h3>
+<p><strong>Enable ASan for specific recipes</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a># In recipe (.bb file) for development
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>CFLAGS:append = &quot; -fsanitize=address -fno-omit-frame-pointer&quot;
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>LDFLAGS:append = &quot; -fsanitize=address&quot;
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a># Increase runtime limits (ASan uses more memory)
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>DEPENDS += &quot;libasan&quot;
+</span></code></pre></div></p>
+<p><strong>System-wide ASan (development images only)</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a># In local.conf for development
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>SECURITY_CFLAGS:append = &quot; -fsanitize=address&quot;
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>SECURITY_LDFLAGS:append = &quot; -fsanitize=address&quot;
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a># Add ASan runtime library
+</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>IMAGE_INSTALL:append = &quot; libasan&quot;
+</span></code></pre></div></p>
+<p><strong>What ASan Detects</strong>:
+- Buffer overflows (stack, heap, global)
+- Use-after-free
+- Use-after-return
+- Use-after-scope
+- Double-free
+- Memory leaks</p>
+<p><strong>Example ASan Detection</strong>:
+<div class="language-c highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">vulnerable</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">    </span><span class="n">strcpy</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;This string is way too long&quot;</span><span class="p">);</span><span class="w">  </span><span class="c1">// ASan detects overflow</span>
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="p">}</span>
+</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>
+</span><span id="__span-43-6"><a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="c1">// ASan Output:</span>
+</span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="c1">// ==12345==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7ffc1234abcd</span>
+</span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="c1">// WRITE of size 29 at 0x7ffc1234abcd thread T0</span>
+</span><span id="__span-43-9"><a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a><span class="c1">//     #0 strcpy</span>
+</span><span id="__span-43-10"><a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a><span class="c1">//     #1 vulnerable</span>
+</span></code></pre></div></p>
+<p><strong>Performance Impact</strong>:
+- <strong>Memory</strong>: 2-3x increase
+- <strong>Runtime</strong>: 2-5x slower
+- <strong>Binary size</strong>: 1.5-2x larger</p>
+<p><strong>Recommendation</strong>: Use ASan in CI/CD testing environments, disable for production builds.</p>
+<h3 id="asan-cicd-integration">ASan CI/CD Integration<a class="headerlink" href="#asan-cicd-integration" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="c1"># .gitlab-ci.yml - ASan testing</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="nt">asan-build</span><span class="p">:</span>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+</span><span id="__span-44-4"><a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-44-5"><a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source oe-init-build-env</span>
+</span><span id="__span-44-6"><a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &#39;SECURITY_CFLAGS:append = &quot; -fsanitize=address&quot;&#39; &gt;&gt; conf/local.conf</span>
+</span><span id="__span-44-7"><a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">echo &#39;SECURITY_LDFLAGS:append = &quot; -fsanitize=address&quot;&#39; &gt;&gt; conf/local.conf</span>
+</span><span id="__span-44-8"><a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitbake my-application</span>
+</span><span id="__span-44-9"><a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a>
+</span><span id="__span-44-10"><a id="__codelineno-44-10" name="__codelineno-44-10" href="#__codelineno-44-10"></a><span class="w">    </span><span class="c1"># Run ASan-enabled binary with test suite</span>
+</span><span id="__span-44-11"><a id="__codelineno-44-11" name="__codelineno-44-11" href="#__codelineno-44-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./tmp/work/.../my-application/test-suite</span>
+</span><span id="__span-44-12"><a id="__codelineno-44-12" name="__codelineno-44-12" href="#__codelineno-44-12"></a>
+</span><span id="__span-44-13"><a id="__codelineno-44-13" name="__codelineno-44-13" href="#__codelineno-44-13"></a><span class="w">  </span><span class="nt">artifacts</span><span class="p">:</span>
+</span><span id="__span-44-14"><a id="__codelineno-44-14" name="__codelineno-44-14" href="#__codelineno-44-14"></a><span class="w">    </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on_failure</span>
+</span><span id="__span-44-15"><a id="__codelineno-44-15" name="__codelineno-44-15" href="#__codelineno-44-15"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+</span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">asan-reports/</span>
+</span></code></pre></div>
+<h2 id="binary-security-verification-workflows">Binary Security Verification Workflows<a class="headerlink" href="#binary-security-verification-workflows" title="Permanent link">&para;</a></h2>
+<p>After building firmware with security hardening, it's critical to verify that protections are actually applied.</p>
+<h3 id="using-checksec-for-comprehensive-checks">Using checksec for Comprehensive Checks<a class="headerlink" href="#using-checksec-for-comprehensive-checks" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="c1"># Install checksec in Yocto</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>bitbake<span class="w"> </span>checksec-native
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="c1"># Check single binary</span>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>checksec<span class="w"> </span>--file<span class="o">=</span>tmp/work/.../usr/bin/myapp
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a>
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="c1"># Check all binaries in image</span>
+</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a>find<span class="w"> </span>tmp/work/.../rootfs<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-executable<span class="w"> </span>-exec<span class="w"> </span>checksec<span class="w"> </span>--file<span class="o">={}</span><span class="w"> </span><span class="se">\;</span>
+</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
+</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="c1"># Generate JSON report</span>
+</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a>checksec<span class="w"> </span>--file<span class="o">=</span>mybinary<span class="w"> </span>--output<span class="o">=</span>json<span class="w"> </span>&gt;<span class="w"> </span>security-report.json
+</span></code></pre></div>
+<p><strong>Expected Output for Hardened Binary</strong>:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>Full RELRO      Canary found      NX enabled    PIE enabled     No RPATH   No RUNPATH
+</span></code></pre></div></p>
+<h3 id="manual-verification-with-readelf">Manual Verification with readelf<a class="headerlink" href="#manual-verification-with-readelf" title="Permanent link">&para;</a></h3>
+<p><strong>Complete security verification workflow</strong>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a><span class="c1"># security-check.sh - Verify binary hardening</span>
+</span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>
+</span><span id="__span-47-4"><a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a><span class="nv">BINARY</span><span class="o">=</span><span class="nv">$1</span>
+</span><span id="__span-47-5"><a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>
+</span><span id="__span-47-6"><a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Security Check for </span><span class="nv">$BINARY</span><span class="s2"> ===&quot;</span>
+</span><span id="__span-47-7"><a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>
+</span><span id="__span-47-8"><a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a><span class="c1"># 1. Check PIE</span>
+</span><span id="__span-47-9"><a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;PIE: &quot;</span>
+</span><span id="__span-47-10"><a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a><span class="k">if</span><span class="w"> </span>readelf<span class="w"> </span>-h<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;Type:.*DYN&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-11"><a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Enabled&quot;</span>
+</span><span id="__span-47-12"><a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a><span class="k">else</span>
+</span><span id="__span-47-13"><a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✗ Disabled&quot;</span>
+</span><span id="__span-47-14"><a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a><span class="k">fi</span>
+</span><span id="__span-47-15"><a id="__codelineno-47-15" name="__codelineno-47-15" href="#__codelineno-47-15"></a>
+</span><span id="__span-47-16"><a id="__codelineno-47-16" name="__codelineno-47-16" href="#__codelineno-47-16"></a><span class="c1"># 2. Check Stack Canary</span>
+</span><span id="__span-47-17"><a id="__codelineno-47-17" name="__codelineno-47-17" href="#__codelineno-47-17"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;Stack Canary: &quot;</span>
+</span><span id="__span-47-18"><a id="__codelineno-47-18" name="__codelineno-47-18" href="#__codelineno-47-18"></a><span class="k">if</span><span class="w"> </span>readelf<span class="w"> </span>-s<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;__stack_chk_fail&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-19"><a id="__codelineno-47-19" name="__codelineno-47-19" href="#__codelineno-47-19"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Found&quot;</span>
+</span><span id="__span-47-20"><a id="__codelineno-47-20" name="__codelineno-47-20" href="#__codelineno-47-20"></a><span class="k">else</span>
+</span><span id="__span-47-21"><a id="__codelineno-47-21" name="__codelineno-47-21" href="#__codelineno-47-21"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✗ Not Found&quot;</span>
+</span><span id="__span-47-22"><a id="__codelineno-47-22" name="__codelineno-47-22" href="#__codelineno-47-22"></a><span class="k">fi</span>
+</span><span id="__span-47-23"><a id="__codelineno-47-23" name="__codelineno-47-23" href="#__codelineno-47-23"></a>
+</span><span id="__span-47-24"><a id="__codelineno-47-24" name="__codelineno-47-24" href="#__codelineno-47-24"></a><span class="c1"># 3. Check NX (No Execute)</span>
+</span><span id="__span-47-25"><a id="__codelineno-47-25" name="__codelineno-47-25" href="#__codelineno-47-25"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;NX: &quot;</span>
+</span><span id="__span-47-26"><a id="__codelineno-47-26" name="__codelineno-47-26" href="#__codelineno-47-26"></a><span class="k">if</span><span class="w"> </span>readelf<span class="w"> </span>-l<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>GNU_STACK<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;RW&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-27"><a id="__codelineno-47-27" name="__codelineno-47-27" href="#__codelineno-47-27"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Enabled (stack not executable)&quot;</span>
+</span><span id="__span-47-28"><a id="__codelineno-47-28" name="__codelineno-47-28" href="#__codelineno-47-28"></a><span class="k">else</span>
+</span><span id="__span-47-29"><a id="__codelineno-47-29" name="__codelineno-47-29" href="#__codelineno-47-29"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✗ Disabled (stack executable!)&quot;</span>
+</span><span id="__span-47-30"><a id="__codelineno-47-30" name="__codelineno-47-30" href="#__codelineno-47-30"></a><span class="k">fi</span>
+</span><span id="__span-47-31"><a id="__codelineno-47-31" name="__codelineno-47-31" href="#__codelineno-47-31"></a>
+</span><span id="__span-47-32"><a id="__codelineno-47-32" name="__codelineno-47-32" href="#__codelineno-47-32"></a><span class="c1"># 4. Check RELRO</span>
+</span><span id="__span-47-33"><a id="__codelineno-47-33" name="__codelineno-47-33" href="#__codelineno-47-33"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;RELRO: &quot;</span>
+</span><span id="__span-47-34"><a id="__codelineno-47-34" name="__codelineno-47-34" href="#__codelineno-47-34"></a><span class="k">if</span><span class="w"> </span>readelf<span class="w"> </span>-d<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;BIND_NOW&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-35"><a id="__codelineno-47-35" name="__codelineno-47-35" href="#__codelineno-47-35"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Full RELRO&quot;</span>
+</span><span id="__span-47-36"><a id="__codelineno-47-36" name="__codelineno-47-36" href="#__codelineno-47-36"></a><span class="k">elif</span><span class="w"> </span>readelf<span class="w"> </span>-l<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;GNU_RELRO&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-37"><a id="__codelineno-47-37" name="__codelineno-47-37" href="#__codelineno-47-37"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;~ Partial RELRO&quot;</span>
+</span><span id="__span-47-38"><a id="__codelineno-47-38" name="__codelineno-47-38" href="#__codelineno-47-38"></a><span class="k">else</span>
+</span><span id="__span-47-39"><a id="__codelineno-47-39" name="__codelineno-47-39" href="#__codelineno-47-39"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✗ No RELRO&quot;</span>
+</span><span id="__span-47-40"><a id="__codelineno-47-40" name="__codelineno-47-40" href="#__codelineno-47-40"></a><span class="k">fi</span>
+</span><span id="__span-47-41"><a id="__codelineno-47-41" name="__codelineno-47-41" href="#__codelineno-47-41"></a>
+</span><span id="__span-47-42"><a id="__codelineno-47-42" name="__codelineno-47-42" href="#__codelineno-47-42"></a><span class="c1"># 5. Check FORTIFY_SOURCE</span>
+</span><span id="__span-47-43"><a id="__codelineno-47-43" name="__codelineno-47-43" href="#__codelineno-47-43"></a><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;FORTIFY_SOURCE: &quot;</span>
+</span><span id="__span-47-44"><a id="__codelineno-47-44" name="__codelineno-47-44" href="#__codelineno-47-44"></a><span class="k">if</span><span class="w"> </span>readelf<span class="w"> </span>-s<span class="w"> </span><span class="nv">$BINARY</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;__.*_chk&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+</span><span id="__span-47-45"><a id="__codelineno-47-45" name="__codelineno-47-45" href="#__codelineno-47-45"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;✓ Detected (fortified functions found)&quot;</span>
+</span><span id="__span-47-46"><a id="__codelineno-47-46" name="__codelineno-47-46" href="#__codelineno-47-46"></a><span class="k">else</span>
+</span><span id="__span-47-47"><a id="__codelineno-47-47" name="__codelineno-47-47" href="#__codelineno-47-47"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;? Unknown&quot;</span>
+</span><span id="__span-47-48"><a id="__codelineno-47-48" name="__codelineno-47-48" href="#__codelineno-47-48"></a><span class="k">fi</span>
+</span></code></pre></div></p>
+<h3 id="automated-security-testing-in-cicd">Automated Security Testing in CI/CD<a class="headerlink" href="#automated-security-testing-in-cicd" title="Permanent link">&para;</a></h3>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="c1"># .gitlab-ci.yml - Binary security verification</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="nt">security-check</span><span class="p">:</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="w">  </span><span class="nt">stage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="w">  </span><span class="nt">script</span><span class="p">:</span>
+</span><span id="__span-48-5"><a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source oe-init-build-env</span>
+</span><span id="__span-48-6"><a id="__codelineno-48-6" name="__codelineno-48-6" href="#__codelineno-48-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bitbake core-image-minimal</span>
+</span><span id="__span-48-7"><a id="__codelineno-48-7" name="__codelineno-48-7" href="#__codelineno-48-7"></a>
+</span><span id="__span-48-8"><a id="__codelineno-48-8" name="__codelineno-48-8" href="#__codelineno-48-8"></a><span class="w">    </span><span class="c1"># Run checksec on all binaries</span>
+</span><span id="__span-48-9"><a id="__codelineno-48-9" name="__codelineno-48-9" href="#__codelineno-48-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-48-10"><a id="__codelineno-48-10" name="__codelineno-48-10" href="#__codelineno-48-10"></a><span class="w">      </span><span class="no">FAIL=0</span>
+</span><span id="__span-48-11"><a id="__codelineno-48-11" name="__codelineno-48-11" href="#__codelineno-48-11"></a><span class="w">      </span><span class="no">for binary in $(find tmp/work/.../rootfs/usr/bin -type f -executable); do</span>
+</span><span id="__span-48-12"><a id="__codelineno-48-12" name="__codelineno-48-12" href="#__codelineno-48-12"></a><span class="w">        </span><span class="no">echo &quot;Checking $binary...&quot;</span>
+</span><span id="__span-48-13"><a id="__codelineno-48-13" name="__codelineno-48-13" href="#__codelineno-48-13"></a>
+</span><span id="__span-48-14"><a id="__codelineno-48-14" name="__codelineno-48-14" href="#__codelineno-48-14"></a><span class="w">        </span><span class="no"># Check PIE</span>
+</span><span id="__span-48-15"><a id="__codelineno-48-15" name="__codelineno-48-15" href="#__codelineno-48-15"></a><span class="w">        </span><span class="no">if ! checksec --file=$binary | grep -q &quot;PIE enabled&quot;; then</span>
+</span><span id="__span-48-16"><a id="__codelineno-48-16" name="__codelineno-48-16" href="#__codelineno-48-16"></a><span class="w">          </span><span class="no">echo &quot;❌ PIE not enabled in $binary&quot;</span>
+</span><span id="__span-48-17"><a id="__codelineno-48-17" name="__codelineno-48-17" href="#__codelineno-48-17"></a><span class="w">          </span><span class="no">FAIL=1</span>
+</span><span id="__span-48-18"><a id="__codelineno-48-18" name="__codelineno-48-18" href="#__codelineno-48-18"></a><span class="w">        </span><span class="no">fi</span>
+</span><span id="__span-48-19"><a id="__codelineno-48-19" name="__codelineno-48-19" href="#__codelineno-48-19"></a>
+</span><span id="__span-48-20"><a id="__codelineno-48-20" name="__codelineno-48-20" href="#__codelineno-48-20"></a><span class="w">        </span><span class="no"># Check NX</span>
+</span><span id="__span-48-21"><a id="__codelineno-48-21" name="__codelineno-48-21" href="#__codelineno-48-21"></a><span class="w">        </span><span class="no">if ! checksec --file=$binary | grep -q &quot;NX enabled&quot;; then</span>
+</span><span id="__span-48-22"><a id="__codelineno-48-22" name="__codelineno-48-22" href="#__codelineno-48-22"></a><span class="w">          </span><span class="no">echo &quot;❌ NX not enabled in $binary&quot;</span>
+</span><span id="__span-48-23"><a id="__codelineno-48-23" name="__codelineno-48-23" href="#__codelineno-48-23"></a><span class="w">          </span><span class="no">FAIL=1</span>
+</span><span id="__span-48-24"><a id="__codelineno-48-24" name="__codelineno-48-24" href="#__codelineno-48-24"></a><span class="w">        </span><span class="no">fi</span>
+</span><span id="__span-48-25"><a id="__codelineno-48-25" name="__codelineno-48-25" href="#__codelineno-48-25"></a>
+</span><span id="__span-48-26"><a id="__codelineno-48-26" name="__codelineno-48-26" href="#__codelineno-48-26"></a><span class="w">        </span><span class="no"># Check stack canary</span>
+</span><span id="__span-48-27"><a id="__codelineno-48-27" name="__codelineno-48-27" href="#__codelineno-48-27"></a><span class="w">        </span><span class="no">if ! checksec --file=$binary | grep -q &quot;Canary found&quot;; then</span>
+</span><span id="__span-48-28"><a id="__codelineno-48-28" name="__codelineno-48-28" href="#__codelineno-48-28"></a><span class="w">          </span><span class="no">echo &quot;❌ Stack canary not found in $binary&quot;</span>
+</span><span id="__span-48-29"><a id="__codelineno-48-29" name="__codelineno-48-29" href="#__codelineno-48-29"></a><span class="w">          </span><span class="no">FAIL=1</span>
+</span><span id="__span-48-30"><a id="__codelineno-48-30" name="__codelineno-48-30" href="#__codelineno-48-30"></a><span class="w">        </span><span class="no">fi</span>
+</span><span id="__span-48-31"><a id="__codelineno-48-31" name="__codelineno-48-31" href="#__codelineno-48-31"></a><span class="w">      </span><span class="no">done</span>
+</span><span id="__span-48-32"><a id="__codelineno-48-32" name="__codelineno-48-32" href="#__codelineno-48-32"></a>
+</span><span id="__span-48-33"><a id="__codelineno-48-33" name="__codelineno-48-33" href="#__codelineno-48-33"></a><span class="w">      </span><span class="no">exit $FAIL</span>
+</span></code></pre></div>
+<h2 id="integration-with-chapter-6-platform-security">Integration with Chapter 6: Platform Security<a class="headerlink" href="#integration-with-chapter-6-platform-security" title="Permanent link">&para;</a></h2>
+<p>For comprehensive Yocto security configuration beyond buffer overflow protection, including:
+- Kernel hardening (KASLR, KPTI, kernel stack protection)
+- Mandatory Access Control (SELinux, AppArmor, SMACK)
+- CVE checking and SBOM generation
+- Reproducible builds</p>
+<p>See: <strong><a href="../6_embedded_framework_and_c-based_toolchain_hardeni/">Chapter 6: Embedded Platform Security Hardening</a></strong> - Yocto Project Build System Security section</p>
+<p><strong>Considerations:</strong></p>
+<ul>
+<li>What kind of buffer and where it resides: physical, logical, virtual memory?</li>
+<li>What data will remain when the buffer is freed or left around to LRU out?</li>
+<li>What strategy will be followed to ensure old buffers do not leak data (example: clear buffer after use)?</li>
+<li>Initialize buffers to known value on allocation.</li>
+<li>Consider where variables are stored: stack, static or allocated structure.</li>
+<li>Dispose and securely wipe sensitive information stored in buffers or temporary files during runtime after they are no longer needed (e.g. Wipe buffers from locations where personally identifiable information(PII) is stored before releasing the buffers).</li>
+<li>Explicitly initialize variables.</li>
+<li>Ensure secure compiler flags or switches are utilized upon each firmware build. (e.g. For GCC -fPIE, -fstack-protector-all, -Wl,-z,noexecstack, -Wl,-z,noexecheap etc.. See additional references section for more details.)</li>
+<li>Use safe equivalent functions for known vulnerable functions such as (non-exhaustive list below):</li>
+<li><code>gets() -&gt; fgets()</code></li>
+<li><code>strcpy() -&gt; strncpy()</code></li>
+<li><code>strcat() -&gt; strncat()</code></li>
+<li><code>sprintf() -&gt; snprintf()</code></li>
+<li>Those functions that do not have safe equivalents should be rewritten with safe checks implemented.</li>
+<li>If FreeRTOS OS is utilized, consider setting "configCHECK_FOR_STACK_OVERFLOW" to "1" with a hook function during the development and testing phases but removing for production builds.&#x20;</li>
+</ul>
+<h2 id="additional-references">Additional References <a href="#additional-references" id="additional-references"></a><a class="headerlink" href="#additional-references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>OSS (Open Source Software) Static Analysis Tools</li>
+<li>Use of <a href="http://www.dwheeler.com/flawfinder/">flawfinder</a> and <a href="https://pmd.github.io/">PMD</a> for C</li>
+<li>Use of <a href="http://cppcheck.sourceforge.net/">cppcheck</a> for <a href="https://github.com/struct/mms/blob/master/Modern_Memory_Safety_In_C_CPP.pdf">C++</a></li>
+<li>Consider <a href="https://github.com/Ericsson/codechecker">Codechecker</a> and <a href="https://fbinfer.com/">Infer</a> for C, C++, and iOS using Clang Static Analysis</li>
+<li><a href="http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html">http://www.dwheeler.com/secure-programs/Secure-Programs-HOWTO/library-c.html</a></li>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html#GCC.2FBinutils">https://cheatsheetseries.owasp.org/cheatsheets/C-Based_Toolchain_Hardening_Cheat_Sheet.html#GCC.2FBinutils</a></li>
+<li><a href="https://owasp.org/www-community/attacks/Buffer_overflow_attack">https://owasp.org/www-community/attacks/Buffer_overflow_attack</a></li>
+<li><a href="https://owasp.org/www-project-code-review-guide/">https://owasp.org/www-project-code-review-guide/</a> (Page 113-114)</li>
+<li><a href="http://www.sis.pitt.edu/jjoshi/courses/IS2620/Spring07/Lecture3.pdf">University of Pittsburgh - Secure Coding C/C++: String Vulnerabilities (PDF)</a></li>
+<li><a href="https://github.com/01org/safestringlib/wiki/SDL-List-of-Banned-Functions">Intel Open Source Technology Center SDL Banned Functions</a></li>
+<li><a href="http://www.freertos.org/Stacks-and-stack-overflow-checking.html">RTOS Stack Overflow Checking</a></li>
+<li><a href="https://github.com/a13xp0p0v/kernel-hardening-checker">Kernel Hardening Checker</a></li>
+<li><a href="https://github.com/slimm609/checksec.sh">checksec.sh</a></li>
+<li><a href="https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS">OWASP ISVS</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 OWASP Foundation
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/scriptingxss/embeddedappsec" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/scriptingxss" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.share", "search.highlight", "navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.sections", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "toc.follow"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
