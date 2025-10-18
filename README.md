@@ -1,49 +1,67 @@
-# Embedded Application Security Best Practices
+# OWASP Embedded Application Security Best Practices
 
-![](https://lh6.googleusercontent.com/Le0Nb5GsnzwUpvT6XaSQg1FnDTSRXqBB64kgXjWkOFb7XYO3s2PmLhYRIdwcSLDTGDBonURW-ZE7Oz3pB4kauCW4ou58Dzs9eyc-UFJptghQnzpBKQWS-a2BhN_SVBEQ_Qoq8KNJ4hjNxPEBjA)
+![OWASP Logo](https://lh6.googleusercontent.com/Le0Nb5GsnzwUpvT6XaSQg1FnDTSRXqBB64kgXjWkOFb7XYO3s2PmLhYRIdwcSLDTGDBonURW-ZE7Oz3pB4kauCW4ou58Dzs9eyc-UFJptghQnzpBKQWS-a2BhN_SVBEQ_Qoq8KNJ4hjNxPEBjA)
 
-#### OWASP Embedded Application Security Project [Wiki Page](https://owasp.org/www-project-embedded-application-security/)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue)](https://scriptingxss.github.io/embeddedappsec/)
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 
-## Welcome
+## 📖 Documentation
 
-Thank you for your interest in the OWASP Embedded Application Security Project. This is the development version of the OWASP Embedded Application Security Best Practices Guide, and will be converted into PDF & MediaWiki for publishing when complete.
+**Read online**: [https://scriptingxss.github.io/embeddedappsec/](https://scriptingxss.github.io/embeddedappsec/)
 
-This document was put together by the collaborative efforts of developers, engineers, and hobbyists with the sole purpose of assisting manufacturers produce embedded devices with security in mind. A special "thank you" is due to all those who have contributed \(see below\) as well as those who continue to see this project evolve. It is our goal that this document will provide a detailed technical pathway for manufacturers to build secure devices for an increasingly insecure world. This is considered a "living" document as it is open to feedback and further collaboration, please contact the project leaders with any feedback you may have.
+This repository contains the source for the OWASP Embedded Application Security Best Practices Guide - a comprehensive resource for developers, engineers, and security professionals building secure embedded devices.
 
-Made possible by contributions from:
+## 🏗️ Local Development
 
-* Jim Manico
-* Benjamin Samuels
-* Janet Kulp
+To build and serve the documentation locally:
 
-## GitBook integration
+```bash
+# Install dependencies
+pip install -r requirements.txt
 
-For a pleasant reading experience, use [GitBook](https://github.com/GitbookIO/gitbook) to turn this document into a PDF, e-book, website, etc.
+# Serve locally at http://localhost:8000
+mkdocs serve
 
-## Contributing
+# Build static site
+mkdocs build
+```
 
-You do not have to be a security expert in order to contribute!
+## 🤝 Contributing
 
-Some of the ways you can help:
+Contributions are welcome! You don't need to be a security expert to contribute.
 
-* Technical editing
-* Review
-* Diagrams
-* Graphic design
-* Code snippets in your favorite language
-* Translate guidance material 
+### Ways to help:
+- **Technical editing** - Improve clarity and accuracy
+- **Review** - Provide feedback on content
+- **Diagrams** - Create visual aids
+- **Code snippets** - Add examples in various languages
+- **Translations** - Help translate content
 
-Feel free to sign up for a task out of our roadmap below or add your own idea to the roadmap. To get started, create a GitBook account or sign in with your Github credentials to add comments and make edits. All changes are tracked and synced to [https://github.com/scriptingxss/embeddedappsec](https://github.com/scriptingxss/embeddedappsec). Alternatively, clone the Github repo, use your favorite markdown editor, apply/make your edits, and submit a pull request. Feel free to contact the project leaders for ways to get involved.
+### How to contribute:
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/amazing-contribution`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add amazing contribution'`)
+5. Push to your branch (`git push origin feature/amazing-contribution`)
+6. Open a Pull Request
 
-## Roadmap
+## 📋 Project Information
 
-🚨⚠️ This project is currently going through a revamp of its content and structure. 🚨⚠️ 
+- **OWASP Project Page**: [OWASP Embedded Application Security](https://owasp.org/www-project-embedded-application-security/)
+- **Documentation Framework**: MkDocs with Material theme
+- **License**: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 
-Join the mailing list, slack channel and contact the Project leaders if you feel you can contribute.
+## 👥 Project Leaders
 
-### Project Leaders <a id="project-leaders"></a>
+- [Aaron Guzman](https://www.linkedin.com/in/scriptingxss/) ([@scriptingxss](https://twitter.com/scriptingxss))
+- Alex Lafrenz ([@zerofrenz](https://twitter.com/zerofrenz))
 
-[Aaron Guzman](https://www.linkedin.com/in/scriptingxss/) [@scriptingxss](https://twitter.com/scriptingxss)
+## 📜 License
 
-Alex Lafrenz [@zerofrenz](https://twitter.com/zerofrenz)
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/).
 
+Copyright © 2025 OWASP Foundation
+
+---
+
+🚨 **Note**: This project is currently undergoing a major revamp of its content and structure.

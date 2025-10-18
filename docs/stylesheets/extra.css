@@ -1,0 +1,98 @@
+/* OWASP Embedded Application Security - Custom Styles */
+/* Matching OWASP MAS design principles - Light Mode Only */
+
+:root {
+  /* OWASP brand colors */
+  --md-primary-fg-color: #2a2a72;  /* OWASP blue */
+  --md-accent-fg-color: #ff6633;   /* OWASP orange */
+}
+
+/* Code block improvements with left border accent */
+.highlight pre {
+  border-left: 3px solid var(--md-accent-fg-color);
+  padding-left: 1rem;
+}
+
+/* Inline code styling */
+code {
+  background-color: rgba(42, 42, 114, 0.08);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+/* Custom admonition styles for security warnings */
+.md-typeset .admonition.security,
+.md-typeset details.security {
+  border-left-color: #e74c3c;
+}
+
+.md-typeset .security > .admonition-title,
+.md-typeset .security > summary {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.md-typeset .security > .admonition-title::before,
+.md-typeset .security > summary::before {
+  background-color: #e74c3c;
+}
+
+/* Improve table readability */
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--md-code-bg-color);
+  font-weight: 700;
+}
+
+/* Navigation tabs styling */
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+}
+
+/* Footer customization */
+.md-footer-meta {
+  background-color: var(--md-primary-fg-color);
+}
+
+/* Improve link visibility */
+.md-typeset a {
+  color: var(--md-accent-fg-color);
+}
+
+.md-typeset a:hover {
+  text-decoration: underline;
+}
+
+/* Code annotation improvements */
+.md-annotation__index {
+  background-color: var(--md-accent-fg-color);
+}
+
+/* Search results highlight */
+.md-search-result__article--document {
+  border-left: 2px solid var(--md-accent-fg-color);
+}
+
+/* Responsive image sizing */
+.md-typeset img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Improve heading anchors */
+.md-typeset .headerlink {
+  color: var(--md-default-fg-color--lighter);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.md-typeset h1:hover .headerlink,
+.md-typeset h2:hover .headerlink,
+.md-typeset h3:hover .headerlink,
+.md-typeset h4:hover .headerlink,
+.md-typeset h5:hover .headerlink,
+.md-typeset h6:hover .headerlink {
+  opacity: 1;
+}

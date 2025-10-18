@@ -1,0 +1,7 @@
+# MkDocs Material theme and dependencies for OWASP Embedded Application Security documentation
+# Install with: pip install -r requirements.txt
+# Serve locally with: mkdocs serve
+
+mkdocs>=1.5.0
+mkdocs-material>=9.5.0
+pymdown-extensions>=10.0

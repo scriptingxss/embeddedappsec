@@ -1,0 +1,125 @@
+site_name: OWASP Embedded Application Security
+site_url: https://scriptingxss.github.io/embeddedappsec/
+site_description: Best Practices for Embedded Device Security
+site_author: OWASP Embedded Application Security Project
+
+# Documentation directory
+docs_dir: docs
+
+# Repository info
+repo_url: https://github.com/scriptingxss/embeddedappsec
+repo_name: scriptingxss/embeddedappsec
+edit_uri: edit/newrevision/
+
+# Copyright
+copyright: Copyright &copy; 2025 OWASP Foundation
+
+# Theme configuration (matching OWASP MAS)
+theme:
+  name: material
+  # logo: .gitbook/assets/logo.png  # Uncomment when you have a logo
+  # favicon: .gitbook/assets/logo.png  # Uncomment when you have a logo
+  icon:
+    repo: fontawesome/brands/github
+
+  # Color palette (light mode only)
+  palette:
+    scheme: default
+    primary: indigo
+    accent: indigo
+
+  # Features (matching OWASP MAS)
+  features:
+    - search.suggest
+    - search.share
+    - search.highlight
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - navigation.sections
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - content.action.view
+    - toc.follow
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - tags
+
+# Markdown extensions
+markdown_extensions:
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+
+# Navigation (generated from your existing chapters)
+nav:
+  - Home: index.md
+  - Introduction: preface.md
+
+  - Security Best Practices:
+    - Buffer and Stack Overflow Protection: 1_buffer_and_stack_overflow_protection.md
+    - Injection Prevention: 2_injection_prevention.md
+    - Firmware Updates and Cryptographic Signatures: 3_firmware_updates_and_cryptographic_signatures.md
+    - Securing Sensitive Information: 4_securing_sensitive_information.md
+    - Identity Management: 5identity_management.md
+    - Embedded Platform Security Hardening: 6_embedded_framework_and_c-based_toolchain_hardeni.md
+    - Usage of Debugging Code and Interfaces: 7_usage_of_debugging_code_and_interfaces.md
+    - Transport Layer Security: 8_transport_layer_security.md
+    - Usage of Data Collection and Storage - Privacy: 9_usage_of_data_collection_and_storage_-_privacy.md
+    - Third Party Code and Components: 10_third_party_code_and_components.md
+    - Threat Modeling: threat-model.md
+
+  - Appendices:
+    - OWASP IoT Ecosystem Alignment: owasp-iot-ecosystem-alignment.md
+    - Device Compliance Frameworks: device-compliance-frameworks.md
+
+  - Project Information:
+    - Project Roadmap: project-roadmap.md
+    - Acknowledgments: acknowledgments.md
+    - About OWASP: about-owasp.md
+    - Changelog 2025: CHANGELOG-2025.md
+    - License: LICENSE.md
+
+# Extra CSS/JS (optional customizations)
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/scriptingxss/embeddedappsec
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/scriptingxss
+
+  # Uncomment and add your Google Analytics key if desired
+  # analytics:
+  #   provider: google
+  #   property: G-XXXXXXXXXX
