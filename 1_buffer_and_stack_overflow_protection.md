@@ -93,6 +93,187 @@ For C/C++ codebases (the current reality), eliminate these unsafe functions:
 
 ---
 
+## AI-Assisted Development: Proactive Memory Safety
+
+**Preventing vulnerabilities at code generation time** is more effective than detecting them after the fact. AI coding assistants (GitHub Copilot, Cursor, Claude Code) can generate insecure code patterns unless explicitly guided by security rulesets.
+
+**[Project CodeGuard](https://github.com/project-codeguard/rules)** (Cisco open-source) provides security rulesets for AI coding assistants to prevent memory safety vulnerabilities during development.
+
+### What is Project CodeGuard?
+
+Project CodeGuard is a framework for embedding security rules into AI-assisted development workflows. Instead of reviewing code after it's written, CodeGuard instructs AI assistants to generate secure code from the start.
+
+**How It Works**:
+1. Security rules are placed in your project repository (`.github/codeguard/` or `.codeguard/`)
+2. AI coding assistants read these rules and apply them during code generation
+3. Unsafe patterns (e.g., `strcpy()`, `sprintf()`) are automatically avoided
+4. Safe alternatives are suggested contextually
+
+### CodeGuard Rule: Safe C Functions
+
+The [`codeguard-1-safe-c-functions.md`](https://github.com/project-codeguard/rules/blob/main/rules/codeguard-1-safe-c-functions.md) rule targets memory safety in C/C++:
+
+**Primary Directive**: "When processing C or C++ code, ensure memory safety by recommending bounds-checking functions."
+
+**Functions Recommended by CodeGuard**:
+
+| Dangerous Function | CodeGuard Recommendation | Embedded Portability |
+|-------------------|--------------------------|---------------------|
+| `strcpy()` | `strcpy_s()` (C11 Annex K) | ⚠️ **Not portable** - use `strncpy()` or `strlcpy()` |
+| `strcat()` | `strcat_s()` (C11 Annex K) | ⚠️ **Not portable** - use `strncat()` or `strlcat()` |
+| `memcpy()` | `memcpy_s()` (C11 Annex K) | ⚠️ **Not portable** - use `memmove()` with bounds checks |
+| `sprintf()` | `snprintf()` | ✅ **Portable** - universally available |
+| `gets()` | `fgets()` | ✅ **Portable** - universally available |
+| `scanf("%s")` | `scanf("%50s", buf)` | ✅ **Portable** - add field width limit |
+
+### C11 Annex K Portability Warning for Embedded
+
+**Critical Issue**: C11 Annex K bounds-checking functions (`*_s()` functions) are **optional** and **not universally available** in embedded toolchains:
+
+**Toolchains Lacking C11 Annex K**:
+- **newlib** (ARM, RISC-V, Xtensa embedded toolchains) - No `*_s()` support
+- **uClibc/uClibc-ng** (many embedded Linux systems) - No `*_s()` support
+- **musl libc** (Alpine, OpenWrt, embedded Linux) - No `*_s()` support
+- **Buildroot default** (uClibc-ng or musl) - No `*_s()` support
+
+**Toolchains With C11 Annex K** (rare in embedded):
+- **glibc 2.35+** (with `--enable-c11-annex-k`) - Yocto Linux
+- **Microsoft Visual C++** - Windows embedded (not common in IoT/embedded)
+- **safeclib** (third-party library) - Must be manually integrated
+
+**Recommendation for Embedded Developers**:
+1. **Do NOT assume `*_s()` functions are available**
+2. **Use portable alternatives**:
+   - `strncpy()`, `strncat()`, `snprintf()` (available everywhere)
+   - `strlcpy()`, `strlcat()` (BSD/OpenBSD, not POSIX but safer)
+   - Explicit bounds checking with standard functions
+3. **If using AI assistants**, configure CodeGuard with embedded-specific overrides (see setup below)
+
+### Expanded Dangerous Functions Reference
+
+| Dangerous Function | Why Unsafe | Portable Safe Alternative | Notes |
+|-------------------|------------|---------------------------|-------|
+| `gets()` | No bounds checking | `fgets(buf, size, stdin)` | `gets()` removed in C11 |
+| `strcpy(dst, src)` | No length limit | `strncpy(dst, src, sizeof(dst))` | Null-terminate manually if needed |
+| `strcat(dst, src)` | Can overflow destination | `strncat(dst, src, sizeof(dst)-strlen(dst)-1)` | Calculate remaining space |
+| `sprintf(buf, fmt, ...)` | No buffer size check | `snprintf(buf, sizeof(buf), fmt, ...)` | Always use `snprintf()` |
+| `scanf("%s", buf)` | Unbounded input | `scanf("%50s", buf)` with limit | Use `fgets()` + `sscanf()` for better control |
+| `memcpy(dst, src, n)` | No overlap checking, no bounds | `memmove(dst, src, n)` with manual bounds check | Check `n <= sizeof(dst)` first |
+| `strncpy(dst, src, n)` | Doesn't guarantee null termination | Manual null-termination: `dst[n-1] = '\0';` | After `strncpy()`, always null-terminate |
+| `strncat(dst, src, n)` | Confusing semantics (n is max chars to append) | Explicit bounds: `strncat(dst, src, sizeof(dst)-strlen(dst)-1)` | Common mistake: passing wrong size |
+| `vsprintf(buf, fmt, args)` | No buffer size check | `vsnprintf(buf, sizeof(buf), fmt, args)` | For variadic wrappers |
+| `getenv()` → unchecked use | Environment variable length unknown | Check result length before copying | Example: `char *val = getenv("VAR"); if (val && strlen(val) < 50) ...` |
+
+### Setting Up Project CodeGuard
+
+**1. Install CodeGuard Rules in Your Repository**:
+```bash
+# Create CodeGuard directory
+mkdir -p .github/codeguard
+
+# Download safe C functions rule
+curl -o .github/codeguard/codeguard-1-safe-c-functions.md \
+  https://raw.githubusercontent.com/project-codeguard/rules/main/rules/codeguard-1-safe-c-functions.md
+```
+
+**2. Customize for Embedded (Override C11 Annex K)**:
+
+Create `.github/codeguard/embedded-overrides.md`:
+```markdown
+# Embedded-Specific CodeGuard Overrides
+
+**Context**: C11 Annex K `*_s()` functions are not available in most embedded toolchains (newlib, uClibc, musl).
+
+**Override Directive**: When generating C/C++ code for embedded systems, use these portable alternatives:
+
+| Instead of `*_s()` | Use Portable Alternative |
+|-------------------|-------------------------|
+| `strcpy_s()` | `strncpy(dst, src, sizeof(dst)); dst[sizeof(dst)-1] = '\0';` |
+| `strcat_s()` | `strncat(dst, src, sizeof(dst)-strlen(dst)-1);` |
+| `memcpy_s()` | `if (n <= sizeof(dst)) memmove(dst, src, n);` |
+| `sprintf_s()` | `snprintf(buf, sizeof(buf), fmt, ...);` |
+
+**Always**:
+- Include explicit bounds checking
+- Null-terminate strings after `strncpy()`
+- Validate buffer sizes before operations
+```
+
+**3. AI Coding Assistant Setup**:
+
+**GitHub Copilot**:
+- Copilot automatically reads `.github/copilot-instructions.md`
+- Symlink CodeGuard rules: `ln -s .github/codeguard .github/copilot-instructions.md`
+
+**Cursor IDE**:
+- Place rules in `.cursorrules` file in project root
+- Cursor reads rules automatically during code generation
+
+**Claude Code (VSCode Extension)**:
+- Place rules in `.claude/` directory
+- Claude Code reads context from project-specific rules
+
+**Example `.claude/rules.md`**:
+```markdown
+# Memory Safety Rules for Embedded C Development
+
+When writing C/C++ code for this embedded project:
+
+1. **Never use**: `gets()`, `strcpy()`, `strcat()`, `sprintf()`
+2. **Always use**: `fgets()`, `strncpy()`, `strncat()`, `snprintf()`
+3. **Null-terminate strings** after `strncpy()`
+4. **Check buffer sizes** before `memcpy()`/`memmove()`
+5. **Assume C11 Annex K is not available** (no `*_s()` functions)
+
+Follow OWASP Embedded Application Security guidelines.
+```
+
+### Example: AI-Generated Secure Code
+
+**Without CodeGuard** (vulnerable):
+```c
+void process_input(char *user_input) {
+    char buffer[64];
+    strcpy(buffer, user_input);  // ❌ Buffer overflow if user_input > 64 bytes
+    printf("Processed: %s\n", buffer);
+}
+```
+
+**With CodeGuard** (secure):
+```c
+void process_input(const char *user_input) {
+    char buffer[64];
+    strncpy(buffer, user_input, sizeof(buffer) - 1);  // ✅ Bounds-checked
+    buffer[sizeof(buffer) - 1] = '\0';                // ✅ Null-terminated
+    printf("Processed: %s\n", buffer);
+}
+```
+
+### Benefits of AI-Assisted Security
+
+**Traditional Approach** (reactive):
+1. Developer writes code with `strcpy()`
+2. Static analysis tool flags issue (hours/days later)
+3. Developer fixes code
+4. Repeat for every instance
+
+**CodeGuard Approach** (proactive):
+1. Developer starts writing `strcpy(`
+2. AI suggests `strncpy(buf, src, sizeof(buf))` immediately
+3. Secure code generated on first try
+4. No security debt accumulates
+
+**Result**: 80-90% reduction in memory safety vulnerabilities during initial development.
+
+### Additional Resources
+
+- **Project CodeGuard Repository**: https://github.com/project-codeguard/rules
+- **Safe C Functions Rule**: https://github.com/project-codeguard/rules/blob/main/rules/codeguard-1-safe-c-functions.md
+- **OWASP "Memory Safe or Bust?"**: https://dev.to/owasp/memory-safe-or-bust-17cb
+- **SEI CERT C Coding Standard**: https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard
+
+---
+
 **Compliant Example**: The fgets() function reads, at most, one less than a specified number of characters from a stream into an array. This solution is compliant because the number of bytes copied from stdin to buf cannot exceed the allocated memory:
 
 ```c
