@@ -464,7 +464,7 @@ Updated 36 references across 8 files:
 
 ### Typo Fixes
 
-**executive_summary/11_threat_modeling.md**:
+**Threat modeling chapter**:
 - Fixed: "Theat Modeling" → "Threat Modeling"
 
 ---
