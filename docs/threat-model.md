@@ -19,7 +19,7 @@ Threat modeling typically includes the following activities:
 2. **Decompose the system** (or device) into components, trust boundaries, and data flows
 3. **Identify threats** using structured frameworks (STRIDE, PASTA, LINDDUN, TARA, STRIDE-AI)
 4. **Document all threats** with their respective scenarios and attack vectors
-5. **Rate each threat** by its likelihood and impact using a risk scoring system (DREAD, CVSS v4.0)
+5. **Rate each threat** by its likelihood and impact using a risk scoring system (DREAD, OWASP Risk Rating)
 6. **Define mitigations** and prioritize remediation based on risk scores
 7. **Validate and iterate** as the system evolves
 
@@ -775,7 +775,72 @@ DREAD is scored on a scale of 1 to 3 (or 0 to 10) according to each category:
 
 **DREAD Score = (D + R + E + A + D) / 5**
 
-### CVSS v4.0 (Common Vulnerability Scoring System - 2025 Standard)
+Note: DREAD was Microsoft's original framework (now deprecated by Microsoft), but remains useful for quick qualitative assessments.
+
+### OWASP Risk Rating Methodology (Recommended)
+
+OWASP Risk Rating is the **recommended approach for threat modeling** in web and embedded applications. It combines threat agent factors, vulnerability factors, and business impact to produce a holistic risk score.
+
+**Risk = Likelihood × Impact**, where:
+
+**Likelihood = (Threat Agent Factors + Vulnerability Factors) / 2**
+
+| Factor | High (3) | Medium (2) | Low (1) |
+|--------|----------|-----------|--------|
+| **Threat Agent Skills** | Expert attackers (nation-state) | Skilled attackers (organized crime) | Script kiddies, untrained |
+| **Threat Agent Motive** | High financial/political gain | Medium gain | Curiosity, low motivation |
+| **Threat Agent Opportunity** | Network-accessible, automated | Requires interaction/proximity | Requires physical access |
+| **Threat Agent Size** | Large attacker community | Medium-sized groups | Single individuals |
+| **Ease of Discovery** | Published/obvious (CVSS, GitHub) | Requires research/analysis | Obscure, requires deep knowledge |
+| **Ease of Exploit** | Automated tools, public PoC | Moderate effort required | Custom exploit needed |
+| **Awareness** | Well-known vulnerability | Somewhat known | Unknown to most |
+| **Intrusion Detection** | Easy to detect/logs | Difficult to detect | Very hard/no logging |
+
+**Impact = (Technical Impact + Business Impact) / 2**
+
+| Impact Type | High | Medium | Low |
+|------------|------|--------|-----|
+| **Confidentiality** | All data exposed | Sensitive data leaked | Trivial data |
+| **Integrity** | Complete system compromise | Partial modification possible | Minimal impact |
+| **Availability** | System completely down | Degraded performance | Minor interruption |
+| **Accountability** | Attacker actions undetectable | Partial audit trail | Full audit trail |
+| **Financial** | $1M+ loss | $100K-$1M | <$100K |
+| **Reputation** | Severe brand damage | Moderate damage | Minor impact |
+| **Compliance** | Critical violations (fines, recall) | Reportable violations | Minor non-compliance |
+
+**Risk Score = Likelihood × Impact** (0-9 scale):
+- **9 (Critical)**: Immediate remediation, block deployment
+- **6-8 (High)**: Fix before release, board visibility
+- **3-5 (Medium)**: Fix in next release, standard testing
+- **1-2 (Low)**: Document, defer unless easy fix
+
+**OWASP Risk Rating Example - Smart Thermostat BLE Pairing**:
+```
+Threat: Attacker spoofs mobile app, pairs with thermostat, changes temperature
+
+Likelihood Calculation:
+  Threat Agent: Skill=2 (skilled), Motive=2 (medium), Opportunity=3 (BLE proximity ~50m), Size=2 → avg=2.25
+  Vulnerability: Discovery=3 (BLE pairing public), Exploit=2 (moderate), Awareness=2, Detection=1 → avg=2
+  Likelihood = (2.25 + 2) / 2 = 2.125 → round to 2 (Medium)
+
+Impact Calculation:
+  Technical: Confidentiality=2 (thermostat settings), Integrity=3 (can change setpoints),
+             Availability=2 (device still operates), Accountability=2 → avg=2.25
+  Business: Financial=1 (low direct cost), Reputation=2 (user frustration),
+            Compliance=1 (residential device) → avg=1.33
+  Impact = (2.25 + 1.33) / 2 = 1.79 → round to 2 (Low-Medium)
+
+Risk Score = 2.125 × 1.79 ≈ 3.8 → **Medium (4)** Priority
+Mitigation: Implement BLE Secure Connections Numeric Comparison to raise Exploit difficulty to 3 → Risk drops to Low
+```
+
+### CVSS v4.0 (Common Vulnerability Scoring System - Vulnerability Severity)
+
+**Important Distinction**: CVSS v4.0 scores the **technical severity** of *known vulnerabilities* (CVEs, CWEs), not the **business risk** of threat scenarios. For threat modeling:
+- **Use CVSS** when scoring identified vulnerabilities during code review or against public CVE databases (e.g., "CVE-2025-12345 scores CVSS 8.5")
+- **Use OWASP Risk Rating/DREAD** when scoring threat scenarios from threat modeling (e.g., "BLE pairing bypass threat scores 7.5")
+
+CVSS lacks business context (financial impact, compliance consequences, market segment), which are essential for prioritizing mitigations. Threat models combine CVSS scores on known vulnerabilities with risk scoring frameworks for threat scenarios.
 
 CVSS v4.0 (released June 2023) is the **current industry standard** for vulnerability severity scoring. It addresses IoT/OT-specific contexts better than v3.1.
 
@@ -865,6 +930,183 @@ cvss_v4_t smart_lock_rce = {
 // Score: 9.8 (Critical) - Immediate patching required
 float score = calculate_cvss_v4_base_score(&smart_lock_rce);
 ```
+
+### FAIR Framework (Quantitative Risk Analysis)
+
+FAIR (Factor Analysis of Information Risk) is a **quantitative framework** for calculating financial risk, essential for executive/board communication and investment decisions. Unlike qualitative frameworks (DREAD, OWASP Risk Rating), FAIR expresses risk in **financial terms**.
+
+**FAIR Formula**:
+```
+Loss Event Frequency (LEF) = (Threat Event Frequency × Vulnerability) per year
+Loss Magnitude (LM) = Financial impact per incident ($)
+Annual Loss Expectancy (ALE) = LEF × LM
+```
+
+**When to Use FAIR**:
+- Executive reporting: "This threat costs $X/year on average"
+- ROI justification: "Mitigation investment of $Y reduces risk by $Z/year"
+- Cyber insurance: "Annual loss expectancy is $M"
+- Board risk appetite discussions
+- Budgeting security controls
+
+**FAIR Example - Medical Device Firmware Update Server Compromise**:
+```
+Asset: Cloud-hosted firmware update server
+Threat: Attacker compromises server, injects malicious firmware → recall, litigation, regulatory fines
+
+Threat Event Frequency: 0.2 events per year (historical analysis of similar infrastructure)
+Vulnerability: If breach occurs, 85% chance attacker goes undetected for 48 hours (detection capability)
+
+Probability Loss Event = 0.2 × 0.85 = 0.17 breaches/year detected too late
+
+Loss per Incident:
+  - Recall costs: $5M (logistics, replacement units)
+  - Regulatory fines (FDA, FCC): $2M
+  - Litigation/settlements: $10M
+  - Reputation/lost revenue: $3M
+  - Total: $20M per incident
+
+Annual Loss Expectancy (ALE) = 0.17 × $20M = $3.4M/year
+
+Mitigation Options:
+  A) Implement redundant servers + 24/7 monitoring = $500K/year cost → Reduces detection time to 2 hours
+     → Reduces loss per incident to $8M (fewer devices auto-updated with malware)
+     → New ALE = 0.17 × $8M = $1.36M/year
+     → Net savings = $3.4M - $1.36M - $500K = $1.54M/year ✅ Justifies investment
+
+  B) Do nothing, accept risk = $3.4M/year loss expectancy (uninsurable)
+```
+
+### Framework Selection Guide
+
+Choose the appropriate framework based on your context:
+
+| Framework | Purpose | Output Format | Time to Score | Best For |
+|-----------|---------|----------------|---------------|----------|
+| **DREAD** | Quick threat assessment | Qualitative (1-3 scale) | 5 min/threat | Early design, brainstorming |
+| **OWASP Risk Rating** | Business-aligned risk | Qualitative + business impact (1-9 scale) | 15 min/threat | Regulatory products, compliance evidence |
+| **FAIR** | Financial risk quantification | Quantitative ($/year, ALE) | 30-60 min/threat | Executive reporting, budget justification |
+| **CVSS** | Known vulnerability severity | Technical (0-10 scale) | 5 min/CVE | Vulnerability management, patch prioritization |
+
+**Decision Tree**:
+1. Are you scoring a **known CVE/vulnerability** from a public database? → Use **CVSS**
+2. Do you need **financial risk** for executives/insurance? → Use **FAIR**
+3. Do you need **regulatory compliance evidence** for audits? → Use **OWASP Risk Rating**
+4. Do you need a **quick assessment** for sprint planning? → Use **DREAD**
+5. Combining multiple? → **OWASP Risk Rating + FAIR** (qualitative assessment, then quantify high-risk items)
+
+---
+
+## Threat Model Risk Register (Design → Test → Release)
+
+A **risk register** is a structured artifact that tracks identified threats from threat modeling through implementation, pre-release testing, and final sign-off. It bridges the gap between threat modeling and penetration testing by maintaining traceability.
+
+### Risk Register Schema
+
+Threat registers should include:
+```json
+{
+  "threat_registry": [
+    {
+      "threat_id": "THR-BLE-001",
+      "title": "BLE Pairing Bypass",
+      "description": "Attacker spoofs mobile app to pair with device",
+      "stride_category": "Spoofing",
+      "likelihood": "Medium",
+      "impact": "High",
+      "risk_score": 7.5,
+      "risk_framework": "OWASP Risk Rating",
+      "priority": "High",
+
+      "mitigation": {
+        "strategy": "Implement BLE Secure Connections with Numeric Comparison",
+        "owner": "Firmware Team",
+        "target_date": "2025-02-15",
+        "status": "In Progress"
+      },
+
+      "validation": {
+        "test_case_id": "ISTG-WRLS-INFO-001",
+        "test_description": "Attempt pairing without Numeric Comparison validation",
+        "pentest_status": "Scheduled",
+        "pentest_date": "2025-03-01",
+        "result": null,
+        "sign_off": false
+      },
+
+      "residual_risk": {
+        "likelihood": "Low",
+        "impact": "Medium",
+        "risk_score": 2.0,
+        "accepted": false
+      }
+    }
+  ]
+}
+```
+
+### Risk Register Lifecycle
+
+**Phase 1: Identification (Design)**
+- Threat modeling team identifies threat using STRIDE/PASTA
+- Assign risk score using OWASP Risk Rating or FAIR
+- Create mitigation strategy with owner and timeline
+
+**Phase 2: Tracking (Development)**
+- Development team updates mitigation status in risk register
+- Weekly reviews in sprint planning/security meetings
+- Escalate blocked items to security team lead
+
+**Phase 3: Pre-Release Testing (QA/Security)**
+- Security team creates pentest test cases mapped to each threat
+- Penetration testers execute tests and update validation status
+- Document findings and mitigation verification
+
+**Phase 4: Sign-Off (Release)**
+- Security team reviews risk register completeness
+- All threats must have validation evidence (pentest report, code review)
+- Residual risk assessment: Accept or defer release
+- Compliance review for regulated industries (medical, automotive, defense)
+
+### Automated Risk Register Integration
+
+**Example: Map Threagile threats to pentest test plan**:
+```bash
+#!/bin/bash
+# Generate test plan from threat model
+
+threagile analyze --model threat-model.yaml --output threats.json
+
+# Extract critical threats
+jq -r '.risks[] | select(.severity=="critical") |
+  "Test: \(.title)\nDescription: \(.description)\nMitigation: \(.mitigations[0])\n"' \
+  threats.json > pentest-testplan.txt
+
+# Track in issue system
+for threat in $(jq -r '.risks[].id' threats.json); do
+  gh issue create \
+    --title "Validate Mitigation: $threat" \
+    --body "Test for threat $threat per threat model" \
+    --label "security,pentest-required" \
+    --project "Release 2025-Q1"
+done
+```
+
+### Risk Register Example - Smart Thermostat Release
+
+| Threat ID | Threat | Risk Score | Mitigation | Pentest Status | Sign-Off |
+|-----------|--------|------------|-----------|-----------------|----------|
+| THR-001 | BLE pairing bypass | 7.5 | Numeric Comparison | ✅ Pass | ✅ Approved |
+| THR-002 | Hardcoded API key | 8.2 | Environment variables | ✅ Pass | ✅ Approved |
+| THR-003 | Unencrypted settings | 6.1 | AES-256-GCM | ✅ Pass | ✅ Approved |
+| THR-004 | Debug interface exposed | 5.0 | JTAG disabled in release | 🟡 Pending | ❌ Blocked |
+| THR-005 | Firmware rollback | 4.2 | Anti-rollback counter | ⏳ Scheduled | ⏳ Pending |
+
+**Release Decision**:
+- ✅ 3 threats fully mitigated and validated
+- 🟡 1 threat mitigation pending pentest (defer release by 1 week)
+- ⏳ 1 threat in progress (acceptable for this release per risk appetite)
+- **Release Status**: Conditional approval pending THR-004 pentest pass
 
 ---
 
@@ -2247,6 +2489,39 @@ generate_dfd_from_config('network-config.yaml')
 
 ## Threat Model Documentation Standards
 
+### Input Artifacts for Threat Modeling
+
+Before beginning threat modeling, gather these artifacts to answer **"What are we working on?"** Complete documentation enables thorough threat identification and accurate risk assessment.
+
+**Business & Product Context** (defines scope and risk appetite):
+- [ ] Product Requirements Document (PRD) - Features, user workflows, business objectives
+- [ ] Product management briefs - Target market, deployment scale, product lifecycle, go-to-market strategy
+- [ ] Business requirements - Revenue model, competitive positioning, stakeholder priorities
+- [ ] Regulatory/compliance requirements - FDA, ISO 26262, IEC 62443, GDPR, industry-specific standards
+
+**Technical & Engineering Design** (defines attack surface):
+- [ ] Functional Specifications (FSD) - How each feature is implemented technically
+- [ ] Hardware PRD - Component selection, power requirements, form factor, interface options
+- [ ] Engineering commitment slides - Design decisions, technical milestones, trade-offs, risk acceptance
+- [ ] System architecture diagrams - Block diagrams, trust boundaries, component interactions
+- [ ] Component datasheets - MCU specs, radio modules (BLE/Wi-Fi), sensors, cryptographic accelerators
+
+**Software & Firmware** (defines implementation details):
+- [ ] Software architecture - Firmware components, OS selection (RTOS/Linux), driver stack, memory layout
+- [ ] API specifications - REST APIs, internal interfaces, RPC protocols, message formats
+- [ ] Software Bill of Materials (SBOM) - Third-party libraries, versions, known CVEs (CycloneDX/SPDX format)
+- [ ] Network/data flow diagrams - Protocol usage, data paths, encryption points, cross-device communication
+- [ ] Interface specifications - UART/JTAG/SPI/I2C debug interfaces, wireless protocols (BLE, Wi-Fi, Zigbee)
+
+**Optional (for detailed threat modeling)**:
+- [ ] User stories/use cases - User interactions, authentication flows, privilege models
+- [ ] Source code - For white-box threat modeling and code review correlation
+- [ ] Existing security assessments - Prior pentests, static analysis reports, vulnerability scans
+
+**Rationale**: Incomplete artifacts lead to missed threats. Without hardware datasheets, physical attack vectors (JTAG, glitch injection, side-channels) may be overlooked. Without PRDs, business impact cannot be accurately assessed for risk scoring. Without firmware architecture, supply chain and third-party risks are invisible.
+
+---
+
 ### Threat Model Document Template
 
 ```markdown
@@ -2402,5 +2677,3 @@ Threat models should answer the following four questions:
 * [MITRE ATT&CK for Mobile](https://attack.mitre.org/matrices/mobile/) - IoT and mobile threats
 * [CVE Database](https://cve.mitre.org/) - Common Vulnerabilities and Exposures
 * [NIST NVD](https://nvd.nist.gov/) - National Vulnerability Database
-
-*Co-Authored-By: Claude <noreply@anthropic.com>*
